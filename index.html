@@ -104,7 +104,7 @@
         .grid-item-card i { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.8rem; }
         .grid-item-card h3 { font-size: 1.15rem; color: var(--primary-dark); font-weight: 700; }
 
-        /* تبويبات الفصول (DzExams Style) */
+        /* تبويبات الفصول */
         .trimester-tabs {
             display: flex;
             gap: 8px;
@@ -246,32 +246,6 @@
             cursor: pointer;
         }
         #upload-loader { display: none; text-align: center; color: var(--accent); font-weight: 700; margin-top: 10px; }
-
-        /* معاينة الصور (Lightbox) */
-        .image-viewer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 1rem;
-        }
-        .image-viewer img {
-            max-width: 95%;
-            max-height: 90vh;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        .close-viewer {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -289,7 +263,6 @@
 
     <div class="main-container">
         
-        <!-- مسار التصفح (Breadcrumb) -->
         <div class="breadcrumb" id="breadcrumb">
             الرئيسية <span>/</span> اختر المستوى الدراسي
         </div>
@@ -325,9 +298,8 @@
             <div class="grid-layout" id="subjects-box"></div>
         </div>
 
-        <!-- 4. شاشة الفروض والاختبارات (DzExams Engine) -->
+        <!-- 4. شاشة الفروض والاختبارات -->
         <div id="view-exams" class="page-view">
-            <!-- تبويبات الفصول الثلاثة -->
             <div class="trimester-tabs">
                 <button class="tab-btn active" onclick="filterTerm('الكل')">جميع الفصول</button>
                 <button class="tab-btn" onclick="filterTerm('الفصل الأول')">الفصل الأول</button>
@@ -348,7 +320,7 @@
     <!-- نافذة رفع الموضوع والحل -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>إضافة موضوع جديد</h3>
+            <h3>إضافة ملف جديد</h3>
             
             <div class="form-group">
                 <label>الفصل الدراسي</label>
@@ -374,13 +346,13 @@
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-file-image"></i> صورة الموضوع (الأصلية)</label>
-                <input type="file" id="field-file-subj" accept="image/*">
+                <label><i class="fa-solid fa-file"></i> ملف الموضوع (صور، PDF، Word...)</label>
+                <input type="file" id="field-file-subj">
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-check-double"></i> صورة الحل النموذجي</label>
-                <input type="file" id="field-file-sol" accept="image/*">
+                <label><i class="fa-solid fa-file-circle-check"></i> ملف الحل النموذجي</label>
+                <input type="file" id="field-file-sol">
             </div>
 
             <div class="modal-buttons">
@@ -389,22 +361,16 @@
             </div>
 
             <div id="upload-loader">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري حفظ ورفع الصور الأصلية...
+                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري حفظ ورفع الملفات الأصلية...
             </div>
         </div>
-    </div>
-
-    <!-- عارض الصور السريع (Lightbox) -->
-    <div id="lightbox" class="image-viewer" onclick="closeLightbox()">
-        <span class="close-viewer">&times;</span>
-        <img id="lightbox-img" src="" alt="المعاينة">
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بك
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0",
             authDomain: "shop-clothes-224a3.firebaseapp.com",
@@ -416,14 +382,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // رابط خادم التخزين (5 تيرابايت)
+        // رابط الخادم
         const GOOGLE_DRIVE_API = "https://script.google.com/macros/s/AKfycbz3mHI7-cbKF_qFS7XQwqW9fksjMWPBKSuERYlnGIjCkxdHtMG0HG8_DuNj9Q9kuyOv/exec";
 
-        // إدارة الحالة
         let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
         let currentExamsList = [];
 
-        // قاعدة بيانات الشعب والمواد الرسمية للثانوية (نظام DzExams الدقيق)
         const schoolCurriculum = {
             'الأولى ثانوي': {
                 'جذع مشترك علوم وتكنولوجيا': [
@@ -588,24 +552,13 @@
             }
         };
 
-        // التنقل بين المستويات والشعب
         window.selectYear = function(year) {
             navState.year = year;
             updateBreadcrumb();
-            
             const branches = Object.keys(schoolCurriculum[year]);
             const box = document.getElementById('branches-box');
             box.innerHTML = '';
-            
-            branches.forEach(branch => {
-                box.innerHTML += `
-                    <div class="grid-item-card" onclick="selectBranch('${branch}')">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                        <h3>${branch}</h3>
-                    </div>
-                `;
-            });
-
+            branches.forEach(branch => { box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-graduation-cap"></i><h3>${branch}</h3></div>`; });
             switchView('view-branch');
             document.getElementById('btn-back').style.display = 'block';
         };
@@ -613,20 +566,10 @@
         window.selectBranch = function(branch) {
             navState.branch = branch;
             updateBreadcrumb();
-            
             const subjects = schoolCurriculum[navState.year][branch];
             const box = document.getElementById('subjects-box');
             box.innerHTML = '';
-
-            subjects.forEach(sub => {
-                box.innerHTML += `
-                    <div class="grid-item-card" onclick="selectSubject('${sub.name}')">
-                        <i class="fa-solid ${sub.icon}"></i>
-                        <h3>${sub.name}</h3>
-                    </div>
-                `;
-            });
-
+            subjects.forEach(sub => { box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; });
             switchView('view-subject');
         };
 
@@ -639,16 +582,9 @@
         };
 
         window.navigateBack = function() {
-            if (document.getElementById('view-exams').classList.contains('active')) {
-                switchView('view-subject');
-                document.getElementById('fab-btn').style.display = 'none';
-            } else if (document.getElementById('view-subject').classList.contains('active')) {
-                switchView('view-branch');
-            } else if (document.getElementById('view-branch').classList.contains('active')) {
-                switchView('view-year');
-                document.getElementById('btn-back').style.display = 'none';
-                navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
-            }
+            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); document.getElementById('fab-btn').style.display = 'none'; } 
+            else if (document.getElementById('view-subject').classList.contains('active')) { switchView('view-branch'); } 
+            else if (document.getElementById('view-branch').classList.contains('active')) { switchView('view-year'); document.getElementById('btn-back').style.display = 'none'; navState = { year: '', branch: '', subject: '', termFilter: 'الكل' }; }
             updateBreadcrumb();
         };
 
@@ -666,7 +602,6 @@
             b.innerHTML = path;
         }
 
-        // تحويل الملفات إلى Base64
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -676,24 +611,25 @@
             });
         }
 
-        // رفع الملف كصورة أصلية إلى مساحة الـ 5 تيرابايت
+        // تم استبدال URLSearchParams بـ FormData لرفع الملفات الكبيرة بشكل طبيعي ودون مشاكل
         async function uploadOriginalFile(base64Data, filename, mimeType) {
-            const body = new URLSearchParams();
-            body.append('fileData', base64Data);
-            body.append('fileName', filename);
-            body.append('mimeType', mimeType);
+            const formData = new FormData();
+            formData.append('fileData', base64Data);
+            formData.append('fileName', filename);
+            formData.append('mimeType', mimeType);
 
-            const res = await fetch(GOOGLE_DRIVE_API, { method: 'POST', body: body });
+            const res = await fetch(GOOGLE_DRIVE_API, { 
+                method: 'POST', 
+                body: formData 
+            });
             const data = await res.json();
             if (data.status !== 'success') throw new Error(data.message);
             return data.fileUrl;
         }
 
-        // نافذة الرفع
         window.openUploadModal = () => document.getElementById('upload-modal').style.display = 'flex';
         window.closeUploadModal = () => document.getElementById('upload-modal').style.display = 'none';
 
-        // نشر الموضوع
         window.submitExam = async function() {
             const term = document.getElementById('field-term').value;
             const type = document.getElementById('field-type').value;
@@ -702,21 +638,22 @@
             const fileSol = document.getElementById('field-file-sol').files[0];
 
             if (!desc || !fileSubj || !fileSol) {
-                alert("الرجاء إدخال الوصف وإرفاق صورة الموضوع وصورة الحل!");
+                alert("الرجاء إدخال الوصف وإرفاق ملفات الموضوع والحل!");
                 return;
             }
 
             document.getElementById('upload-loader').style.display = 'block';
 
             try {
-                // رفع الصور الأصلية كما هي
+                // الحفاظ على صيغة الملف الأصلية (PDF أو صور) ورفعه كما هو
+                const extSubj = fileSubj.name.split('.').pop();
                 const subjBase64 = await fileToBase64(fileSubj);
-                const subjUrl = await uploadOriginalFile(subjBase64, `${navState.subject}_${desc}_موضوع.jpg`, fileSubj.type);
+                const subjUrl = await uploadOriginalFile(subjBase64, `${navState.subject}_${desc}_موضوع.${extSubj}`, fileSubj.type);
 
+                const extSol = fileSol.name.split('.').pop();
                 const solBase64 = await fileToBase64(fileSol);
-                const solUrl = await uploadOriginalFile(solBase64, `${navState.subject}_${desc}_حل.jpg`, fileSol.type);
+                const solUrl = await uploadOriginalFile(solBase64, `${navState.subject}_${desc}_حل.${extSol}`, fileSol.type);
 
-                // حفظ المنشور في Firestore
                 const docRef = await addDoc(collection(db, "exams_repository"), {
                     year: navState.year,
                     branch: navState.branch,
@@ -729,12 +666,11 @@
                     timestamp: serverTimestamp()
                 });
 
-                // تذكر أن المستخدم هو صاحب المنشور لحذفه
                 let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
                 myDocs.push(docRef.id);
                 localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
 
-                alert("تم رفع الموضوع والحل بنجاح!");
+                alert("تم رفع الملفات الأصلية بنجاح!");
                 closeUploadModal();
                 fetchExamsFromDB();
 
@@ -745,112 +681,55 @@
             }
         };
 
-        // جلب الفروض من قاعدة البيانات
         async function fetchExamsFromDB() {
             const container = document.getElementById('exams-container');
             container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل المواضيع...</p>';
 
             try {
-                const q = query(
-                    collection(db, "exams_repository"),
-                    where("year", "==", navState.year),
-                    where("branch", "==", navState.branch),
-                    where("subject", "==", navState.subject)
-                );
-
+                const q = query(collection(db, "exams_repository"), where("year", "==", navState.year), where("branch", "==", navState.branch), where("subject", "==", navState.subject));
                 const snapshot = await getDocs(q);
                 currentExamsList = [];
                 snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
-
-                // ترتيب زمني من الأحدث
                 currentExamsList.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
                 renderExams();
             } catch (err) {
                 container.innerHTML = '<p style="text-align:center; color:red;">تعذر جلب البيانات من الخادم.</p>';
             }
         }
 
-        // عرض الفروض وتطبيق فلترة الفصول
         function renderExams() {
             const container = document.getElementById('exams-container');
             const myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
-
-            let filtered = currentExamsList;
-            if (navState.termFilter !== 'الكل') {
-                filtered = currentExamsList.filter(e => e.term === navState.termFilter);
-            }
+            let filtered = navState.termFilter !== 'الكل' ? currentExamsList.filter(e => e.term === navState.termFilter) : currentExamsList;
 
             if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:3rem; background:white; border-radius:10px; border:1px solid var(--border);">
-                        <i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i>
-                        <p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p>
-                        <p style="font-size:0.85rem; color:var(--text-muted);">اضغط على زر (+) في الأسفل لتكون أول من يضيف!</p>
-                    </div>
-                `;
+                container.innerHTML = `<div style="text-align:center; padding:3rem; background:white; border-radius:10px; border:1px solid var(--border);"><i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i><p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p><p style="font-size:0.85rem; color:var(--text-muted);">اضغط على زر (+) في الأسفل لتكون أول من يضيف!</p></div>`;
                 return;
             }
 
             container.innerHTML = '';
             filtered.forEach(item => {
-                const deleteBtn = myDocs.includes(item.id)
-                    ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i> حذف</button>`
-                    : '';
-
+                const deleteBtn = myDocs.includes(item.id) ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i> حذف</button>` : '';
                 container.innerHTML += `
                     <div class="exam-item" id="exam-card-${item.id}">
                         <div class="exam-info">
                             <h4>${item.title}</h4>
-                            <div class="exam-tags">
-                                <span class="badge badge-term">${item.term}</span>
-                                <span class="badge badge-type">${item.type}</span>
-                            </div>
+                            <div class="exam-tags"><span class="badge badge-term">${item.term}</span><span class="badge badge-type">${item.type}</span></div>
                         </div>
                         <div class="exam-actions">
-                            <button class="btn-action btn-subject" onclick="showImage('${item.subjectImg}')"><i class="fa-solid fa-file-lines"></i> عرض الموضوع</button>
-                            <button class="btn-action btn-solution" onclick="showImage('${item.solutionImg}')"><i class="fa-solid fa-check"></i> عرض الحل</button>
+                            <button class="btn-action btn-subject" onclick="openFile('${item.subjectImg}')"><i class="fa-solid fa-file-lines"></i> عرض الموضوع</button>
+                            <button class="btn-action btn-solution" onclick="openFile('${item.solutionImg}')"><i class="fa-solid fa-check"></i> عرض الحل</button>
                             ${deleteBtn}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         }
 
-        // فلترة الفصول
-        window.filterTerm = function(term) {
-            navState.termFilter = term;
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول'));
-            });
-            renderExams();
-        };
-
-        // حذف الموضوع
-        window.deleteExam = async function(id) {
-            if (confirm("هل أنت متأكد من حذف هذا الموضوع؟")) {
-                try {
-                    await deleteDoc(doc(db, "exams_repository", id));
-                    let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
-                    myDocs = myDocs.filter(itemId => itemId !== id);
-                    localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
-
-                    currentExamsList = currentExamsList.filter(e => e.id !== id);
-                    renderExams();
-                } catch (e) {
-                    alert("تعذر حذف الموضوع.");
-                }
-            }
-        };
-
-        // عارض الصور
-        window.showImage = function(url) {
-            document.getElementById('lightbox-img').src = url;
-            document.getElementById('lightbox').style.display = 'flex';
-        };
-        window.closeLightbox = function() {
-            document.getElementById('lightbox').style.display = 'none';
-        };
+        window.filterTerm = function(term) { navState.termFilter = term; document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول')); }); renderExams(); };
+        window.deleteExam = async function(id) { if (confirm("هل أنت متأكد من حذف هذا الموضوع؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs = myDocs.filter(itemId => itemId !== id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } catch (e) { alert("تعذر حذف الموضوع."); } } };
+        
+        // فتح الملفات بمختلف صيغها مباشرة في نافذة جديدة
+        window.openFile = function(url) { window.open(url, '_blank'); };
     </script>
 </body>
 </html>
