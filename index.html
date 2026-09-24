@@ -12,240 +12,64 @@
             --primary: #1e3a8a;
             --primary-dark: #0f172a;
             --accent: #2563eb;
-            --accent-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --border: #e2e8f0;
             --text: #1e293b;
             --text-muted: #64748b;
+            --telegram: #0088cc;
             --success: #16a34a;
             --danger: #dc2626;
-            --telegram: #0088cc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background-color: var(--bg); color: var(--text); line-height: 1.5; }
 
-        /* الشريط العلوي */
-        header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-            color: white;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .header-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header-content { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .brand { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .back-nav-btn {
-            display: none;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .back-nav-btn:hover { background: rgba(255,255,255,0.25); }
-
+        .back-nav-btn { display: none; background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
         .main-container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
-
-        /* شريط المسار الأكاديمي */
-        .breadcrumb {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .breadcrumb { background: white; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1.5rem; font-weight: 600; color: var(--text-muted); }
         .breadcrumb span { color: var(--accent); }
 
-        /* الشاشات */
         .page-view { display: none; }
-        .page-view.active { display: block; animation: viewFade 0.25s ease-out; }
-        @keyframes viewFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .page-view.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* شبكة البطاقات (المستويات / الشعب / المواد) */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1rem;
-        }
-        .grid-item-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .grid-item-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.08);
-        }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+        .grid-item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: 0.2s; }
+        .grid-item-card:hover { border-color: var(--accent); transform: translateY(-3px); }
         .grid-item-card i { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.8rem; }
-        .grid-item-card h3 { font-size: 1.15rem; color: var(--primary-dark); font-weight: 700; }
+        .grid-item-card h3 { font-size: 1.15rem; color: var(--primary-dark); }
 
-        /* تبويبات الفصول */
-        .trimester-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 1.5rem;
-            background: white;
-            padding: 6px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            overflow-x: auto;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            font-weight: 700;
-            color: var(--text-muted);
-            border-radius: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: var(--accent);
-            color: white;
-        }
+        .trimester-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; background: white; padding: 6px; border-radius: 10px; border: 1px solid var(--border); overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; font-weight: 700; color: var(--text-muted); border-radius: 6px; cursor: pointer; }
+        .tab-btn.active { background: var(--accent); color: white; }
 
-        /* قائمة المواضيع */
-        .exam-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-right: 4px solid var(--telegram);
-            border-radius: 8px;
-            padding: 1.2rem;
-            margin-bottom: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+        .exam-item { background: var(--card-bg); border: 1px solid var(--border); border-right: 4px solid var(--telegram); border-radius: 8px; padding: 1.2rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .exam-info h4 { font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 4px; }
-        .exam-tags { display: flex; gap: 8px; align-items: center; }
-        .badge {
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
+        .badge { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
         .badge-term { background: #e0f2fe; color: #0369a1; }
         .badge-type { background: #fef3c7; color: #b45309; }
-
+        
         .exam-actions { display: flex; gap: 8px; }
-        .btn-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: none;
-            text-decoration: none;
-            color: white;
-        }
-        .btn-subject { background: var(--telegram); }
-        .btn-solution { background: var(--success); }
+        .btn-action { padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: none; color: white; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-telegram { background: var(--telegram); }
         .btn-delete { background: var(--danger); }
 
-        /* زر الإضافة العائم */
-        .fab {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--telegram);
-            color: white;
-            border-radius: 50%;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-            z-index: 99;
-            transition: 0.2s;
-        }
-        .fab:hover { transform: scale(1.08); }
-
-        /* نافذة الرفع */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-        .modal-card {
-            background: white;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 1.8rem;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
-        .modal-card h3 { margin-bottom: 1.2rem; color: var(--primary-dark); }
+        .fab { display: none; position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--telegram); color: white; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); z-index: 99; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+        .modal-card { background: white; width: 100%; max-width: 500px; border-radius: 12px; padding: 1.8rem; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-family: inherit;
-        }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; }
         .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; }
-        .btn-submit {
-            flex: 1;
-            padding: 10px;
-            background: var(--telegram);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .btn-cancel {
-            padding: 10px 15px;
-            background: #e2e8f0;
-            color: var(--text);
-            border: none;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .btn-submit { flex: 1; padding: 10px; background: var(--telegram); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-cancel { padding: 10px 15px; background: #e2e8f0; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; color: var(--text); }
+        
         #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 700; margin-top: 10px; }
     </style>
 </head>
@@ -253,53 +77,25 @@
 
     <header>
         <div class="header-content">
-            <div class="brand">
-                <i class="fa-brands fa-telegram"></i> بنك الفروض (تليجرام)
-            </div>
-            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()">
-                <i class="fa-solid fa-arrow-right"></i> رجوع
-            </button>
+            <div class="brand"><i class="fa-brands fa-telegram"></i> بنك الفروض (تليجرام)</div>
+            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
         </div>
     </header>
 
     <div class="main-container">
-        
-        <div class="breadcrumb" id="breadcrumb">
-            الرئيسية <span>/</span> اختر المستوى الدراسي
-        </div>
+        <div class="breadcrumb" id="breadcrumb">الرئيسية</div>
 
-        <!-- 1. شاشة اختيار المستوى -->
         <div id="view-year" class="page-view active">
             <div class="grid-layout">
-                <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')">
-                    <i class="fa-solid fa-1"></i>
-                    <h3>الأولى ثانوي</h3>
-                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">جذع مشترك</p>
-                </div>
-                <div class="grid-item-card" onclick="selectYear('الثانية ثانوي')">
-                    <i class="fa-solid fa-2"></i>
-                    <h3>الثانية ثانوي</h3>
-                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">الشعب التخصصية</p>
-                </div>
-                <div class="grid-item-card" onclick="selectYear('الثالثة ثانوي')">
-                    <i class="fa-solid fa-3"></i>
-                    <h3>الثالثة ثانوي</h3>
-                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">أقسام البكالوريا</p>
-                </div>
+                <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')"><i class="fa-solid fa-1"></i><h3>الأولى ثانوي</h3></div>
+                <div class="grid-item-card" onclick="selectYear('الثانية ثانوي')"><i class="fa-solid fa-2"></i><h3>الثانية ثانوي</h3></div>
+                <div class="grid-item-card" onclick="selectYear('الثالثة ثانوي')"><i class="fa-solid fa-3"></i><h3>الثالثة ثانوي</h3></div>
             </div>
         </div>
 
-        <!-- 2. شاشة اختيار الشعبة -->
-        <div id="view-branch" class="page-view">
-            <div class="grid-layout" id="branches-box"></div>
-        </div>
-
-        <!-- 3. شاشة اختيار المادة -->
-        <div id="view-subject" class="page-view">
-            <div class="grid-layout" id="subjects-box"></div>
-        </div>
-
-        <!-- 4. شاشة الفروض والاختبارات -->
+        <div id="view-branch" class="page-view"><div class="grid-layout" id="branches-box"></div></div>
+        <div id="view-subject" class="page-view"><div class="grid-layout" id="subjects-box"></div></div>
+        
         <div id="view-exams" class="page-view">
             <div class="trimester-tabs">
                 <button class="tab-btn active" onclick="filterTerm('الكل')">جميع الفصول</button>
@@ -307,52 +103,31 @@
                 <button class="tab-btn" onclick="filterTerm('الفصل الثاني')">الفصل الثاني</button>
                 <button class="tab-btn" onclick="filterTerm('الفصل الثالث')">الفصل الثالث</button>
             </div>
-
             <div id="exams-container"></div>
         </div>
-
     </div>
 
-    <!-- زر إضافة موضوع جديد -->
-    <button class="fab" id="fab-btn" onclick="openUploadModal()">
-        <i class="fa-solid fa-paper-plane"></i>
-    </button>
+    <button class="fab" id="fab-btn" onclick="openUploadModal()"><i class="fa-solid fa-paper-plane"></i></button>
 
-    <!-- نافذة رفع الموضوع والحل -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3><i class="fa-brands fa-telegram" style="color:var(--telegram)"></i> إضافة ملف جديد (تليجرام)</h3>
+            <h3><i class="fa-brands fa-telegram" style="color:var(--telegram)"></i> نشر في تليجرام</h3>
             
             <div class="form-group">
-                <label>الفصل الدراسي</label>
-                <select id="field-term">
-                    <option value="الفصل الأول">الفصل الأول</option>
-                    <option value="الفصل الثاني">الفصل الثاني</option>
-                    <option value="الفصل الثالث">الفصل الثالث</option>
-                </select>
+                <select id="field-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select>
             </div>
-
             <div class="form-group">
-                <label>نوع التقييم</label>
-                <select id="field-type">
-                    <option value="فرض">فرض</option>
-                    <option value="اختبار">اختبار</option>
-                    <option value="سلسلة تمارين">سلسلة تمارين</option>
-                </select>
+                <select id="field-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option></select>
             </div>
-
             <div class="form-group">
-                <label>عنوان أو وصف الموضوع</label>
-                <input type="text" id="field-desc" placeholder="مثال: فرض محروس رقم 1 (2025/2026)">
+                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: فرض محروس رقم 1)">
             </div>
-
             <div class="form-group">
-                <label><i class="fa-solid fa-file"></i> ملف الموضوع (صور، PDF، Word...)</label>
+                <label>ملف الموضوع (صور، PDF، Word)</label>
                 <input type="file" id="field-file-subj">
             </div>
-
             <div class="form-group">
-                <label><i class="fa-solid fa-file-circle-check"></i> ملف الحل النموذجي</label>
+                <label>ملف الحل</label>
                 <input type="file" id="field-file-sol">
             </div>
 
@@ -360,10 +135,7 @@
                 <button class="btn-submit" onclick="submitToTelegram()">إرسال إلى القناة 🚀</button>
                 <button class="btn-cancel" onclick="closeUploadModal()">إلغاء</button>
             </div>
-
-            <div id="upload-loader">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري الرفع إلى خوادم تليجرام...
-            </div>
+            <div id="upload-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري الرفع إلى خوادم تليجرام...</div>
         </div>
     </div>
 
@@ -371,7 +143,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0",
             authDomain: "shop-clothes-224a3.firebaseapp.com",
@@ -384,239 +155,38 @@
         const db = getFirestore(app);
 
         // =====================================================================
-        // إعدادات تليجرام المحدثة
+        // إعدادات تليجرام - تم ربطها بالـ ID الخاص بك مباشرة
         // =====================================================================
         const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
-        // بما أن البوت موجود في مجموعة واسمها "Ghoubrini bot"، ومطلوب استخدامها،
-        // يجب أن تحصل على Chat ID الرقمي للمجموعة. 
-        // بما أني لا أستطيع استخراجه لك، ولتجنب الأخطاء، سأفترض أنك أنشأت قناة عامة بهذا المعرف.
-        // **هام جدًا: يجب أن تكون القناة عامة (Public Channel) ولها معرف يبدأ بـ @**
-        // مثال: @ghoubrini_bot (تأكد من أن هذا المعرف متاح وقمت بتعيينه للقناة)
-        const TELEGRAM_CHANNEL_ID = "@ghoubrini_bot"; 
+        const TELEGRAM_CHANNEL_ID = "7737717483"; // الايدي الشخصي الخاص بك
         // =====================================================================
-
 
         let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
         let currentExamsList = [];
 
         const schoolCurriculum = {
-            'الأولى ثانوي': {
-                'جذع مشترك علوم وتكنولوجيا': [
-                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
-                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التكنولوجيا', icon: 'fa-gears' },
-                    { name: 'الإعلام الآلي', icon: 'fa-laptop-code' }
-                ],
-                'جذع مشترك آداب': [
-                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-leaf' },
-                    { name: 'الإعلام الآلي', icon: 'fa-laptop-code' }
-                ]
-            },
-            'الثانية ثانوي': {
-                'علوم تجريبية': [
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
-                ],
-                'رياضيات': [
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
-                ],
-                'تقني رياضي - هندسة كهربائية': [
-                    { name: 'هندسة كهربائية', icon: 'fa-bolt' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تقني رياضي - هندسة ميكانيكية': [
-                    { name: 'هندسة ميكانيكية', icon: 'fa-gears' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تقني رياضي - هندسة مدنية': [
-                    { name: 'هندسة مدنية', icon: 'fa-building' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تقني رياضي - هندسة طرائق': [
-                    { name: 'هندسة طرائق', icon: 'fa-flask-vial' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تسيير واقتصاد': [
-                    { name: 'المحاسبة والمالية', icon: 'fa-file-invoice-dollar' },
-                    { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' },
-                    { name: 'القانون', icon: 'fa-scale-balanced' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' }
-                ],
-                'آداب وفلسفة': [
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' }
-                ],
-                'لغات أجنبية': [
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
-                    { name: 'اللغة الإسبانية / الألمانية', icon: 'fa-flag' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' }
-                ]
-            },
-            'الثالثة ثانوي': {
-                'علوم تجريبية': [
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
-                ],
-                'رياضيات': [
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تقني رياضي - جميع الفروع': [
-                    { name: 'التكنولوجيا (تخصص)', icon: 'fa-gears' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ],
-                'تسيير واقتصاد': [
-                    { name: 'المحاسبة والمالية', icon: 'fa-file-invoice-dollar' },
-                    { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' },
-                    { name: 'القانون', icon: 'fa-scale-balanced' },
-                    { name: 'الرياضيات', icon: 'fa-calculator' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' }
-                ],
-                'آداب وفلسفة': [
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
-                ],
-                'لغات أجنبية': [
-                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
-                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
-                    { name: 'اللغة الأجنبية الثالثة', icon: 'fa-flag' },
-                    { name: 'اللغة العربية', icon: 'fa-book-open' },
-                    { name: 'الفلسفة', icon: 'fa-brain' },
-                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
-                ]
-            }
+            'الأولى ثانوي': { 'جذع مشترك علوم وتكنولوجيا': [{ name: 'الرياضيات', icon: 'fa-square-root-variable' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' }, { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }, { name: 'العلوم الإسلامية', icon: 'fa-mosque' }], 'جذع مشترك آداب': [{ name: 'اللغة العربية وآدابها', icon: 'fa-book-open' }, { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }, { name: 'العلوم الإسلامية', icon: 'fa-mosque' }] },
+            'الثانية ثانوي': { 'علوم تجريبية': [{ name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'الرياضيات', icon: 'fa-square-root-variable' }] },
+            'الثالثة ثانوي': { 'علوم تجريبية': [{ name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'الرياضيات', icon: 'fa-square-root-variable' }] }
         };
 
-        window.selectYear = function(year) {
-            navState.year = year;
-            updateBreadcrumb();
-            const branches = Object.keys(schoolCurriculum[year]);
-            const box = document.getElementById('branches-box');
-            box.innerHTML = '';
-            branches.forEach(branch => { box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-graduation-cap"></i><h3>${branch}</h3></div>`; });
-            switchView('view-branch');
-            document.getElementById('btn-back').style.display = 'block';
-        };
-
-        window.selectBranch = function(branch) {
-            navState.branch = branch;
-            updateBreadcrumb();
-            const subjects = schoolCurriculum[navState.year][branch];
-            const box = document.getElementById('subjects-box');
-            box.innerHTML = '';
-            subjects.forEach(sub => { box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; });
-            switchView('view-subject');
-        };
-
-        window.selectSubject = function(subject) {
-            navState.subject = subject;
-            updateBreadcrumb();
-            switchView('view-exams');
-            document.getElementById('fab-btn').style.display = 'block';
-            fetchExamsFromDB();
-        };
+        window.selectYear = function(year) { navState.year = year; updateBreadcrumb(); const box = document.getElementById('branches-box'); box.innerHTML = ''; (Object.keys(schoolCurriculum[year]) || []).forEach(branch => { box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-graduation-cap"></i><h3>${branch}</h3></div>`; }); switchView('view-branch'); document.getElementById('btn-back').style.display = 'block'; };
+        window.selectBranch = function(branch) { navState.branch = branch; updateBreadcrumb(); const box = document.getElementById('subjects-box'); box.innerHTML = ''; (schoolCurriculum[navState.year][branch] || []).forEach(sub => { box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; }); switchView('view-subject'); };
+        window.selectSubject = function(subject) { navState.subject = subject; updateBreadcrumb(); switchView('view-exams'); document.getElementById('fab-btn').style.display = 'block'; fetchExamsFromDB(); };
 
         window.navigateBack = function() {
-            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); document.getElementById('fab-btn').style.display = 'none'; } 
-            else if (document.getElementById('view-subject').classList.contains('active')) { switchView('view-branch'); } 
+            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); document.getElementById('fab-btn').style.display = 'none'; }
+            else if (document.getElementById('view-subject').classList.contains('active')) { switchView('view-branch'); }
             else if (document.getElementById('view-branch').classList.contains('active')) { switchView('view-year'); document.getElementById('btn-back').style.display = 'none'; navState = { year: '', branch: '', subject: '', termFilter: 'الكل' }; }
             updateBreadcrumb();
         };
 
-        function switchView(viewId) {
-            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-        }
-
-        function updateBreadcrumb() {
-            const b = document.getElementById('breadcrumb');
-            let path = `الرئيسية`;
-            if (navState.year) path += ` <span>/</span> ${navState.year}`;
-            if (navState.branch) path += ` <span>/</span> ${navState.branch}`;
-            if (navState.subject) path += ` <span>/</span> ${navState.subject}`;
-            b.innerHTML = path;
-        }
+        function switchView(viewId) { document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
+        function updateBreadcrumb() { document.getElementById('breadcrumb').innerHTML = `الرئيسية ${navState.year ? `<span>/</span> ${navState.year}` : ''} ${navState.branch ? `<span>/</span> ${navState.branch}` : ''} ${navState.subject ? `<span>/</span> ${navState.subject}` : ''}`; }
 
         window.openUploadModal = () => document.getElementById('upload-modal').style.display = 'flex';
         window.closeUploadModal = () => document.getElementById('upload-modal').style.display = 'none';
 
-        // دالة الرفع إلى تليجرام
         async function uploadFileToTelegram(file, caption) {
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM_CHANNEL_ID);
@@ -630,18 +200,9 @@
             const data = await res.json();
             if (!data.ok) throw new Error(data.description);
             
-            // استخراج الرابط. 
-            // إذا كانت القناة عامة (تبدأ بـ @)، يمكن تكوين رابط مباشر.
             const messageId = data.result.message_id;
-            
-            let fileUrl = "";
-            if (TELEGRAM_CHANNEL_ID.startsWith('@')) {
-                const channelName = TELEGRAM_CHANNEL_ID.replace('@', '');
-                fileUrl = `https://t.me/${channelName}/${messageId}`;
-            } else {
-                fileUrl = `https://t.me/c/${TELEGRAM_CHANNEL_ID.replace('-100', '')}/${messageId}`;
-            }
-            return fileUrl;
+            const channelName = String(TELEGRAM_CHANNEL_ID).replace('@', '');
+            return `https://t.me/${channelName}/${messageId}`;
         }
 
         window.submitToTelegram = async function() {
@@ -651,97 +212,72 @@
             const fileSubj = document.getElementById('field-file-subj').files[0];
             const fileSol = document.getElementById('field-file-sol').files[0];
 
-            if (!desc || !fileSubj || !fileSol) {
-                alert("الرجاء إدخال الوصف وإرفاق ملفات الموضوع والحل!");
-                return;
-            }
+            if (!desc || !fileSubj || !fileSol) return alert("يرجى إدخال الوصف وإرفاق ملفات الموضوع والحل!");
 
             document.getElementById('upload-loader').style.display = 'block';
 
             try {
                 const titleMeta = `📚 ${navState.subject}\n🎓 ${navState.year} - ${navState.branch}\n📌 ${type} - ${term}\n📝 ${desc}`;
                 
-                // الرفع إلى تليجرام
                 const subjUrl = await uploadFileToTelegram(fileSubj, `(الموضوع)\n${titleMeta}`);
                 const solUrl = await uploadFileToTelegram(fileSol, `(الحل)\n${titleMeta}`);
 
-                // حفظ المنشور في Firestore (الفهرس)
-                const docRef = await addDoc(collection(db, "exams_repository"), {
-                    year: navState.year,
-                    branch: navState.branch,
-                    subject: navState.subject,
-                    term: term,
-                    type: type,
-                    title: desc,
-                    subjectImg: subjUrl,
-                    solutionImg: solUrl,
-                    timestamp: serverTimestamp()
+                const docRef = await addDoc(collection(db, "exams_repository"), { 
+                    year: navState.year, branch: navState.branch, subject: navState.subject, 
+                    term: term, type: type, title: desc, 
+                    subjectImg: subjUrl, solutionImg: solUrl, 
+                    timestamp: serverTimestamp() 
                 });
-
-                let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
-                myDocs.push(docRef.id);
-                localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
-
-                alert("تم إرسال الملفات إلى تليجرام ونشرها بنجاح!");
-                closeUploadModal();
-                fetchExamsFromDB();
-
-            } catch (err) {
-                alert("حدث خطأ أثناء الرفع لتليجرام: " + err.message);
-            } finally {
-                document.getElementById('upload-loader').style.display = 'none';
+                
+                let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs.push(docRef.id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
+                
+                alert("تم النشر بنجاح! الملفات الآن محفوظة في حسابك الشخصي."); 
+                closeUploadModal(); fetchExamsFromDB();
+            } catch (err) { 
+                alert("خطأ في الرفع لتليجرام: " + err.message); 
+            } finally { 
+                document.getElementById('upload-loader').style.display = 'none'; 
             }
         };
 
         async function fetchExamsFromDB() {
-            const container = document.getElementById('exams-container');
-            container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل المواضيع...</p>';
-
+            const container = document.getElementById('exams-container'); container.innerHTML = '<p style="text-align:center; padding:2rem;"><i class="fa-solid fa-spinner fa-spin"></i> جاري الجلب...</p>';
             try {
                 const q = query(collection(db, "exams_repository"), where("year", "==", navState.year), where("branch", "==", navState.branch), where("subject", "==", navState.subject));
                 const snapshot = await getDocs(q);
-                currentExamsList = [];
-                snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
+                currentExamsList = []; snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
                 currentExamsList.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                 renderExams();
-            } catch (err) {
-                container.innerHTML = '<p style="text-align:center; color:red;">تعذر جلب البيانات من الخادم.</p>';
-            }
+            } catch (err) { container.innerHTML = '<p style="text-align:center; color:red;">تعذر جلب البيانات من الخادم.</p>'; }
         }
 
         function renderExams() {
             const container = document.getElementById('exams-container');
-            const myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
             let filtered = navState.termFilter !== 'الكل' ? currentExamsList.filter(e => e.term === navState.termFilter) : currentExamsList;
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:3rem; background:white; border-radius:10px; border:1px solid var(--border);"><i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i><p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p><p style="font-size:0.85rem; color:var(--text-muted);">اضغط على زر (+) في الأسفل لتكون أول من يضيف!</p></div>`;
-                return;
-            }
-
+            if (filtered.length === 0) return container.innerHTML = '<div style="text-align:center; padding:3rem; border:1px solid var(--border); border-radius:10px; background:white;"><i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i><p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p></div>';
+            
+            const myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
             container.innerHTML = '';
             filtered.forEach(item => {
-                const deleteBtn = myDocs.includes(item.id) ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i> حذف</button>` : '';
                 container.innerHTML += `
-                    <div class="exam-item" id="exam-card-${item.id}">
+                    <div class="exam-item">
                         <div class="exam-info">
                             <h4>${item.title}</h4>
-                            <div class="exam-tags"><span class="badge badge-term">${item.term}</span><span class="badge badge-type">${item.type}</span></div>
+                            <div style="display:flex; gap:5px; margin-top:5px;">
+                                <span class="badge badge-term">${item.term}</span><span class="badge badge-type">${item.type}</span>
+                            </div>
                         </div>
                         <div class="exam-actions">
-                            <button class="btn-action btn-subject" onclick="openFile('${item.subjectImg}')"><i class="fa-brands fa-telegram"></i> عرض الموضوع</button>
-                            <button class="btn-action btn-solution" onclick="openFile('${item.solutionImg}')"><i class="fa-brands fa-telegram"></i> عرض الحل</button>
-                            ${deleteBtn}
+                            <button class="btn-action btn-telegram" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-brands fa-telegram"></i> عرض الموضوع</button>
+                            <button class="btn-action btn-telegram" style="background:#16a34a;" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-brands fa-telegram"></i> عرض الحل</button>
+                            ${myDocs.includes(item.id) ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>`;
             });
         }
 
         window.filterTerm = function(term) { navState.termFilter = term; document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول')); }); renderExams(); };
-        window.deleteExam = async function(id) { if (confirm("ملاحظة: هذا سيحذف المنشور من الموقع. يجب حذفه يدوياً من تليجرام إذا أردت إزالته نهائياً. هل أنت متأكد؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs = myDocs.filter(itemId => itemId !== id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } catch (e) { alert("تعذر حذف الموضوع."); } } };
-        
-        // فتح الملفات بمختلف صيغها مباشرة في نافذة جديدة
-        window.openFile = function(url) { window.open(url, '_blank'); };
+        window.deleteExam = async function(id) { if (confirm("ملاحظة: هذا سيحذف المنشور من الموقع فقط. لحذفه نهائياً قم بحذفه من محادثة تليجرام أيضاً. هل تريد الاستمرار؟")) { await deleteDoc(doc(db, "exams_repository", id)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } };
     </script>
 </body>
 </html>
