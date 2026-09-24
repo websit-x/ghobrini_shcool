@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بنك الفروض والاختبارات - ثانوية غوبريني مصطفى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.5; }
+
+        /* الشريط العلوي */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .back-nav-btn {
+            display: none;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .back-nav-btn:hover { background: rgba(255,255,255,0.25); }
+
+        .main-container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
+
+        /* شريط المسار الأكاديمي */
+        .breadcrumb {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .breadcrumb span { color: var(--accent); }
+
+        /* الشاشات */
+        .page-view { display: none; }
+        .page-view.active { display: block; animation: viewFade 0.25s ease-out; }
+        @keyframes viewFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* شبكة البطاقات (المستويات / الشعب / المواد) */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+        .grid-item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .grid-item-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.08);
+        }
+        .grid-item-card i { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.8rem; }
+        .grid-item-card h3 { font-size: 1.15rem; color: var(--primary-dark); font-weight: 700; }
+
+        /* تبويبات الفصول (DzExams Style) */
+        .trimester-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* قائمة المواضيع */
+        .exam-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-right: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .exam-info h4 { font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 4px; }
+        .exam-tags { display: flex; gap: 8px; align-items: center; }
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .badge-term { background: #e0f2fe; color: #0369a1; }
+        .badge-type { background: #fef3c7; color: #b45309; }
+
+        .exam-actions { display: flex; gap: 8px; }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            color: white;
+        }
+        .btn-subject { background: var(--accent); }
+        .btn-solution { background: var(--success); }
+        .btn-delete { background: var(--danger); }
+
+        /* زر الإضافة العائم */
+        .fab {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            z-index: 99;
+            transition: 0.2s;
+        }
+        .fab:hover { transform: scale(1.08); background: var(--accent-hover); }
+
+        /* نافذة الرفع */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        .modal-card {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .modal-card h3 { margin-bottom: 1.2rem; color: var(--primary-dark); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; }
+        .btn-submit {
+            flex: 1;
+            padding: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            padding: 10px 15px;
+            background: #e2e8f0;
+            color: var(--text);
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        #upload-loader { display: none; text-align: center; color: var(--accent); font-weight: 700; margin-top: 10px; }
+
+        /* معاينة الصور (Lightbox) */
+        .image-viewer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        .image-viewer img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="brand">
+                <i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني مصطفى
+            </div>
+            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()">
+                <i class="fa-solid fa-arrow-right"></i> رجوع
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- مسار التصفح (Breadcrumb) -->
+        <div class="breadcrumb" id="breadcrumb">
+            الرئيسية <span>/</span> اختر المستوى الدراسي
+        </div>
+
+        <!-- 1. شاشة اختيار المستوى -->
+        <div id="view-year" class="page-view active">
+            <div class="grid-layout">
+                <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')">
+                    <i class="fa-solid fa-1"></i>
+                    <h3>الأولى ثانوي</h3>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">جذع مشترك</p>
+                </div>
+                <div class="grid-item-card" onclick="selectYear('الثانية ثانوي')">
+                    <i class="fa-solid fa-2"></i>
+                    <h3>الثانية ثانوي</h3>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">الشعب التخصصية</p>
+                </div>
+                <div class="grid-item-card" onclick="selectYear('الثالثة ثانوي')">
+                    <i class="fa-solid fa-3"></i>
+                    <h3>الثالثة ثانوي</h3>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">أقسام البكالوريا</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. شاشة اختيار الشعبة -->
+        <div id="view-branch" class="page-view">
+            <div class="grid-layout" id="branches-box"></div>
+        </div>
+
+        <!-- 3. شاشة اختيار المادة -->
+        <div id="view-subject" class="page-view">
+            <div class="grid-layout" id="subjects-box"></div>
+        </div>
+
+        <!-- 4. شاشة الفروض والاختبارات (DzExams Engine) -->
+        <div id="view-exams" class="page-view">
+            <!-- تبويبات الفصول الثلاثة -->
+            <div class="trimester-tabs">
+                <button class="tab-btn active" onclick="filterTerm('الكل')">جميع الفصول</button>
+                <button class="tab-btn" onclick="filterTerm('الفصل الأول')">الفصل الأول</button>
+                <button class="tab-btn" onclick="filterTerm('الفصل الثاني')">الفصل الثاني</button>
+                <button class="tab-btn" onclick="filterTerm('الفصل الثالث')">الفصل الثالث</button>
+            </div>
+
+            <div id="exams-container"></div>
+        </div>
+
+    </div>
+
+    <!-- زر إضافة موضوع جديد -->
+    <button class="fab" id="fab-btn" onclick="openUploadModal()">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <!-- نافذة رفع الموضوع والحل -->
+    <div id="upload-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>إضافة موضوع جديد</h3>
+            
+            <div class="form-group">
+                <label>الفصل الدراسي</label>
+                <select id="field-term">
+                    <option value="الفصل الأول">الفصل الأول</option>
+                    <option value="الفصل الثاني">الفصل الثاني</option>
+                    <option value="الفصل الثالث">الفصل الثالث</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>نوع التقييم</label>
+                <select id="field-type">
+                    <option value="فرض">فرض</option>
+                    <option value="اختبار">اختبار</option>
+                    <option value="سلسلة تمارين">سلسلة تمارين</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>عنوان أو وصف الموضوع</label>
+                <input type="text" id="field-desc" placeholder="مثال: فرض محروس رقم 1 (2025/2026)">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-file-image"></i> صورة الموضوع (الأصلية)</label>
+                <input type="file" id="field-file-subj" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-check-double"></i> صورة الحل النموذجي</label>
+                <input type="file" id="field-file-sol" accept="image/*">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-submit" onclick="submitExam()">نشر مباشرة 🚀</button>
+                <button class="btn-cancel" onclick="closeUploadModal()">إلغاء</button>
+            </div>
+
+            <div id="upload-loader">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري حفظ ورفع الصور الأصلية...
+            </div>
+        </div>
+    </div>
+
+    <!-- عارض الصور السريع (Lightbox) -->
+    <div id="lightbox" class="image-viewer" onclick="closeLightbox()">
+        <span class="close-viewer">&times;</span>
+        <img id="lightbox-img" src="" alt="المعاينة">
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0",
+            authDomain: "shop-clothes-224a3.firebaseapp.com",
+            projectId: "shop-clothes-224a3",
+            storageBucket: "shop-clothes-224a3.appspot.com",
+            messagingSenderId: "348817058494",
+            appId: "1:348817058494:web:830980b3dae15984350cef"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // رابط خادم التخزين (5 تيرابايت)
+        const GOOGLE_DRIVE_API = "https://script.google.com/macros/s/AKfycbz3mHI7-cbKF_qFS7XQwqW9fksjMWPBKSuERYlnGIjCkxdHtMG0HG8_DuNj9Q9kuyOv/exec";
+
+        // إدارة الحالة
+        let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
+        let currentExamsList = [];
+
+        // قاعدة بيانات الشعب والمواد الرسمية للثانوية (نظام DzExams الدقيق)
+        const schoolCurriculum = {
+            'الأولى ثانوي': {
+                'جذع مشترك علوم وتكنولوجيا': [
+                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
+                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التكنولوجيا', icon: 'fa-gears' },
+                    { name: 'الإعلام الآلي', icon: 'fa-laptop-code' }
+                ],
+                'جذع مشترك آداب': [
+                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-leaf' },
+                    { name: 'الإعلام الآلي', icon: 'fa-laptop-code' }
+                ]
+            },
+            'الثانية ثانوي': {
+                'علوم تجريبية': [
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
+                ],
+                'رياضيات': [
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
+                ],
+                'تقني رياضي - هندسة كهربائية': [
+                    { name: 'هندسة كهربائية', icon: 'fa-bolt' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تقني رياضي - هندسة ميكانيكية': [
+                    { name: 'هندسة ميكانيكية', icon: 'fa-gears' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تقني رياضي - هندسة مدنية': [
+                    { name: 'هندسة مدنية', icon: 'fa-building' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تقني رياضي - هندسة طرائق': [
+                    { name: 'هندسة طرائق', icon: 'fa-flask-vial' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تسيير واقتصاد': [
+                    { name: 'المحاسبة والمالية', icon: 'fa-file-invoice-dollar' },
+                    { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' },
+                    { name: 'القانون', icon: 'fa-scale-balanced' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' }
+                ],
+                'آداب وفلسفة': [
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' }
+                ],
+                'لغات أجنبية': [
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
+                    { name: 'اللغة الإسبانية / الألمانية', icon: 'fa-flag' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' }
+                ]
+            },
+            'الثالثة ثانوي': {
+                'علوم تجريبية': [
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'الرياضيات', icon: 'fa-square-root-variable' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
+                ],
+                'رياضيات': [
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تقني رياضي - جميع الفروع': [
+                    { name: 'التكنولوجيا (تخصص)', icon: 'fa-gears' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ],
+                'تسيير واقتصاد': [
+                    { name: 'المحاسبة والمالية', icon: 'fa-file-invoice-dollar' },
+                    { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' },
+                    { name: 'القانون', icon: 'fa-scale-balanced' },
+                    { name: 'الرياضيات', icon: 'fa-calculator' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' }
+                ],
+                'آداب وفلسفة': [
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+                    { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' }
+                ],
+                'لغات أجنبية': [
+                    { name: 'اللغة الفرنسية', icon: 'fa-language' },
+                    { name: 'اللغة الإنجليزية', icon: 'fa-globe' },
+                    { name: 'اللغة الأجنبية الثالثة', icon: 'fa-flag' },
+                    { name: 'اللغة العربية', icon: 'fa-book-open' },
+                    { name: 'الفلسفة', icon: 'fa-brain' },
+                    { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }
+                ]
+            }
+        };
+
+        // التنقل بين المستويات والشعب
+        window.selectYear = function(year) {
+            navState.year = year;
+            updateBreadcrumb();
+            
+            const branches = Object.keys(schoolCurriculum[year]);
+            const box = document.getElementById('branches-box');
+            box.innerHTML = '';
+            
+            branches.forEach(branch => {
+                box.innerHTML += `
+                    <div class="grid-item-card" onclick="selectBranch('${branch}')">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h3>${branch}</h3>
+                    </div>
+                `;
+            });
+
+            switchView('view-branch');
+            document.getElementById('btn-back').style.display = 'block';
+        };
+
+        window.selectBranch = function(branch) {
+            navState.branch = branch;
+            updateBreadcrumb();
+            
+            const subjects = schoolCurriculum[navState.year][branch];
+            const box = document.getElementById('subjects-box');
+            box.innerHTML = '';
+
+            subjects.forEach(sub => {
+                box.innerHTML += `
+                    <div class="grid-item-card" onclick="selectSubject('${sub.name}')">
+                        <i class="fa-solid ${sub.icon}"></i>
+                        <h3>${sub.name}</h3>
+                    </div>
+                `;
+            });
+
+            switchView('view-subject');
+        };
+
+        window.selectSubject = function(subject) {
+            navState.subject = subject;
+            updateBreadcrumb();
+            switchView('view-exams');
+            document.getElementById('fab-btn').style.display = 'block';
+            fetchExamsFromDB();
+        };
+
+        window.navigateBack = function() {
+            if (document.getElementById('view-exams').classList.contains('active')) {
+                switchView('view-subject');
+                document.getElementById('fab-btn').style.display = 'none';
+            } else if (document.getElementById('view-subject').classList.contains('active')) {
+                switchView('view-branch');
+            } else if (document.getElementById('view-branch').classList.contains('active')) {
+                switchView('view-year');
+                document.getElementById('btn-back').style.display = 'none';
+                navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
+            }
+            updateBreadcrumb();
+        };
+
+        function switchView(viewId) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function updateBreadcrumb() {
+            const b = document.getElementById('breadcrumb');
+            let path = `الرئيسية`;
+            if (navState.year) path += ` <span>/</span> ${navState.year}`;
+            if (navState.branch) path += ` <span>/</span> ${navState.branch}`;
+            if (navState.subject) path += ` <span>/</span> ${navState.subject}`;
+            b.innerHTML = path;
+        }
+
+        // تحويل الملفات إلى Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+            });
+        }
+
+        // رفع الملف كصورة أصلية إلى مساحة الـ 5 تيرابايت
+        async function uploadOriginalFile(base64Data, filename, mimeType) {
+            const body = new URLSearchParams();
+            body.append('fileData', base64Data);
+            body.append('fileName', filename);
+            body.append('mimeType', mimeType);
+
+            const res = await fetch(GOOGLE_DRIVE_API, { method: 'POST', body: body });
+            const data = await res.json();
+            if (data.status !== 'success') throw new Error(data.message);
+            return data.fileUrl;
+        }
+
+        // نافذة الرفع
+        window.openUploadModal = () => document.getElementById('upload-modal').style.display = 'flex';
+        window.closeUploadModal = () => document.getElementById('upload-modal').style.display = 'none';
+
+        // نشر الموضوع
+        window.submitExam = async function() {
+            const term = document.getElementById('field-term').value;
+            const type = document.getElementById('field-type').value;
+            const desc = document.getElementById('field-desc').value;
+            const fileSubj = document.getElementById('field-file-subj').files[0];
+            const fileSol = document.getElementById('field-file-sol').files[0];
+
+            if (!desc || !fileSubj || !fileSol) {
+                alert("الرجاء إدخال الوصف وإرفاق صورة الموضوع وصورة الحل!");
+                return;
+            }
+
+            document.getElementById('upload-loader').style.display = 'block';
+
+            try {
+                // رفع الصور الأصلية كما هي
+                const subjBase64 = await fileToBase64(fileSubj);
+                const subjUrl = await uploadOriginalFile(subjBase64, `${navState.subject}_${desc}_موضوع.jpg`, fileSubj.type);
+
+                const solBase64 = await fileToBase64(fileSol);
+                const solUrl = await uploadOriginalFile(solBase64, `${navState.subject}_${desc}_حل.jpg`, fileSol.type);
+
+                // حفظ المنشور في Firestore
+                const docRef = await addDoc(collection(db, "exams_repository"), {
+                    year: navState.year,
+                    branch: navState.branch,
+                    subject: navState.subject,
+                    term: term,
+                    type: type,
+                    title: desc,
+                    subjectImg: subjUrl,
+                    solutionImg: solUrl,
+                    timestamp: serverTimestamp()
+                });
+
+                // تذكر أن المستخدم هو صاحب المنشور لحذفه
+                let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
+                myDocs.push(docRef.id);
+                localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
+
+                alert("تم رفع الموضوع والحل بنجاح!");
+                closeUploadModal();
+                fetchExamsFromDB();
+
+            } catch (err) {
+                alert("حدث خطأ أثناء الرفع: " + err.message);
+            } finally {
+                document.getElementById('upload-loader').style.display = 'none';
+            }
+        };
+
+        // جلب الفروض من قاعدة البيانات
+        async function fetchExamsFromDB() {
+            const container = document.getElementById('exams-container');
+            container.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل المواضيع...</p>';
+
+            try {
+                const q = query(
+                    collection(db, "exams_repository"),
+                    where("year", "==", navState.year),
+                    where("branch", "==", navState.branch),
+                    where("subject", "==", navState.subject)
+                );
+
+                const snapshot = await getDocs(q);
+                currentExamsList = [];
+                snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
+
+                // ترتيب زمني من الأحدث
+                currentExamsList.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                renderExams();
+            } catch (err) {
+                container.innerHTML = '<p style="text-align:center; color:red;">تعذر جلب البيانات من الخادم.</p>';
+            }
+        }
+
+        // عرض الفروض وتطبيق فلترة الفصول
+        function renderExams() {
+            const container = document.getElementById('exams-container');
+            const myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
+
+            let filtered = currentExamsList;
+            if (navState.termFilter !== 'الكل') {
+                filtered = currentExamsList.filter(e => e.term === navState.termFilter);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:3rem; background:white; border-radius:10px; border:1px solid var(--border);">
+                        <i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i>
+                        <p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">اضغط على زر (+) في الأسفل لتكون أول من يضيف!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(item => {
+                const deleteBtn = myDocs.includes(item.id)
+                    ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i> حذف</button>`
+                    : '';
+
+                container.innerHTML += `
+                    <div class="exam-item" id="exam-card-${item.id}">
+                        <div class="exam-info">
+                            <h4>${item.title}</h4>
+                            <div class="exam-tags">
+                                <span class="badge badge-term">${item.term}</span>
+                                <span class="badge badge-type">${item.type}</span>
+                            </div>
+                        </div>
+                        <div class="exam-actions">
+                            <button class="btn-action btn-subject" onclick="showImage('${item.subjectImg}')"><i class="fa-solid fa-file-lines"></i> عرض الموضوع</button>
+                            <button class="btn-action btn-solution" onclick="showImage('${item.solutionImg}')"><i class="fa-solid fa-check"></i> عرض الحل</button>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // فلترة الفصول
+        window.filterTerm = function(term) {
+            navState.termFilter = term;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول'));
+            });
+            renderExams();
+        };
+
+        // حذف الموضوع
+        window.deleteExam = async function(id) {
+            if (confirm("هل أنت متأكد من حذف هذا الموضوع؟")) {
+                try {
+                    await deleteDoc(doc(db, "exams_repository", id));
+                    let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
+                    myDocs = myDocs.filter(itemId => itemId !== id);
+                    localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
+
+                    currentExamsList = currentExamsList.filter(e => e.id !== id);
+                    renderExams();
+                } catch (e) {
+                    alert("تعذر حذف الموضوع.");
+                }
+            }
+        };
+
+        // عارض الصور
+        window.showImage = function(url) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox').style.display = 'flex';
+        };
+        window.closeLightbox = function() {
+            document.getElementById('lightbox').style.display = 'none';
+        };
+    </script>
+</body>
+</html>
