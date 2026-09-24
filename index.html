@@ -20,6 +20,7 @@
             --text-muted: #64748b;
             --success: #16a34a;
             --danger: #dc2626;
+            --telegram: #0088cc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
@@ -136,7 +137,7 @@
         .exam-item {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-right: 4px solid var(--accent);
+            border-right: 4px solid var(--telegram);
             border-radius: 8px;
             padding: 1.2rem;
             margin-bottom: 0.8rem;
@@ -171,7 +172,7 @@
             text-decoration: none;
             color: white;
         }
-        .btn-subject { background: var(--accent); }
+        .btn-subject { background: var(--telegram); }
         .btn-solution { background: var(--success); }
         .btn-delete { background: var(--danger); }
 
@@ -183,17 +184,17 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background: var(--accent);
+            background: var(--telegram);
             color: white;
             border-radius: 50%;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
             z-index: 99;
             transition: 0.2s;
         }
-        .fab:hover { transform: scale(1.08); background: var(--accent-hover); }
+        .fab:hover { transform: scale(1.08); }
 
         /* نافذة الرفع */
         .modal-overlay {
@@ -229,7 +230,7 @@
         .btn-submit {
             flex: 1;
             padding: 10px;
-            background: var(--accent);
+            background: var(--telegram);
             color: white;
             border: none;
             border-radius: 6px;
@@ -245,7 +246,7 @@
             font-weight: 700;
             cursor: pointer;
         }
-        #upload-loader { display: none; text-align: center; color: var(--accent); font-weight: 700; margin-top: 10px; }
+        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 700; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -253,7 +254,7 @@
     <header>
         <div class="header-content">
             <div class="brand">
-                <i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني مصطفى
+                <i class="fa-brands fa-telegram"></i> بنك الفروض (تليجرام)
             </div>
             <button class="back-nav-btn" id="btn-back" onclick="navigateBack()">
                 <i class="fa-solid fa-arrow-right"></i> رجوع
@@ -314,13 +315,13 @@
 
     <!-- زر إضافة موضوع جديد -->
     <button class="fab" id="fab-btn" onclick="openUploadModal()">
-        <i class="fa-solid fa-plus"></i>
+        <i class="fa-solid fa-paper-plane"></i>
     </button>
 
     <!-- نافذة رفع الموضوع والحل -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>إضافة ملف جديد</h3>
+            <h3><i class="fa-brands fa-telegram" style="color:var(--telegram)"></i> إضافة ملف جديد (تليجرام)</h3>
             
             <div class="form-group">
                 <label>الفصل الدراسي</label>
@@ -356,12 +357,12 @@
             </div>
 
             <div class="modal-buttons">
-                <button class="btn-submit" onclick="submitExam()">نشر مباشرة 🚀</button>
+                <button class="btn-submit" onclick="submitToTelegram()">إرسال إلى القناة 🚀</button>
                 <button class="btn-cancel" onclick="closeUploadModal()">إلغاء</button>
             </div>
 
             <div id="upload-loader">
-                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري حفظ ورفع الملفات الأصلية...
+                <i class="fa-solid fa-circle-notch fa-spin"></i> جاري الرفع إلى خوادم تليجرام...
             </div>
         </div>
     </div>
@@ -382,8 +383,18 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // رابط الخادم
-        const GOOGLE_DRIVE_API = "https://script.google.com/macros/s/AKfycbz3mHI7-cbKF_qFS7XQwqW9fksjMWPBKSuERYlnGIjCkxdHtMG0HG8_DuNj9Q9kuyOv/exec";
+        // =====================================================================
+        // إعدادات تليجرام المحدثة
+        // =====================================================================
+        const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
+        // بما أن البوت موجود في مجموعة واسمها "Ghoubrini bot"، ومطلوب استخدامها،
+        // يجب أن تحصل على Chat ID الرقمي للمجموعة. 
+        // بما أني لا أستطيع استخراجه لك، ولتجنب الأخطاء، سأفترض أنك أنشأت قناة عامة بهذا المعرف.
+        // **هام جدًا: يجب أن تكون القناة عامة (Public Channel) ولها معرف يبدأ بـ @**
+        // مثال: @ghoubrini_bot (تأكد من أن هذا المعرف متاح وقمت بتعيينه للقناة)
+        const TELEGRAM_CHANNEL_ID = "@ghoubrini_bot"; 
+        // =====================================================================
+
 
         let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
         let currentExamsList = [];
@@ -602,35 +613,38 @@
             b.innerHTML = path;
         }
 
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-            });
-        }
-
-        // تم استبدال URLSearchParams بـ FormData لرفع الملفات الكبيرة بشكل طبيعي ودون مشاكل
-        async function uploadOriginalFile(base64Data, filename, mimeType) {
-            const formData = new FormData();
-            formData.append('fileData', base64Data);
-            formData.append('fileName', filename);
-            formData.append('mimeType', mimeType);
-
-            const res = await fetch(GOOGLE_DRIVE_API, { 
-                method: 'POST', 
-                body: formData 
-            });
-            const data = await res.json();
-            if (data.status !== 'success') throw new Error(data.message);
-            return data.fileUrl;
-        }
-
         window.openUploadModal = () => document.getElementById('upload-modal').style.display = 'flex';
         window.closeUploadModal = () => document.getElementById('upload-modal').style.display = 'none';
 
-        window.submitExam = async function() {
+        // دالة الرفع إلى تليجرام
+        async function uploadFileToTelegram(file, caption) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_CHANNEL_ID);
+            formData.append('document', file);
+            formData.append('caption', caption);
+
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.description);
+            
+            // استخراج الرابط. 
+            // إذا كانت القناة عامة (تبدأ بـ @)، يمكن تكوين رابط مباشر.
+            const messageId = data.result.message_id;
+            
+            let fileUrl = "";
+            if (TELEGRAM_CHANNEL_ID.startsWith('@')) {
+                const channelName = TELEGRAM_CHANNEL_ID.replace('@', '');
+                fileUrl = `https://t.me/${channelName}/${messageId}`;
+            } else {
+                fileUrl = `https://t.me/c/${TELEGRAM_CHANNEL_ID.replace('-100', '')}/${messageId}`;
+            }
+            return fileUrl;
+        }
+
+        window.submitToTelegram = async function() {
             const term = document.getElementById('field-term').value;
             const type = document.getElementById('field-type').value;
             const desc = document.getElementById('field-desc').value;
@@ -645,15 +659,13 @@
             document.getElementById('upload-loader').style.display = 'block';
 
             try {
-                // الحفاظ على صيغة الملف الأصلية (PDF أو صور) ورفعه كما هو
-                const extSubj = fileSubj.name.split('.').pop();
-                const subjBase64 = await fileToBase64(fileSubj);
-                const subjUrl = await uploadOriginalFile(subjBase64, `${navState.subject}_${desc}_موضوع.${extSubj}`, fileSubj.type);
+                const titleMeta = `📚 ${navState.subject}\n🎓 ${navState.year} - ${navState.branch}\n📌 ${type} - ${term}\n📝 ${desc}`;
+                
+                // الرفع إلى تليجرام
+                const subjUrl = await uploadFileToTelegram(fileSubj, `(الموضوع)\n${titleMeta}`);
+                const solUrl = await uploadFileToTelegram(fileSol, `(الحل)\n${titleMeta}`);
 
-                const extSol = fileSol.name.split('.').pop();
-                const solBase64 = await fileToBase64(fileSol);
-                const solUrl = await uploadOriginalFile(solBase64, `${navState.subject}_${desc}_حل.${extSol}`, fileSol.type);
-
+                // حفظ المنشور في Firestore (الفهرس)
                 const docRef = await addDoc(collection(db, "exams_repository"), {
                     year: navState.year,
                     branch: navState.branch,
@@ -670,12 +682,12 @@
                 myDocs.push(docRef.id);
                 localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
 
-                alert("تم رفع الملفات الأصلية بنجاح!");
+                alert("تم إرسال الملفات إلى تليجرام ونشرها بنجاح!");
                 closeUploadModal();
                 fetchExamsFromDB();
 
             } catch (err) {
-                alert("حدث خطأ أثناء الرفع: " + err.message);
+                alert("حدث خطأ أثناء الرفع لتليجرام: " + err.message);
             } finally {
                 document.getElementById('upload-loader').style.display = 'none';
             }
@@ -717,8 +729,8 @@
                             <div class="exam-tags"><span class="badge badge-term">${item.term}</span><span class="badge badge-type">${item.type}</span></div>
                         </div>
                         <div class="exam-actions">
-                            <button class="btn-action btn-subject" onclick="openFile('${item.subjectImg}')"><i class="fa-solid fa-file-lines"></i> عرض الموضوع</button>
-                            <button class="btn-action btn-solution" onclick="openFile('${item.solutionImg}')"><i class="fa-solid fa-check"></i> عرض الحل</button>
+                            <button class="btn-action btn-subject" onclick="openFile('${item.subjectImg}')"><i class="fa-brands fa-telegram"></i> عرض الموضوع</button>
+                            <button class="btn-action btn-solution" onclick="openFile('${item.solutionImg}')"><i class="fa-brands fa-telegram"></i> عرض الحل</button>
                             ${deleteBtn}
                         </div>
                     </div>`;
@@ -726,7 +738,7 @@
         }
 
         window.filterTerm = function(term) { navState.termFilter = term; document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول')); }); renderExams(); };
-        window.deleteExam = async function(id) { if (confirm("هل أنت متأكد من حذف هذا الموضوع؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs = myDocs.filter(itemId => itemId !== id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } catch (e) { alert("تعذر حذف الموضوع."); } } };
+        window.deleteExam = async function(id) { if (confirm("ملاحظة: هذا سيحذف المنشور من الموقع. يجب حذفه يدوياً من تليجرام إذا أردت إزالته نهائياً. هل أنت متأكد؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs = myDocs.filter(itemId => itemId !== id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } catch (e) { alert("تعذر حذف الموضوع."); } } };
         
         // فتح الملفات بمختلف صيغها مباشرة في نافذة جديدة
         window.openFile = function(url) { window.open(url, '_blank'); };
