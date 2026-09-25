@@ -3,88 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بنك الفروض والاختبارات - ثانوية غوبريني مصطفى</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>أكاديمية التفوق - بنك الفروض والاختبارات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #1e3a8a;
-            --primary-dark: #0f172a;
-            --accent: #2563eb;
+            --primary: #2563eb;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
             --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-            --text: #1e293b;
+            --surface: #ffffff;
+            --text-main: #0f172a;
             --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
             --telegram: #0088cc;
-            --success: #16a34a;
-            --danger: #dc2626;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
+            --radius-md: 12px;
+            --radius-lg: 20px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); line-height: 1.5; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
-        header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .header-content { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .back-nav-btn { display: none; background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Navbar */
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
+        .brand i { color: var(--primary); font-size: 1.8rem; }
+        .back-nav-btn { display: none; background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-nav-btn:hover { background: #e2e8f0; transform: translateX(-3px); }
+
+        /* Premium Hero Section */
+        .hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; text-align: center; padding: 4rem 1.5rem 5rem 1.5rem; position: relative; overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 2.5rem; box-shadow: var(--shadow-lg); }
+        .hero::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; blur: 20px; }
+        .hero::after { content: ''; position: absolute; bottom: -80px; left: -20px; width: 250px; height: 250px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        .hero h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 15px; position: relative; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .hero p { font-size: 1.15rem; color: #e0f2fe; max-width: 650px; margin: 0 auto; position: relative; z-index: 2; font-weight: 500; }
+
+        .main-container { max-width: 1200px; margin: -3.5rem auto 3rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
         
-        .main-container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
-        .breadcrumb { background: white; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1.5rem; font-weight: 600; color: var(--text-muted); }
-        .breadcrumb span { color: var(--accent); }
+        /* Breadcrumb */
+        .breadcrumb { background: var(--surface); padding: 15px 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--border); margin-bottom: 2rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-size: 1rem; }
+        .breadcrumb span { color: var(--primary); margin: 0 5px; }
 
+        /* Views & Animations */
         .page-view { display: none; }
-        .page-view.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page-view.active { display: block; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
-        .grid-item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: 0.2s; }
-        .grid-item-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-        .grid-item-card i { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.8rem; }
-        .grid-item-card h3 { font-size: 1.15rem; color: var(--primary-dark); }
+        /* Grid Cards */
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+        .grid-item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+        .grid-item-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); transform: scaleX(0); transition: transform 0.3s ease; transform-origin: right; }
+        .grid-item-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: transparent; }
+        .grid-item-card:hover::before { transform: scaleX(1); }
+        .grid-item-card i { font-size: 3rem; color: var(--primary); margin-bottom: 1.2rem; transition: transform 0.3s ease; }
+        .grid-item-card:hover i { transform: scale(1.1); color: var(--accent); }
+        .grid-item-card h3 { font-size: 1.3rem; color: var(--primary-dark); font-weight: 800; }
 
-        .trimester-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; background: white; padding: 6px; border-radius: 10px; border: 1px solid var(--border); overflow-x: auto; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; font-weight: 700; color: var(--text-muted); border-radius: 6px; cursor: pointer; }
-        .tab-btn.active { background: var(--accent); color: white; }
+        .fa-language, .fa-spell-check { color: #8b5cf6 !important; }
+        .fa-brain, .fa-scale-balanced { color: #f59e0b !important; }
+        .fa-calculator, .fa-chart-line { color: #10b981 !important; }
 
-        .exam-item { background: var(--card-bg); border: 1px solid var(--border); border-right: 4px solid var(--telegram); border-radius: 8px; padding: 1.2rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .exam-info h4 { font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 4px; }
-        .badge { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+        /* Tabs */
+        .trimester-tabs { display: flex; gap: 12px; margin-bottom: 2rem; background: var(--surface); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border); overflow-x: auto; box-shadow: var(--shadow-sm); }
+        .tab-btn { flex: 1; min-width: 130px; padding: 12px; border: none; background: transparent; font-weight: 700; font-size: 1rem; color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .tab-btn:hover { background: #f1f5f9; color: var(--text-main); }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+        /* Exam Items */
+        .exam-item { background: var(--surface); border: 1px solid var(--border); border-right: 6px solid var(--primary); border-radius: var(--radius-md); padding: 1.8rem; margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
+        .exam-item:hover { transform: translateX(-5px); box-shadow: var(--shadow-md); border-right-color: var(--accent); }
+        .exam-info h4 { font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 10px; font-weight: 800; }
+        .badge { font-size: 0.85rem; font-weight: 800; padding: 6px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; }
         .badge-term { background: #e0f2fe; color: #0369a1; }
         .badge-type { background: #fef3c7; color: #b45309; }
         
-        .exam-actions { display: flex; gap: 8px; }
-        .btn-action { padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: none; color: white; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-telegram { background: var(--telegram); }
-        .btn-delete { background: var(--danger); }
+        .exam-actions { display: flex; gap: 12px; }
+        .btn-action { padding: 12px 20px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; border: none; color: white; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .btn-subject { background: var(--primary-dark); }
+        .btn-solution { background: var(--success); }
 
-        .fab { display: none; position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--telegram); color: white; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); z-index: 99; }
+        /* Floating Action Button (FAB) */
+        .fab { position: fixed; bottom: 40px; right: 40px; background: linear-gradient(135deg, var(--telegram), #00a2f5); color: white; border-radius: 50px; border: none; padding: 16px 28px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4); z-index: 99; display: flex; align-items: center; gap: 10px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: pulse 2s infinite; }
+        .fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 30px rgba(0, 136, 204, 0.6); animation: none; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 136, 204, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); } }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-card { background: var(--surface); width: 100%; max-width: 600px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+        .modal-overlay.show .modal-card { transform: scale(1); }
+        .modal-card h3 { margin-bottom: 1.5rem; color: var(--primary-dark); font-size: 1.5rem; display: flex; align-items: center; gap: 12px; font-weight: 900; }
+        .modal-card p.hint { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 2rem; background: #f8fafc; padding: 15px; border-radius: 12px; border-right: 4px solid var(--accent); line-height: 1.7; }
         
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
-        .modal-card { background: white; width: 100%; max-width: 500px; border-radius: 12px; padding: 1.8rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; }
-        .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; }
-        .btn-submit { flex: 1; padding: 10px; background: var(--telegram); color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
-        .btn-cancel { padding: 10px 15px; background: #e2e8f0; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; color: var(--text); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 800; margin-bottom: 8px; font-size: 1rem; color: var(--primary-dark); }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; transition: all 0.3s ease; background: var(--bg); color: var(--text-main); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
         
-        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 700; margin-top: 10px; }
+        .modal-buttons { display: flex; gap: 15px; margin-top: 2.5rem; }
+        .btn-submit { flex: 2; padding: 14px; background: var(--telegram); color: white; border: none; border-radius: 10px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-submit:hover { background: #0077b3; transform: translateY(-2px); }
+        .btn-cancel { flex: 1; padding: 14px; background: #f1f5f9; border: none; border-radius: 10px; font-weight: 800; font-size: 1.1rem; cursor: pointer; color: var(--text-main); transition: 0.2s; }
+        .btn-cancel:hover { background: #e2e8f0; }
+        
+        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 800; margin-top: 20px; font-size: 1.1rem; padding: 15px; background: #e0f2fe; border-radius: 10px; }
+
+        /* Footer */
+        footer { text-align: center; padding: 3rem 1rem; margin-top: 4rem; color: var(--text-muted); border-top: 1px solid var(--border); font-weight: 600; font-size: 0.95rem; background: var(--surface); }
+
+        /* ========================================================
+           الاستجابة لجميع الأجهزة (Responsive Design)
+           ======================================================== */
+        @media screen and (max-width: 768px) {
+            .hero { padding: 3rem 1rem 4rem 1rem; border-radius: 0 0 25px 25px; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            
+            .main-container { margin-top: -2.5rem; padding: 0 1rem; }
+            .grid-layout { grid-template-columns: 1fr; gap: 1rem; }
+            .grid-item-card { padding: 1.5rem 1rem; }
+            
+            .breadcrumb { font-size: 0.9rem; padding: 12px 15px; }
+            
+            .exam-item { flex-direction: column; align-items: flex-start; gap: 15px; padding: 1.2rem; }
+            .exam-actions { width: 100%; flex-direction: column; gap: 10px; }
+            .btn-action { width: 100%; justify-content: center; }
+            
+            .modal-card { padding: 1.5rem; }
+            .modal-card h3 { font-size: 1.3rem; }
+            div[style*="display: flex; gap: 15px;"] { flex-direction: column; gap: 0; }
+            .modal-buttons { flex-direction: column; gap: 10px; }
+            .btn-submit, .btn-cancel { width: 100%; }
+            
+            .fab { bottom: 20px; right: 20px; padding: 14px 22px; font-size: 1rem; }
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand { font-size: 1.2rem; }
+            .brand i { font-size: 1.5rem; }
+            .tab-btn { min-width: 100px; padding: 8px; font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-content">
-            <div class="brand"><i class="fa-brands fa-telegram"></i> بنك الفروض (تليجرام)</div>
-            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+            <div class="brand"><i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني مصطفى</div>
+            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right-long"></i> رجوع للخلف</button>
         </div>
     </header>
 
-    <div class="main-container">
-        <div class="breadcrumb" id="breadcrumb">الرئيسية</div>
+    <div class="hero" id="hero-section">
+        <h1>بنك الفروض والاختبارات</h1>
+        <p>المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير للامتحانات بأفضل المواضيع.</p>
+    </div>
 
+    <div class="main-container">
+        <div class="breadcrumb" id="breadcrumb"><i class="fa-solid fa-house"></i> الرئيسية</div>
+
+        <!-- اختيار السنة -->
         <div id="view-year" class="page-view active">
             <div class="grid-layout">
                 <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')"><i class="fa-solid fa-1"></i><h3>الأولى ثانوي</h3></div>
@@ -93,12 +186,16 @@
             </div>
         </div>
 
+        <!-- اختيار الشعبة -->
         <div id="view-branch" class="page-view"><div class="grid-layout" id="branches-box"></div></div>
+        
+        <!-- اختيار المادة -->
         <div id="view-subject" class="page-view"><div class="grid-layout" id="subjects-box"></div></div>
         
+        <!-- عرض المواضيع -->
         <div id="view-exams" class="page-view">
             <div class="trimester-tabs">
-                <button class="tab-btn active" onclick="filterTerm('الكل')">جميع الفصول</button>
+                <button class="tab-btn active" onclick="filterTerm('الكل')"><i class="fa-solid fa-layer-group"></i> جميع الفصول</button>
                 <button class="tab-btn" onclick="filterTerm('الفصل الأول')">الفصل الأول</button>
                 <button class="tab-btn" onclick="filterTerm('الفصل الثاني')">الفصل الثاني</button>
                 <button class="tab-btn" onclick="filterTerm('الفصل الثالث')">الفصل الثالث</button>
@@ -107,41 +204,63 @@
         </div>
     </div>
 
-    <button class="fab" id="fab-btn" onclick="openUploadModal()"><i class="fa-solid fa-paper-plane"></i></button>
+    <button class="fab" id="fab-btn" onclick="openUploadModal()">
+        <i class="fa-solid fa-hand-holding-heart"></i> ساهم بموضوع
+    </button>
 
+    <!-- Modal طلب الإضافة -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3><i class="fa-brands fa-telegram" style="color:var(--telegram)"></i> نشر في تليجرام</h3>
+            <h3><i class="fa-solid fa-file-arrow-up" style="color:var(--telegram)"></i> إرسال موضوع للمنصة</h3>
+            <p class="hint">ساهم معنا في إثراء الموقع! سيتم إرسال الملفات للإدارة لمراجعتها وإضافتها لاحقاً لكي يستفيد منها جميع الطلاب والأساتذة.</p>
             
             <div class="form-group">
-                <select id="field-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select>
+                <input type="text" id="field-sender" placeholder="اسمك الكريم">
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <select id="field-term">
+                        <option value="الفصل الأول">الفصل الأول</option>
+                        <option value="الفصل الثاني">الفصل الثاني</option>
+                        <option value="الفصل الثالث">الفصل الثالث</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <select id="field-type">
+                        <option value="فرض">فرض</option>
+                        <option value="اختبار">اختبار</option>
+                        <option value="سلسلة تمارين">سلسلة تمارين</option>
+                        <option value="ملخص">ملخص شامل</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
-                <select id="field-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option></select>
+                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: اختبار الفصل الأول في الرياضيات - نموذج 1)">
             </div>
             <div class="form-group">
-                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: فرض محروس رقم 1)">
+                <label>إرفاق الموضوع (صورة، PDF، Word) <span style="color:var(--danger)">*</span></label>
+                <input type="file" id="field-file-subj" accept="image/*,.pdf,.doc,.docx">
             </div>
             <div class="form-group">
-                <label>ملف الموضوع (صور، PDF، Word)</label>
-                <input type="file" id="field-file-subj">
-            </div>
-            <div class="form-group">
-                <label>ملف الحل</label>
-                <input type="file" id="field-file-sol">
+                <label>إرفاق الحل (إن وجد - اختياري)</label>
+                <input type="file" id="field-file-sol" accept="image/*,.pdf,.doc,.docx">
             </div>
 
             <div class="modal-buttons">
-                <button class="btn-submit" onclick="submitToTelegram()">إرسال إلى القناة 🚀</button>
+                <button class="btn-submit" onclick="submitRequestToAdmin()"><i class="fa-brands fa-telegram"></i> إرسال الطلب للإدارة</button>
                 <button class="btn-cancel" onclick="closeUploadModal()">إلغاء</button>
             </div>
-            <div id="upload-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري الرفع إلى خوادم تليجرام...</div>
+            <div id="upload-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري إرسال الملفات ... يرجى الانتظار</div>
         </div>
     </div>
 
+    <footer>
+        <p>تم التطوير بكل ❤️ من أجل طلاب ثانوية غوبريني مصطفى | أكاديمية التفوق &copy; 2026</p>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0",
@@ -154,130 +273,231 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // =====================================================================
-        // إعدادات تليجرام - تم ربطها بالـ ID الخاص بك مباشرة
-        // =====================================================================
         const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
-        const TELEGRAM_CHANNEL_ID = "7737717483"; // الايدي الشخصي الخاص بك
-        // =====================================================================
+        const TELEGRAM_CHANNEL_ID = "7737717483"; 
 
         let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
         let currentExamsList = [];
 
+        // المنهاج الجزائري الشامل
+        const commonSubjects = [
+            { name: 'الرياضيات', icon: 'fa-square-root-variable' },
+            { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
+            { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
+            { name: 'اللغة الفرنسية', icon: 'fa-language' },
+            { name: 'اللغة الإنجليزية', icon: 'fa-spell-check' },
+            { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
+            { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
+            { name: 'اللغة الأمازيغية', icon: 'fa-font' }
+        ];
+
         const schoolCurriculum = {
-            'الأولى ثانوي': { 'جذع مشترك علوم وتكنولوجيا': [{ name: 'الرياضيات', icon: 'fa-square-root-variable' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' }, { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }, { name: 'العلوم الإسلامية', icon: 'fa-mosque' }], 'جذع مشترك آداب': [{ name: 'اللغة العربية وآدابها', icon: 'fa-book-open' }, { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' }, { name: 'العلوم الإسلامية', icon: 'fa-mosque' }] },
-            'الثانية ثانوي': { 'علوم تجريبية': [{ name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'الرياضيات', icon: 'fa-square-root-variable' }] },
-            'الثالثة ثانوي': { 'علوم تجريبية': [{ name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'العلوم الفيزيائية', icon: 'fa-atom' }, { name: 'الرياضيات', icon: 'fa-square-root-variable' }] }
+            'الأولى ثانوي': { 
+                'جذع مشترك علوم وتكنولوجيا': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'التكنولوجيا', icon: 'fa-microchip' }, { name: 'الإعلام الآلي', icon: 'fa-computer' }], 
+                'جذع مشترك آداب': [...commonSubjects, { name: 'الإعلام الآلي', icon: 'fa-computer' }] 
+            },
+            'الثانية ثانوي': { 
+                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }], 
+                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية', icon: 'fa-building' }, { name: 'الهندسة الميكانيكية', icon: 'fa-gears' }, { name: 'الهندسة الكهربائية', icon: 'fa-plug' }, { name: 'هندسة الطرائق', icon: 'fa-flask' }], 
+                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }],
+                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }],
+                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }, { name: 'اللغة الإسبانية', icon: 'fa-language' }, { name: 'اللغة الألمانية', icon: 'fa-language' }],
+                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي', icon: 'fa-calculator' }, { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' }, { name: 'القانون', icon: 'fa-scale-balanced' }]
+            },
+            'الثالثة ثانوي': { 
+                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'الفلسفة', icon: 'fa-brain' }], 
+                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية', icon: 'fa-building' }, { name: 'الهندسة الميكانيكية', icon: 'fa-gears' }, { name: 'الهندسة الكهربائية', icon: 'fa-plug' }, { name: 'هندسة الطرائق', icon: 'fa-flask' }, { name: 'الفلسفة', icon: 'fa-brain' }], 
+                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'الفلسفة', icon: 'fa-brain' }],
+                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }],
+                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }, { name: 'اللغة الإسبانية', icon: 'fa-language' }, { name: 'اللغة الألمانية', icon: 'fa-language' }],
+                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي', icon: 'fa-calculator' }, { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' }, { name: 'القانون', icon: 'fa-scale-balanced' }, { name: 'الفلسفة', icon: 'fa-brain' }]
+            }
         };
 
-        window.selectYear = function(year) { navState.year = year; updateBreadcrumb(); const box = document.getElementById('branches-box'); box.innerHTML = ''; (Object.keys(schoolCurriculum[year]) || []).forEach(branch => { box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-graduation-cap"></i><h3>${branch}</h3></div>`; }); switchView('view-branch'); document.getElementById('btn-back').style.display = 'block'; };
-        window.selectBranch = function(branch) { navState.branch = branch; updateBreadcrumb(); const box = document.getElementById('subjects-box'); box.innerHTML = ''; (schoolCurriculum[navState.year][branch] || []).forEach(sub => { box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; }); switchView('view-subject'); };
-        window.selectSubject = function(subject) { navState.subject = subject; updateBreadcrumb(); switchView('view-exams'); document.getElementById('fab-btn').style.display = 'block'; fetchExamsFromDB(); };
+        window.selectYear = function(year) { 
+            navState.year = year; 
+            updateBreadcrumb(); 
+            const hero = document.getElementById('hero-section');
+            hero.style.height = hero.offsetHeight + 'px';
+            setTimeout(() => { hero.style.height = '0'; hero.style.padding = '0'; hero.style.marginBottom = '0'; hero.style.opacity = '0'; }, 10);
+            
+            const box = document.getElementById('branches-box'); 
+            box.innerHTML = ''; 
+            (Object.keys(schoolCurriculum[year]) || []).forEach(branch => { 
+                box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-users-viewfinder"></i><h3>${branch}</h3></div>`; 
+            }); 
+            switchView('view-branch'); 
+            document.getElementById('btn-back').style.display = 'block'; 
+        };
+        
+        window.selectBranch = function(branch) { 
+            navState.branch = branch; 
+            updateBreadcrumb(); 
+            const box = document.getElementById('subjects-box'); 
+            box.innerHTML = ''; 
+            (schoolCurriculum[navState.year][branch] || []).forEach(sub => { 
+                box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; 
+            }); 
+            switchView('view-subject'); 
+        };
+        
+        window.selectSubject = function(subject) { 
+            navState.subject = subject; 
+            updateBreadcrumb(); 
+            switchView('view-exams'); 
+            fetchExamsFromDB(); 
+        };
 
         window.navigateBack = function() {
-            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); document.getElementById('fab-btn').style.display = 'none'; }
+            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); }
             else if (document.getElementById('view-subject').classList.contains('active')) { switchView('view-branch'); }
-            else if (document.getElementById('view-branch').classList.contains('active')) { switchView('view-year'); document.getElementById('btn-back').style.display = 'none'; navState = { year: '', branch: '', subject: '', termFilter: 'الكل' }; }
+            else if (document.getElementById('view-branch').classList.contains('active')) { 
+                switchView('view-year'); 
+                document.getElementById('btn-back').style.display = 'none'; 
+                
+                const hero = document.getElementById('hero-section');
+                hero.style.height = 'auto';
+                
+                if (window.innerWidth <= 768) {
+                    hero.style.padding = '3rem 1rem 4rem 1rem';
+                } else {
+                    hero.style.padding = '4rem 1.5rem 5rem 1.5rem';
+                }
+                
+                hero.style.marginBottom = '2.5rem';
+                hero.style.opacity = '1';
+                
+                navState = { year: '', branch: '', subject: '', termFilter: 'الكل' }; 
+            }
             updateBreadcrumb();
         };
 
-        function switchView(viewId) { document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
-        function updateBreadcrumb() { document.getElementById('breadcrumb').innerHTML = `الرئيسية ${navState.year ? `<span>/</span> ${navState.year}` : ''} ${navState.branch ? `<span>/</span> ${navState.branch}` : ''} ${navState.subject ? `<span>/</span> ${navState.subject}` : ''}`; }
+        function switchView(viewId) { 
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active')); 
+            document.getElementById(viewId).classList.add('active'); 
+        }
+        
+        function updateBreadcrumb() { 
+            document.getElementById('breadcrumb').innerHTML = `<i class="fa-solid fa-house"></i> الرئيسية ${navState.year ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.year}` : ''} ${navState.branch ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.branch}` : ''} ${navState.subject ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.subject}` : ''}`; 
+        }
 
-        window.openUploadModal = () => document.getElementById('upload-modal').style.display = 'flex';
-        window.closeUploadModal = () => document.getElementById('upload-modal').style.display = 'none';
+        window.openUploadModal = () => {
+            const modal = document.getElementById('upload-modal');
+            modal.classList.add('show');
+        };
+        
+        window.closeUploadModal = () => {
+            const modal = document.getElementById('upload-modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('field-sender').value = '';
+                document.getElementById('field-desc').value = '';
+                document.getElementById('field-file-subj').value = '';
+                document.getElementById('field-file-sol').value = '';
+            }, 300);
+        };
 
         async function uploadFileToTelegram(file, caption) {
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM_CHANNEL_ID);
             formData.append('document', file);
             formData.append('caption', caption);
-
-            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-                method: 'POST',
-                body: formData
-            });
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, { method: 'POST', body: formData });
             const data = await res.json();
             if (!data.ok) throw new Error(data.description);
-            
-            const messageId = data.result.message_id;
-            const channelName = String(TELEGRAM_CHANNEL_ID).replace('@', '');
-            return `https://t.me/${channelName}/${messageId}`;
+            return true;
         }
 
-        window.submitToTelegram = async function() {
+        window.submitRequestToAdmin = async function() {
+            if(!navState.subject) {
+                alert("يرجى تصفح الموقع واختيار السنة، الشعبة، والمادة أولاً قبل محاولة إرسال موضوع، لنعرف أين نصنفه.");
+                closeUploadModal();
+                return;
+            }
+
+            const senderName = document.getElementById('field-sender').value || 'فاعل خير (مجهول)';
             const term = document.getElementById('field-term').value;
             const type = document.getElementById('field-type').value;
             const desc = document.getElementById('field-desc').value;
             const fileSubj = document.getElementById('field-file-subj').files[0];
             const fileSol = document.getElementById('field-file-sol').files[0];
 
-            if (!desc || !fileSubj || !fileSol) return alert("يرجى إدخال الوصف وإرفاق ملفات الموضوع والحل!");
+            if (!desc || !fileSubj) {
+                return alert("الرجاء إدخال عنوان الموضوع وإرفاق ملف الموضوع كحد أدنى.");
+            }
 
             document.getElementById('upload-loader').style.display = 'block';
+            document.querySelector('.modal-buttons').style.display = 'none';
 
             try {
-                const titleMeta = `📚 ${navState.subject}\n🎓 ${navState.year} - ${navState.branch}\n📌 ${type} - ${term}\n📝 ${desc}`;
+                const requestCaption = `🔔 طلب إضافة موضوع جديد 🔔\n\n👤 المرسل: ${senderName}\n📚 المادة: ${navState.subject}\n🎓 المستوى: ${navState.year} - ${navState.branch}\n📌 النوع: ${type} - ${term}\n📝 الوصف: ${desc}\n\n⚠️ يرجى الرفع في لوحة التحكم (Admin).`;
                 
-                const subjUrl = await uploadFileToTelegram(fileSubj, `(الموضوع)\n${titleMeta}`);
-                const solUrl = await uploadFileToTelegram(fileSol, `(الحل)\n${titleMeta}`);
-
-                const docRef = await addDoc(collection(db, "exams_repository"), { 
-                    year: navState.year, branch: navState.branch, subject: navState.subject, 
-                    term: term, type: type, title: desc, 
-                    subjectImg: subjUrl, solutionImg: solUrl, 
-                    timestamp: serverTimestamp() 
-                });
+                await uploadFileToTelegram(fileSubj, requestCaption + "\n\n(المرفق: الموضوع)");
+                if (fileSol) await uploadFileToTelegram(fileSol, `(المرفق: الحل التابع للطلب: ${desc})\nالمرسل: ${senderName}`);
                 
-                let myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]'); myDocs.push(docRef.id); localStorage.setItem('my_school_exams', JSON.stringify(myDocs));
-                
-                alert("تم النشر بنجاح! الملفات الآن محفوظة في حسابك الشخصي."); 
-                closeUploadModal(); fetchExamsFromDB();
+                alert("✅ تم إرسال طلبك بنجاح! الإدارة ستراجعه وتضيفه في أقرب وقت. شكراً لك."); 
+                closeUploadModal();
             } catch (err) { 
-                alert("خطأ في الرفع لتليجرام: " + err.message); 
+                alert("❌ فشل الإرسال، تحقق من اتصالك بالإنترنت. " + err.message); 
             } finally { 
                 document.getElementById('upload-loader').style.display = 'none'; 
+                document.querySelector('.modal-buttons').style.display = 'flex';
             }
         };
 
         async function fetchExamsFromDB() {
-            const container = document.getElementById('exams-container'); container.innerHTML = '<p style="text-align:center; padding:2rem;"><i class="fa-solid fa-spinner fa-spin"></i> جاري الجلب...</p>';
+            const container = document.getElementById('exams-container'); 
+            container.innerHTML = '<div style="text-align:center; padding:5rem 1rem;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i><h3 style="color:var(--primary-dark);">جاري البحث في قاعدة البيانات...</h3></div>';
             try {
                 const q = query(collection(db, "exams_repository"), where("year", "==", navState.year), where("branch", "==", navState.branch), where("subject", "==", navState.subject));
                 const snapshot = await getDocs(q);
-                currentExamsList = []; snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
+                currentExamsList = []; 
+                snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
                 currentExamsList.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                 renderExams();
-            } catch (err) { container.innerHTML = '<p style="text-align:center; color:red;">تعذر جلب البيانات من الخادم.</p>'; }
+            } catch (err) { 
+                container.innerHTML = '<div style="text-align:center; padding:3rem; background:#fee2e2; border-radius:15px; color:var(--danger);"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; margin-bottom:10px;"></i><h4>تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً.</h4></div>'; 
+            }
         }
 
         function renderExams() {
             const container = document.getElementById('exams-container');
             let filtered = navState.termFilter !== 'الكل' ? currentExamsList.filter(e => e.term === navState.termFilter) : currentExamsList;
-            if (filtered.length === 0) return container.innerHTML = '<div style="text-align:center; padding:3rem; border:1px solid var(--border); border-radius:10px; background:white;"><i class="fa-regular fa-folder-open" style="font-size:2.5rem; color:#cbd5e1; margin-bottom:10px;"></i><p style="font-weight:700; color:var(--text-muted);">لا توجد مواضيع منشورة هنا بعد.</p></div>';
+            if (filtered.length === 0) {
+                return container.innerHTML = `<div style="text-align:center; padding:5rem 1rem; border:2px dashed var(--border); border-radius:20px; background:var(--surface);">
+                    <i class="fa-regular fa-folder-open" style="font-size:4rem; color:var(--border); margin-bottom:20px;"></i>
+                    <h2 style="color:var(--text-muted); margin-bottom:10px;">لم يتم نشر مواضيع في هذا القسم بعد</h2>
+                    <p style="color:#94a3b8; font-size:1.1rem; max-width:400px; margin:0 auto;">كن أول من يساهم في إثراء هذا القسم عبر إرسال موضوع باستخدام الزر العائم أدناه.</p>
+                </div>`;
+            }
             
-            const myDocs = JSON.parse(localStorage.getItem('my_school_exams') || '[]');
             container.innerHTML = '';
             filtered.forEach(item => {
                 container.innerHTML += `
                     <div class="exam-item">
                         <div class="exam-info">
                             <h4>${item.title}</h4>
-                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                <span class="badge badge-term">${item.term}</span><span class="badge badge-type">${item.type}</span>
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <span class="badge badge-term"><i class="fa-regular fa-calendar-check"></i> ${item.term}</span>
+                                <span class="badge badge-type"><i class="fa-solid fa-tags"></i> ${item.type}</span>
                             </div>
                         </div>
                         <div class="exam-actions">
-                            <button class="btn-action btn-telegram" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-brands fa-telegram"></i> عرض الموضوع</button>
-                            <button class="btn-action btn-telegram" style="background:#16a34a;" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-brands fa-telegram"></i> عرض الحل</button>
-                            ${myDocs.includes(item.id) ? `<button class="btn-action btn-delete" onclick="deleteExam('${item.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            ${item.subjectImg ? `<button class="btn-action btn-subject" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>` : ''}
+                            ${item.solutionImg ? `<button class="btn-action btn-solution" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>` : ''}
                         </div>
                     </div>`;
             });
         }
 
-        window.filterTerm = function(term) { navState.termFilter = term; document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.toggle('active', btn.innerText === term || (term === 'الكل' && btn.innerText === 'جميع الفصول')); }); renderExams(); };
-        window.deleteExam = async function(id) { if (confirm("ملاحظة: هذا سيحذف المنشور من الموقع فقط. لحذفه نهائياً قم بحذفه من محادثة تليجرام أيضاً. هل تريد الاستمرار؟")) { await deleteDoc(doc(db, "exams_repository", id)); currentExamsList = currentExamsList.filter(e => e.id !== id); renderExams(); } };
+        window.filterTerm = function(term) { 
+            navState.termFilter = term; 
+            document.querySelectorAll('.tab-btn').forEach(btn => { 
+                const isActive = btn.innerText.includes(term) || (term === 'الكل' && btn.innerText.includes('جميع'));
+                btn.classList.toggle('active', isActive); 
+            }); 
+            renderExams(); 
+        };
     </script>
 </body>
 </html>
