@@ -460,6 +460,34 @@
             }
         }
 
+        // --- الدالة السحرية الجديدة لجلب الملف الخام مباشرة من سيرفرات تليجرام ---
+        window.openTelegramFile = async function(fileId, buttonElement) {
+            const originalContent = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري جلب الملف...';
+            buttonElement.style.pointerEvents = 'none';
+
+            try {
+                // نطلب مسار الملف عبر Telegram API باستخدام الـ File ID
+                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+                const data = await res.json();
+                
+                if (!data.ok) throw new Error("تعذر الوصول للملف في تليجرام");
+
+                // استخراج الرابط وتكوين الرابط المباشر
+                const filePath = data.result.file_path;
+                const directUrl = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${filePath}`;
+
+                // فتح الملف كملف خام في المتصفح مباشرة
+                window.open(directUrl, '_blank');
+            } catch (error) {
+                alert("حدث خطأ أثناء فتح الملف: " + error.message);
+            } finally {
+                // إرجاع الزر لشكله الطبيعي
+                buttonElement.innerHTML = originalContent;
+                buttonElement.style.pointerEvents = 'auto';
+            }
+        };
+
         function renderExams() {
             const container = document.getElementById('exams-container');
             let filtered = navState.termFilter !== 'الكل' ? currentExamsList.filter(e => e.term === navState.termFilter) : currentExamsList;
@@ -473,6 +501,21 @@
             
             container.innerHTML = '';
             filtered.forEach(item => {
+                // التحديث الجديد: يدعم النظامين معاً (القديم بالروابط، والجديد بالـ File ID)
+                let subjectButton = '';
+                if (item.subjectFileId) {
+                    subjectButton = `<button class="btn-action btn-subject" onclick="openTelegramFile('${item.subjectFileId}', this)"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>`;
+                } else if (item.subjectImg) {
+                    subjectButton = `<button class="btn-action btn-subject" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>`;
+                }
+
+                let solutionButton = '';
+                if (item.solutionFileId) {
+                    solutionButton = `<button class="btn-action btn-solution" onclick="openTelegramFile('${item.solutionFileId}', this)"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>`;
+                } else if (item.solutionImg) {
+                    solutionButton = `<button class="btn-action btn-solution" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>`;
+                }
+
                 container.innerHTML += `
                     <div class="exam-item">
                         <div class="exam-info">
@@ -483,8 +526,8 @@
                             </div>
                         </div>
                         <div class="exam-actions">
-                            ${item.subjectImg ? `<button class="btn-action btn-subject" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>` : ''}
-                            ${item.solutionImg ? `<button class="btn-action btn-solution" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>` : ''}
+                            ${subjectButton}
+                            ${solutionButton}
                         </div>
                     </div>`;
             });
