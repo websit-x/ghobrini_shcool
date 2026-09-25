@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة - بنك الفروض</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --admin-dark: #111827;
+            --admin-panel: #1f2937;
+            --admin-primary: #3b82f6;
+            --admin-accent: #10b981;
+            --admin-danger: #ef4444;
+            --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--admin-dark); color: var(--text-light); line-height: 1.6; padding-bottom: 50px; }
+
+        header { background: var(--admin-panel); padding: 1.2rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .brand { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; color: var(--text-light); }
+        .brand i { color: var(--admin-primary); }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+
+        .panel-card { background: var(--admin-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .panel-header { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .panel-header i { color: var(--admin-accent); }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 0.95rem; transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--admin-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .form-row { display: flex; gap: 10px; }
+        .form-row .form-group { flex: 1; }
+
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; color: white; }
+        .btn-submit { background: var(--admin-primary); margin-top: 1rem; }
+        .btn-submit:hover { background: #2563eb; }
+        .btn-delete { background: var(--admin-danger); padding: 6px 12px; font-size: 0.85rem; }
+        .btn-delete:hover { background: #dc2626; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { text-align: right; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 700; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+        #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand"><i class="fa-solid fa-shield-halved"></i> لوحة التحكم الإدارية</div>
+        <div style="font-size: 0.9rem; color: var(--admin-accent); font-weight: 700;"><i class="fa-solid fa-circle-user"></i> الأدمن: يوسف</div>
+    </header>
+
+    <div class="container">
+        <!-- قسم إضافة موضوع جديد -->
+        <div class="panel-card">
+            <div class="panel-header"><i class="fa-solid fa-plus-circle"></i> إضافة موضوع جديد</div>
+            
+            <div class="form-group">
+                <label>السنة الدراسية</label>
+                <select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select>
+            </div>
+            <div class="form-group">
+                <label>الشعبة</label>
+                <select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select>
+            </div>
+            <div class="form-group">
+                <label>المادة</label>
+                <select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الفصل</label>
+                    <select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select>
+                </div>
+                <div class="form-group">
+                    <label>النوع</label>
+                    <select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>عنوان الموضوع (يظهر للطلاب)</label>
+                <input type="text" id="inp-title" placeholder="مثال: فرض الفصل الأول محروس رقم 1">
+            </div>
+
+            <div class="form-group">
+                <label>ملف الموضوع (إجباري)</label>
+                <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx">
+            </div>
+            <div class="form-group">
+                <label>ملف الحل (اختياري)</label>
+                <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
+            </div>
+
+            <button class="btn btn-submit" onclick="publishExam()"><i class="fa-solid fa-cloud-arrow-up"></i> نشر الموضوع الآن</button>
+            <div id="upload-loader"><i class="fa-solid fa-gear fa-spin"></i> جاري الرفع إلى تليجرام وحفظ البيانات...</div>
+        </div>
+
+        <!-- قسم إدارة المواضيع -->
+        <div class="panel-card">
+            <div class="panel-header"><i class="fa-solid fa-database"></i> إدارة المواضيع المنشورة</div>
+            <div style="overflow-x: auto;">
+                <table id="exams-table">
+                    <thead>
+                        <tr>
+                            <th>العنوان</th>
+                            <th>المستوى والمادة</th>
+                            <th>الفصل والنوع</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr><td colspan="4" class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب البيانات...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        // إعدادات فايربيز الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0",
+            authDomain: "shop-clothes-224a3.firebaseapp.com",
+            projectId: "shop-clothes-224a3",
+            storageBucket: "shop-clothes-224a3.appspot.com",
+            messagingSenderId: "348817058494",
+            appId: "1:348817058494:web:830980b3dae15984350cef"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // إعدادات تليجرام لتخزين الملفات
+        const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
+        const TELEGRAM_CHANNEL_ID = "7737717483"; 
+
+        // هيكل المنهاج الدراسي الديناميكي
+        const curriculum = {
+            'الأولى ثانوي': { 
+                'جذع مشترك علوم وتكنولوجيا': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 
+                'جذع مشترك آداب': ['اللغة العربية وآدابها', 'التاريخ والجغرافيا', 'العلوم الإسلامية'] 
+            },
+            'الثانية ثانوي': { 
+                'علوم تجريبية': ['علوم الطبيعة والحياة', 'العلوم الفيزيائية', 'الرياضيات'], 
+                'تقني رياضي': ['الرياضيات', 'العلوم الفيزيائية', 'الهندسة المدنية'] 
+            },
+            'الثالثة ثانوي': { 
+                'علوم تجريبية': ['علوم الطبيعة والحياة', 'العلوم الفيزيائية', 'الرياضيات'] 
+            }
+        };
+
+        // تحديث القوائم المنسدلة
+        window.updateBranches = function() {
+            const year = document.getElementById('sel-year').value;
+            const branchSel = document.getElementById('sel-branch');
+            const subjectSel = document.getElementById('sel-subject');
+            
+            branchSel.innerHTML = '<option value="">-- اختر الشعبة --</option>';
+            subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>';
+            subjectSel.disabled = true;
+
+            if (year && curriculum[year]) {
+                Object.keys(curriculum[year]).forEach(branch => {
+                    branchSel.innerHTML += `<option value="${branch}">${branch}</option>`;
+                });
+                branchSel.disabled = false;
+            } else {
+                branchSel.disabled = true;
+            }
+        };
+
+        window.updateSubjects = function() {
+            const year = document.getElementById('sel-year').value;
+            const branch = document.getElementById('sel-branch').value;
+            const subjectSel = document.getElementById('sel-subject');
+            
+            subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>';
+
+            if (year && branch && curriculum[year][branch]) {
+                curriculum[year][branch].forEach(subject => {
+                    subjectSel.innerHTML += `<option value="${subject}">${subject}</option>`;
+                });
+                subjectSel.disabled = false;
+            } else {
+                subjectSel.disabled = true;
+            }
+        };
+
+        // دالة الرفع إلى تليجرام واستخراج الرابط
+        async function uploadToTelegram(file, caption) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_CHANNEL_ID);
+            formData.append('document', file);
+            formData.append('caption', caption);
+
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.description);
+            
+            const messageId = data.result.message_id;
+            const channelName = String(TELEGRAM_CHANNEL_ID).replace('@', '');
+            return `https://t.me/${channelName}/${messageId}`;
+        }
+
+        // نشر الموضوع
+        window.publishExam = async function() {
+            const year = document.getElementById('sel-year').value;
+            const branch = document.getElementById('sel-branch').value;
+            const subject = document.getElementById('sel-subject').value;
+            const term = document.getElementById('sel-term').value;
+            const type = document.getElementById('sel-type').value;
+            const title = document.getElementById('inp-title').value;
+            const fileSubj = document.getElementById('file-subj').files[0];
+            const fileSol = document.getElementById('file-sol').files[0];
+
+            if (!year || !branch || !subject || !title || !fileSubj) {
+                return alert("الرجاء ملء جميع الحقول المطلوبة (بما فيها ملف الموضوع)!");
+            }
+
+            document.getElementById('upload-loader').style.display = 'block';
+
+            try {
+                const metaText = `📁 رفع للإدارة: ${title}\nالمادة: ${subject} (${year} - ${branch})\n${type} - ${term}`;
+                
+                // رفع الموضوع
+                const subjUrl = await uploadToTelegram(fileSubj, metaText + "\n(الموضوع)");
+                
+                // رفع الحل إن وجد
+                let solUrl = "";
+                if (fileSol) {
+                    solUrl = await uploadToTelegram(fileSol, metaText + "\n(الحل)");
+                }
+
+                // حفظ في فايربيز
+                await addDoc(collection(db, "exams_repository"), { 
+                    year: year, branch: branch, subject: subject, 
+                    term: term, type: type, title: title, 
+                    subjectImg: subjUrl, solutionImg: solUrl, 
+                    timestamp: serverTimestamp() 
+                });
+                
+                alert("✅ تم نشر الموضوع بنجاح في الموقع!");
+                
+                // تفريغ الحقول
+                document.getElementById('inp-title').value = '';
+                document.getElementById('file-subj').value = '';
+                document.getElementById('file-sol').value = '';
+                
+                // تحديث الجدول
+                loadAllExams();
+                
+            } catch (err) { 
+                alert("❌ خطأ أثناء النشر: " + err.message); 
+            } finally { 
+                document.getElementById('upload-loader').style.display = 'none'; 
+            }
+        };
+
+        // جلب جميع المواضيع المنشورة وعرضها في لوحة التحكم
+        async function loadAllExams() {
+            const tbody = document.getElementById('table-body');
+            try {
+                // جلب جميع الوثائق في مجموعة exams_repository
+                const querySnapshot = await getDocs(collection(db, "exams_repository"));
+                
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><i class="fa-regular fa-folder-open"></i> لا توجد مواضيع منشورة حتى الآن.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="font-weight:bold; color:white;">${data.title}</td>
+                            <td><span style="font-size:0.8rem; display:block; color:var(--admin-primary);">${data.year} - ${data.branch}</span>${data.subject}</td>
+                            <td><span style="background:#374151; padding:3px 8px; border-radius:4px; font-size:0.8rem;">${data.type}</span><br><span style="font-size:0.8rem; color:var(--text-muted);">${data.term}</span></td>
+                            <td>
+                                <button class="btn btn-delete" onclick="deleteExam('${docSnap.id}')"><i class="fa-solid fa-trash"></i> حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching documents: ", error);
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--admin-danger);">حدث خطأ أثناء جلب البيانات.</td></tr>';
+            }
+        }
+
+        // حذف موضوع
+        window.deleteExam = async function(id) {
+            if (confirm("هل أنت متأكد من حذف هذا الموضوع نهائياً من الموقع؟")) {
+                try {
+                    await deleteDoc(doc(db, "exams_repository", id));
+                    loadAllExams(); // تحديث الجدول
+                } catch (error) {
+                    alert("خطأ أثناء الحذف: " + error.message);
+                }
+            }
+        };
+
+        // تحميل البيانات عند فتح الصفحة
+        window.onload = loadAllExams;
+    </script>
+</body>
+</html>
