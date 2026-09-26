@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - الربط المباشر مع تليجرام</title>
+    <title>لوحة الإدارة - الرفع المتعدد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* نفس تصميم لوحة الإدارة السابق دون تغيير */
         :root { --admin-dark: #111827; --admin-panel: #1f2937; --admin-primary: #3b82f6; --admin-accent: #10b981; --admin-danger: #ef4444; --text-light: #f3f4f6; --text-muted: #9ca3af; --border-color: #374151; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background-color: var(--admin-dark); color: var(--text-light); line-height: 1.6; padding-bottom: 50px; }
@@ -25,6 +24,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; } th, td { text-align: right; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; } th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
         .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
         #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .hint-box { background: rgba(59, 130, 246, 0.1); border-right: 4px solid var(--admin-primary); padding: 10px; font-size: 0.85rem; border-radius: 6px; margin-bottom: 15px; color: #bfdbfe; }
     </style>
 </head>
 <body>
@@ -35,26 +35,40 @@
 
     <div class="container">
         <div class="panel-card">
-            <div class="panel-header"><i class="fa-solid fa-plus-circle"></i> إضافة موضوع (مستضاف على تليجرام)</div>
+            <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
+            
+            <div class="hint-box">
+                <i class="fa-solid fa-lightbulb"></i> <b>ميزة التسمية التلقائية:</b> حدد العديد من الملفات دفعة واحدة، وسيقوم النظام بتسميتها تلقائياً بناءً على النوع (مثلاً: فرض رقم 1، فرض رقم 2...).
+            </div>
+
             <div class="form-group"><label>السنة الدراسية</label><select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select></div>
             <div class="form-group"><label>الشعبة</label><select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select></div>
             <div class="form-group"><label>المادة</label><select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select></div>
             <div class="form-row">
                 <div class="form-group"><label>الفصل</label><select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select></div>
-                <div class="form-group"><label>النوع</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
+                <div class="form-group"><label>النوع (سيكون اسم الموضوع)</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
             </div>
-            <div class="form-group"><label>عنوان الموضوع</label><input type="text" id="inp-title" placeholder="مثال: فرض الفصل الأول محروس رقم 1"></div>
-            <div class="form-group"><label>ملف الموضوع (إجباري)</label><input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx"></div>
-            <div class="form-group"><label>ملف الحل (اختياري)</label><input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx"></div>
-            <button class="btn btn-submit" onclick="publishExam()"><i class="fa-solid fa-cloud-arrow-up"></i> رفع لتليجرام ونشر الموضوع</button>
-            <div id="upload-loader"><i class="fa-solid fa-gear fa-spin"></i> جاري الرفع إلى خوادم تليجرام واستخراج الـ ID...</div>
+            
+            <!-- تم إضافة خاصية multiple للسماح بتحديد أكثر من ملف -->
+            <div class="form-group">
+                <label>تحديد المواضيع (يمكنك تحديد عدة صور أو ملفات معاً) <span style="color:var(--admin-danger)">*</span></label>
+                <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx" multiple onchange="checkFilesCount()">
+            </div>
+            
+            <div class="form-group" id="sol-group">
+                <label>ملف الحل (متاح فقط عند رفع موضوع واحد)</label>
+                <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
+            </div>
+
+            <button class="btn btn-submit" id="btn-publish" onclick="publishExamsBulk()"><i class="fa-solid fa-cloud-arrow-up"></i> رفع المواضيع المحددة الآن</button>
+            <div id="upload-loader"></div>
         </div>
 
         <div class="panel-card">
             <div class="panel-header"><i class="fa-solid fa-database"></i> إدارة المواضيع</div>
             <div style="overflow-x: auto;">
                 <table id="exams-table">
-                    <thead><tr><th>العنوان</th><th>المستوى والمادة</th><th>حالة الملف</th><th>إجراءات</th></tr></thead>
+                    <thead><tr><th>العنوان التلقائي</th><th>المستوى والمادة</th><th>حالة الملف</th><th>إجراءات</th></tr></thead>
                     <tbody id="table-body"><tr><td colspan="4" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
                 </table>
             </div>
@@ -63,7 +77,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0", authDomain: "shop-clothes-224a3.firebaseapp.com", projectId: "shop-clothes-224a3", storageBucket: "shop-clothes-224a3.appspot.com", messagingSenderId: "348817058494", appId: "1:348817058494:web:830980b3dae15984350cef" };
         const app = initializeApp(firebaseConfig);
@@ -81,52 +95,108 @@
         window.updateBranches = function() { const year = document.getElementById('sel-year').value; const branchSel = document.getElementById('sel-branch'); const subjectSel = document.getElementById('sel-subject'); branchSel.innerHTML = '<option value="">-- اختر الشعبة --</option>'; subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>'; subjectSel.disabled = true; if (year && curriculum[year]) { Object.keys(curriculum[year]).forEach(branch => { branchSel.innerHTML += `<option value="${branch}">${branch}</option>`; }); branchSel.disabled = false; } else { branchSel.disabled = true; } };
         window.updateSubjects = function() { const year = document.getElementById('sel-year').value; const branch = document.getElementById('sel-branch').value; const subjectSel = document.getElementById('sel-subject'); subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>'; if (year && branch && curriculum[year][branch]) { curriculum[year][branch].forEach(subject => { subjectSel.innerHTML += `<option value="${subject}">${subject}</option>`; }); subjectSel.disabled = false; } else { subjectSel.disabled = true; } };
 
-        // رفع الملف كـ Document وجلب الـ File ID السري
+        // إخفاء حقل الحل إذا تم تحديد أكثر من ملف (لأن الحلول تُرفع فردياً)
+        window.checkFilesCount = function() {
+            const files = document.getElementById('file-subj').files;
+            const solGroup = document.getElementById('sol-group');
+            const btn = document.getElementById('btn-publish');
+            if(files.length > 1) {
+                solGroup.style.display = 'none';
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع ${files.length} مواضيع الآن`;
+            } else {
+                solGroup.style.display = 'block';
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع لتليجرام ونشر الموضوع`;
+            }
+        };
+
         async function uploadAndGetFileId(file, caption) {
             const formData = new FormData();
             formData.append('chat_id', TELEGRAM_CHANNEL_ID);
             formData.append('document', file);
             formData.append('caption', caption);
 
-            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-                method: 'POST',
-                body: formData
-            });
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, { method: 'POST', body: formData });
             const data = await res.json();
             if (!data.ok) throw new Error(data.description);
-            
-            // إرجاع معرّف الملف السري (File ID) الذي سنحفظه في القاعدة
             return data.result.document.file_id;
         }
 
-        window.publishExam = async function() {
-            const year = document.getElementById('sel-year').value; const branch = document.getElementById('sel-branch').value; const subject = document.getElementById('sel-subject').value; const term = document.getElementById('sel-term').value; const type = document.getElementById('sel-type').value; const title = document.getElementById('inp-title').value; const fileSubj = document.getElementById('file-subj').files[0]; const fileSol = document.getElementById('file-sol').files[0];
-            if (!year || !branch || !subject || !title || !fileSubj) return alert("الرجاء ملء جميع الحقول وإرفاق الموضوع!");
+        window.publishExamsBulk = async function() {
+            const year = document.getElementById('sel-year').value; 
+            const branch = document.getElementById('sel-branch').value; 
+            const subject = document.getElementById('sel-subject').value; 
+            const term = document.getElementById('sel-term').value; 
+            const type = document.getElementById('sel-type').value; 
+            
+            const filesSubj = document.getElementById('file-subj').files; 
+            const fileSol = document.getElementById('file-sol').files[0];
 
-            document.getElementById('upload-loader').style.display = 'block';
+            if (!year || !branch || !subject || filesSubj.length === 0) {
+                return alert("الرجاء اختيار السنة، الشعبة، المادة، وتحديد ملف واحد على الأقل!");
+            }
+
+            const loader = document.getElementById('upload-loader');
+            loader.style.display = 'block';
+            document.getElementById('btn-publish').disabled = true;
 
             try {
-                const metaText = `📁 رفع: ${title}\nالمادة: ${subject} (${year} - ${branch})\n${type} - ${term}`;
-                
-                // جلب الـ ID للموضوع
-                const subjFileId = await uploadAndGetFileId(fileSubj, metaText + "\n(الموضوع)");
-                
-                // جلب الـ ID للحل إن وجد
-                let solFileId = "";
-                if (fileSol) solFileId = await uploadAndGetFileId(fileSol, metaText + "\n(الحل)");
+                // 1. حساب عدد المواضيع الموجودة مسبقاً في هذا القسم بالذات للترقيم الصحيح
+                const q = query(collection(db, "exams_repository"), 
+                    where("year", "==", year), 
+                    where("branch", "==", branch), 
+                    where("subject", "==", subject), 
+                    where("term", "==", term), 
+                    where("type", "==", type)
+                );
+                const snapshot = await getDocs(q);
+                let currentCount = snapshot.size; // مثلاً إذا وجد 2، سيبدأ الترقيم الجديد من 3
 
-                // حفظ الـ IDs في قاعدة البيانات بدلاً من الروابط
-                await addDoc(collection(db, "exams_repository"), { 
-                    year: year, branch: branch, subject: subject, term: term, type: type, title: title, 
-                    subjectFileId: subjFileId, // لاحظ التغيير هنا
-                    solutionFileId: solFileId, // وهنا
-                    timestamp: serverTimestamp() 
-                });
+                // 2. حلقة التكرار للرفع المتعدد
+                for (let i = 0; i < filesSubj.length; i++) {
+                    const currentFile = filesSubj[i];
+                    currentCount++; // زيادة العداد
+                    
+                    // توليد العنوان التلقائي (مثال: فرض رقم 1)
+                    const autoTitle = `${type} رقم ${currentCount}`;
+                    
+                    // تحديث واجهة المستخدم ليعرف الأستاذ أي ملف يُرفع الآن
+                    loader.innerHTML = `<i class="fa-solid fa-gear fa-spin"></i> جاري رفع الملف ${i + 1} من ${filesSubj.length} (${autoTitle})...`;
+
+                    const metaText = `📁 رفع: ${autoTitle}\nالمادة: ${subject} (${year} - ${branch})\n${type} - ${term}`;
+                    
+                    // رفع الملف لتليجرام
+                    const subjFileId = await uploadAndGetFileId(currentFile, metaText + "\n(الموضوع)");
+                    
+                    // التعامل مع ملف الحل (فقط إذا تم رفع موضوع واحد، في الرفع المتعدد يتم تجاهل الحل)
+                    let solFileId = "";
+                    if (filesSubj.length === 1 && fileSol) {
+                        solFileId = await uploadAndGetFileId(fileSol, metaText + "\n(الحل)");
+                    }
+
+                    // حفظ في Firebase
+                    await addDoc(collection(db, "exams_repository"), { 
+                        year: year, branch: branch, subject: subject, term: term, type: type, 
+                        title: autoTitle, // وضع العنوان التلقائي
+                        subjectFileId: subjFileId, 
+                        solutionFileId: solFileId, 
+                        timestamp: serverTimestamp() 
+                    });
+                }
                 
-                alert("✅ تم الرفع على خوادم تليجرام وحفظ الـ File ID بنجاح!");
-                document.getElementById('inp-title').value = ''; document.getElementById('file-subj').value = ''; document.getElementById('file-sol').value = '';
+                alert(`✅ تم رفع ${filesSubj.length} ملفات بنجاح وتسميتها تلقائياً!`);
+                
+                // تفريغ الحقول وإعادة التعيين
+                document.getElementById('file-subj').value = ''; 
+                document.getElementById('file-sol').value = '';
+                checkFilesCount(); // إعادة الزر لحالته
                 loadAllExams();
-            } catch (err) { alert("❌ خطأ: " + err.message); } finally { document.getElementById('upload-loader').style.display = 'none'; }
+                
+            } catch (err) { 
+                alert("❌ خطأ أثناء الرفع: " + err.message); 
+            } finally { 
+                loader.style.display = 'none'; 
+                document.getElementById('btn-publish').disabled = false;
+            }
         };
 
         async function loadAllExams() {
