@@ -3,181 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أكاديمية التفوق - بنك الفروض والاختبارات</title>
+    <title>ثانوية التوفق - بنك الفروض والاختبارات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --danger: #ef4444;
+            --telegram: #0088cc;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        :root.light-mode {
             --primary: #2563eb;
             --primary-dark: #1e3a8a;
             --secondary: #3b82f6;
-            --accent: #f59e0b;
             --bg: #f8fafc;
             --surface: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --telegram: #0088cc;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
-            --radius-md: 12px;
-            --radius-lg: 20px;
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         /* Navbar */
-        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); border-bottom: 1px solid var(--border); padding: 1rem 0; }
-        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
-        .brand i { color: var(--primary); font-size: 1.8rem; }
-        .back-nav-btn { display: none; background: var(--bg); border: 1px solid var(--border); color: var(--text-main); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
-        .back-nav-btn:hover { background: #e2e8f0; transform: translateX(-3px); }
-
-        /* Premium Hero Section */
-        .hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; text-align: center; padding: 4rem 1.5rem 5rem 1.5rem; position: relative; overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 2.5rem; box-shadow: var(--shadow-lg); }
-        .hero::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; blur: 20px; }
-        .hero::after { content: ''; position: absolute; bottom: -80px; left: -20px; width: 250px; height: 250px; background: rgba(255,255,255,0.05); border-radius: 50%; }
-        .hero h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 15px; position: relative; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .hero p { font-size: 1.15rem; color: #e0f2fe; max-width: 650px; margin: 0 auto; position: relative; z-index: 2; font-weight: 500; }
-
-        .main-container { max-width: 1200px; margin: -3.5rem auto 3rem auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+        header { background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow-sm); border-bottom: 1px solid var(--border); padding: 0.8rem 0; transition: background 0.3s; }
+        :root.light-mode header { background: rgba(255, 255, 255, 0.95); }
         
-        /* Breadcrumb */
-        .breadcrumb { background: var(--surface); padding: 15px 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--border); margin-bottom: 2rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-size: 1rem; }
-        .breadcrumb span { color: var(--primary); margin: 0 5px; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .brand i { color: var(--primary); font-size: 1.5rem; }
+        
+        .nav-controls { display: flex; align-items: center; gap: 10px; }
+        .theme-toggle-btn { background: var(--surface); border: 1px solid var(--border); color: var(--accent); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .back-nav-btn { display: none; background: var(--surface); border: 1px solid var(--border); color: var(--text-main); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        .back-nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Views & Animations */
+        /* Hero Section */
+        .hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary) 100%); color: white; text-align: center; padding: 2.5rem 1rem 3rem 1rem; position: relative; overflow: hidden; border-radius: 0 0 30px 30px; margin-bottom: 1.5rem; box-shadow: var(--shadow-lg); transition: all 0.4s ease; }
+        .hero h1 { font-size: 2rem; font-weight: 900; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .hero p { font-size: 0.95rem; color: #e0f2fe; max-width: 600px; margin: 0 auto; font-weight: 500; }
+
+        .main-container { max-width: 1200px; margin: 1rem auto 3rem auto; padding: 0 1rem; position: relative; z-index: 10; }
+        
+        .breadcrumb { background: var(--surface); padding: 12px 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 1.5rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; transition: background 0.3s; }
+        .breadcrumb span { color: var(--primary); margin: 0 3px; }
+
         .page-view { display: none; }
-        .page-view.active { display: block; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-view.active { display: block; animation: slideUp 0.4s ease forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Grid Cards */
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
-        .grid-item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
-        .grid-item-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); transform: scaleX(0); transition: transform 0.3s ease; transform-origin: right; }
-        .grid-item-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: transparent; }
-        .grid-item-card:hover::before { transform: scaleX(1); }
-        .grid-item-card i { font-size: 3rem; color: var(--primary); margin-bottom: 1.2rem; transition: transform 0.3s ease; }
-        .grid-item-card:hover i { transform: scale(1.1); color: var(--accent); }
-        .grid-item-card h3 { font-size: 1.3rem; color: var(--primary-dark); font-weight: 800; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+        .grid-item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+        .grid-item-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .grid-item-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .grid-item-card h3 { font-size: 1.15rem; color: var(--text-main); font-weight: 800; }
 
-        .fa-language, .fa-spell-check { color: #8b5cf6 !important; }
+        .fa-language, .fa-spell-check { color: #a855f7 !important; }
         .fa-brain, .fa-scale-balanced { color: #f59e0b !important; }
         .fa-calculator, .fa-chart-line { color: #10b981 !important; }
 
-        /* Tabs */
-        .trimester-tabs { display: flex; gap: 12px; margin-bottom: 2rem; background: var(--surface); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border); overflow-x: auto; box-shadow: var(--shadow-sm); }
-        .tab-btn { flex: 1; min-width: 130px; padding: 12px; border: none; background: transparent; font-weight: 700; font-size: 1rem; color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
-        .tab-btn:hover { background: #f1f5f9; color: var(--text-main); }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .trimester-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .trimester-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .trimester-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .trimester-card i { font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+        .trimester-card h3 { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
+
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .category-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 1.8rem 1rem; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .category-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-md); background: rgba(56, 189, 248, 0.03); }
+        .category-card i { font-size: 2.8rem; color: var(--accent); }
+        .category-card h3 { font-size: 1.2rem; font-weight: 900; color: var(--text-main); }
+        .category-card p { color: var(--text-muted); font-size: 0.8rem; }
+
+        /* Search & Bear */
+        .search-container { position: relative; max-width: 100%; margin: 1.5rem auto 1.5rem; }
+        .bear-search-mascot { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) scale(0.55); transform-origin: bottom center; width: 140px; height: 110px; z-index: 5; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .search-bear-head { width: 130px; height: 120px; background: #334155; border-radius: 50%; margin: 0 auto; position: relative; box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2); }
+        :root.light-mode .search-bear-head { background: #8d5524; }
+        .search-ear { position: absolute; top: -5px; width: 45px; height: 45px; background: #334155; border-radius: 50%; z-index: -1; transition: top 0.3s ease; }
+        :root.light-mode .search-ear { background: #8d5524; }
+        .search-ear.left { left: -5px; } .search-ear.right { right: -5px; }
+        .search-ear::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px; background: #38bdf8; border-radius: 50%; }
+        :root.light-mode .search-ear::after { background: #e0ac69; }
+        .search-bear-face { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 75px; height: 60px; background: #475569; border-radius: 40px 40px 30px 30px; }
+        :root.light-mode .search-bear-face { background: #e0ac69; }
+        .search-nose { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 28px; height: 16px; background: #020617; border-radius: 50%; }
+        .search-mouth { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); width: 20px; height: 10px; border-bottom: 2px solid #020617; border-radius: 50%; transition: all 0.3s ease; }
+        .search-eye { position: absolute; top: 40px; width: 16px; height: 16px; background: #020617; border-radius: 50%; transition: height 0.2s ease, margin-top 0.2s ease, transform 0.1s; }
+        .search-eye.left { left: 30px; } .search-eye.right { right: 30px; }
+        .search-eye::after { content: ''; position: absolute; top: 3px; right: 3px; width: 4px; height: 4px; background: #fff; border-radius: 50%; }
+        .search-paw { position: absolute; bottom: -15px; width: 45px; height: 45px; background: #334155; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 20; }
+        :root.light-mode .search-paw { background: #8d5524; }
+        .search-paw.left { left: 15px; } .search-paw.right { right: 15px; }
+        .search-pad { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 20px; height: 15px; background: #475569; border-radius: 50%; }
+        :root.light-mode .search-pad { background: #e0ac69; }
+        .search-claws { position: absolute; top: 3px; width: 100%; display: flex; justify-content: center; gap: 4px; }
+        .search-claw { width: 5px; height: 10px; background: #020617; border-radius: 50% 50% 0 0; }
+        .search-claw:nth-child(1) { transform: rotate(-15deg) translateY(2px); }
+        .search-claw:nth-child(3) { transform: rotate(15deg) translateY(2px); }
+        .bear-search-mascot.sleeping { transform: translateX(-50%) scale(0.4) translateY(100px); opacity: 0; pointer-events: none; }
+        .bear-search-mascot.sad .search-mouth { border-bottom: none; border-top: 2px solid #020617; top: 33px; }
+        .bear-search-mascot.sad .search-ear { top: 0px; }
+        .bear-search-mascot.sad .search-eye { height: 8px; margin-top: 4px; }
+        .search-box { position: relative; z-index: 10; }
+        .search-box input { width: 100%; padding: 12px 40px 12px 12px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); color: var(--text-main); font-size: 0.95rem; outline: none; transition: 0.3s; font-family: inherit; font-weight: 600; box-shadow: var(--shadow-sm); }
+        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+        .search-box i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; z-index: 11; }
 
         /* Exam Items */
-        .exam-item { background: var(--surface); border: 1px solid var(--border); border-right: 6px solid var(--primary); border-radius: var(--radius-md); padding: 1.8rem; margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
-        .exam-item:hover { transform: translateX(-5px); box-shadow: var(--shadow-md); border-right-color: var(--accent); }
-        .exam-info h4 { font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 10px; font-weight: 800; }
-        .badge { font-size: 0.85rem; font-weight: 800; padding: 6px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; }
-        .badge-term { background: #e0f2fe; color: #0369a1; }
-        .badge-type { background: #fef3c7; color: #b45309; }
+        .exam-item { background: var(--surface); border: 1px solid var(--border); border-right: 5px solid var(--primary); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
+        .exam-info h4 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px; font-weight: 800; }
+        .badge { font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+        .badge-term { background: rgba(56, 189, 248, 0.1); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .badge-type { background: rgba(245, 158, 11, 0.1); color: var(--accent); border: 1px solid rgba(245, 158, 11, 0.2); }
         
-        .exam-actions { display: flex; gap: 12px; }
-        .btn-action { padding: 12px 20px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; border: none; color: white; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .exam-actions { display: flex; gap: 8px; width: 100%; flex-wrap: wrap; }
+        .btn-action { flex: 1; min-width: 90px; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; border: none; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease; }
+        .btn-preview { background: var(--secondary); }
         .btn-subject { background: var(--primary-dark); }
         .btn-solution { background: var(--success); }
 
-        /* Floating Action Button (FAB) */
-        .fab { position: fixed; bottom: 40px; right: 40px; background: linear-gradient(135deg, var(--telegram), #00a2f5); color: white; border-radius: 50px; border: none; padding: 16px 28px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4); z-index: 99; display: flex; align-items: center; gap: 10px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: pulse 2s infinite; }
-        .fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 30px rgba(0, 136, 204, 0.6); animation: none; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 136, 204, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); } }
+        /* Preview Modal */
+        .preview-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 1rem; }
+        .preview-overlay.show { display: flex; }
+        .preview-card { background: var(--surface); width: 100%; max-width: 850px; height: 85vh; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.6); border: 1px solid var(--border); }
+        .preview-header { padding: 1rem 1.5rem; background: var(--bg); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .preview-header h3 { font-size: 1.1rem; color: var(--primary); }
+        .preview-body { flex: 1; width: 100%; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
+        .preview-body iframe, .preview-body img { width: 100%; height: 100%; border: none; object-fit: contain; }
+        .preview-footer { padding: 1rem 1.5rem; background: var(--bg); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); gap: 10px; }
 
-        /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
+        .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 9999; }
+
+        /* Book Loader (أنيميشن الكتاب الذكي) */
+        .book-loader-container { text-align: center; padding: 3rem 1rem; }
+        .book-loader { width: 60px; height: 45px; border: 3px solid var(--primary); border-radius: 3px 6px 6px 3px; position: relative; margin: 0 auto 15px; background: var(--surface); box-shadow: var(--shadow-md); }
+        .book-loader::before { content: ''; position: absolute; width: 30px; height: 100%; border-right: 3px solid var(--primary); border-radius: 3px 0 0 3px; left: 0; top: 0; background: var(--surface); transform-origin: right; animation: flipPage 1.2s infinite cubic-bezier(0.64, 0.04, 0.35, 1); }
+        @keyframes flipPage { 0% { transform: rotateY(0deg); background: var(--bg); } 50% { background: var(--primary); } 100% { transform: rotateY(-180deg); background: var(--surface); } }
+
+        .fab { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--telegram), #00a2f5); color: white; border-radius: 50px; border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 136, 204, 0.4); z-index: 999; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .fab i { animation: fabWink 5s infinite; }
+        @keyframes fabWink { 0%, 90%, 100% { transform: scale(1) rotate(0deg); } 92% { transform: scale(1.2) rotate(-15deg); } 94% { transform: scale(1.2) rotate(15deg); } 96% { transform: scale(1) rotate(0deg); } }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-card { background: var(--surface); width: 100%; max-width: 600px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: var(--surface); width: 100%; max-width: 500px; border-radius: 20px; padding: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; max-height: 90vh; overflow-y: auto; }
         .modal-overlay.show .modal-card { transform: scale(1); }
-        .modal-card h3 { margin-bottom: 1.5rem; color: var(--primary-dark); font-size: 1.5rem; display: flex; align-items: center; gap: 12px; font-weight: 900; }
-        .modal-card p.hint { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 2rem; background: #f8fafc; padding: 15px; border-radius: 12px; border-right: 4px solid var(--accent); line-height: 1.7; }
+        .modal-card h3 { margin-bottom: 1rem; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 8px; font-weight: 800; }
+        .modal-card p.hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem; background: var(--bg); padding: 10px; border-radius: 8px; border-right: 3px solid var(--accent); }
         
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 800; margin-bottom: 8px; font-size: 1rem; color: var(--primary-dark); }
-        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; transition: all 0.3s ease; background: var(--bg); color: var(--text-main); }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-main); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: var(--bg); color: var(--text-main); outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
         
-        .modal-buttons { display: flex; gap: 15px; margin-top: 2.5rem; }
-        .btn-submit { flex: 2; padding: 14px; background: var(--telegram); color: white; border: none; border-radius: 10px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn-submit:hover { background: #0077b3; transform: translateY(-2px); }
-        .btn-cancel { flex: 1; padding: 14px; background: #f1f5f9; border: none; border-radius: 10px; font-weight: 800; font-size: 1.1rem; cursor: pointer; color: var(--text-main); transition: 0.2s; }
-        .btn-cancel:hover { background: #e2e8f0; }
-        
-        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 800; margin-top: 20px; font-size: 1.1rem; padding: 15px; background: #e0f2fe; border-radius: 10px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; }
+        .btn-submit { flex: 2; padding: 10px; background: var(--telegram); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .btn-cancel { flex: 1; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; color: var(--text-main); }
+        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 800; margin-top: 15px; font-size: 0.95rem; padding: 10px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; }
 
-        /* Footer */
-        footer { text-align: center; padding: 3rem 1rem; margin-top: 4rem; color: var(--text-muted); border-top: 1px solid var(--border); font-weight: 600; font-size: 0.95rem; background: var(--surface); }
-
-        /* ========================================================
-           الاستجابة لجميع الأجهزة (Responsive Design)
-           ======================================================== */
-        @media screen and (max-width: 768px) {
-            .hero { padding: 3rem 1rem 4rem 1rem; border-radius: 0 0 25px 25px; }
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
-            
-            .main-container { margin-top: -2.5rem; padding: 0 1rem; }
-            .grid-layout { grid-template-columns: 1fr; gap: 1rem; }
-            .grid-item-card { padding: 1.5rem 1rem; }
-            
-            .breadcrumb { font-size: 0.9rem; padding: 12px 15px; }
-            
-            .exam-item { flex-direction: column; align-items: flex-start; gap: 15px; padding: 1.2rem; }
-            .exam-actions { width: 100%; flex-direction: column; gap: 10px; }
-            .btn-action { width: 100%; justify-content: center; }
-            
-            .modal-card { padding: 1.5rem; }
-            .modal-card h3 { font-size: 1.3rem; }
-            div[style*="display: flex; gap: 15px;"] { flex-direction: column; gap: 0; }
-            .modal-buttons { flex-direction: column; gap: 10px; }
-            .btn-submit, .btn-cancel { width: 100%; }
-            
-            .fab { bottom: 20px; right: 20px; padding: 14px 22px; font-size: 1rem; }
-        }
-
-        @media screen and (max-width: 480px) {
-            .brand { font-size: 1.2rem; }
-            .brand i { font-size: 1.5rem; }
-            .tab-btn { min-width: 100px; padding: 8px; font-size: 0.9rem; }
-        }
+        footer { text-align: center; padding: 2rem 1rem; margin-top: 3rem; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem; background: var(--surface); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-content">
-            <div class="brand"><i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني مصطفى</div>
-            <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right-long"></i> رجوع للخلف</button>
+            <div class="brand"><i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني</div>
+            <div class="nav-controls">
+                <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()"><i class="fa-solid fa-sun"></i></button>
+                <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right-long"></i> رجوع</button>
+            </div>
         </div>
     </header>
 
     <div class="hero" id="hero-section">
         <h1>بنك الفروض والاختبارات</h1>
-        <p>المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير للامتحانات بأفضل المواضيع.</p>
+        <p>المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.</p>
     </div>
 
     <div class="main-container">
         <div class="breadcrumb" id="breadcrumb"><i class="fa-solid fa-house"></i> الرئيسية</div>
 
-        <!-- اختيار السنة -->
+        <!-- 1. اختيار السنة -->
         <div id="view-year" class="page-view active">
             <div class="grid-layout">
                 <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')"><i class="fa-solid fa-1"></i><h3>الأولى ثانوي</h3></div>
@@ -186,39 +219,130 @@
             </div>
         </div>
 
-        <!-- اختيار الشعبة -->
+        <!-- 2. اختيار الشعبة -->
         <div id="view-branch" class="page-view"><div class="grid-layout" id="branches-box"></div></div>
         
-        <!-- اختيار المادة -->
+        <!-- 3. اختيار المادة -->
         <div id="view-subject" class="page-view"><div class="grid-layout" id="subjects-box"></div></div>
         
-        <!-- عرض المواضيع -->
-        <div id="view-exams" class="page-view">
-            <div class="trimester-tabs">
-                <button class="tab-btn active" onclick="filterTerm('الكل')"><i class="fa-solid fa-layer-group"></i> جميع الفصول</button>
-                <button class="tab-btn" onclick="filterTerm('الفصل الأول')">الفصل الأول</button>
-                <button class="tab-btn" onclick="filterTerm('الفصل الثاني')">الفصل الثاني</button>
-                <button class="tab-btn" onclick="filterTerm('الفصل الثالث')">الفصل الثالث</button>
+        <!-- 4. اختيار الفصل -->
+        <div id="view-term" class="page-view">
+            <div class="trimester-grid">
+                <div class="trimester-card" onclick="selectTerm('الفصل الأول')"><i class="fa-solid fa-calendar-days"></i><h3>الفصل الأول</h3></div>
+                <div class="trimester-card" onclick="selectTerm('الفصل الثاني')"><i class="fa-solid fa-calendar-days"></i><h3>الفصل الثاني</h3></div>
+                <div class="trimester-card" onclick="selectTerm('الفصل الثالث')"><i class="fa-solid fa-calendar-days"></i><h3>الفصل الثالث</h3></div>
             </div>
+        </div>
+
+        <!-- 5. اختيار نوع الموضوع -->
+        <div id="view-category" class="page-view">
+            <div class="category-grid">
+                <div class="category-card" onclick="selectCategory('فرض')">
+                    <i class="fa-solid fa-file-pen"></i>
+                    <h3>الفروض</h3>
+                    <p>فروض محروسة وتجارب</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('اختبار')">
+                    <i class="fa-solid fa-file-shield"></i>
+                    <h3>الاختبارات</h3>
+                    <p>اختبارات فصلية مع التصحيح</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('سلسلة تمارين')">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h3>سلسلة تمارين</h3>
+                    <p>سلاسل الدعم والمراجعة</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('ملخص')">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <h3>ملخصات شاملة</h3>
+                    <p>ملخصات الدروس والقوانين</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 6. عرض المواضيع النهائية -->
+        <div id="view-exams" class="page-view">
+            <div class="search-container">
+                <div class="bear-search-mascot sleeping" id="search-bear">
+                    <div class="search-bear-head">
+                        <div class="search-ear left"></div><div class="search-ear right"></div>
+                        <div class="search-eye left" id="search-eye-left"></div><div class="search-eye right" id="search-eye-right"></div>
+                        <div class="search-bear-face">
+                            <div class="search-nose"></div><div class="search-mouth"></div>
+                        </div>
+                    </div>
+                    <div class="search-paw left">
+                        <div class="search-claws"><div class="search-claw"></div><div class="search-claw"></div><div class="search-claw"></div></div>
+                        <div class="search-pad"></div>
+                    </div>
+                    <div class="search-paw right">
+                        <div class="search-claws"><div class="search-claw"></div><div class="search-claw"></div><div class="search-claw"></div></div>
+                        <div class="search-pad"></div>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="search-input" placeholder="ابحث في هذا القسم..." autocomplete="off">
+                </div>
+            </div>
+
             <div id="exams-container"></div>
         </div>
     </div>
 
+    <!-- نافذة المعاينة مع أنيميشن الكتاب -->
+    <div id="preview-modal" class="preview-overlay">
+        <div class="preview-card">
+            <div class="preview-header">
+                <h3 id="preview-title">معاينة الموضوع</h3>
+                <button onclick="closePreview()" style="background:none; border:none; color:var(--text-main); font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="preview-body" id="preview-body">
+                <div class="book-loader-container">
+                    <div class="book-loader"></div>
+                    <h3 style="color:var(--primary);">جاري تحميل المعاينة...</h3>
+                </div>
+            </div>
+            <div class="preview-footer">
+                <button class="btn-action btn-subject" id="preview-download-btn" style="flex:1;"><i class="fa-solid fa-download"></i> تحميل الملف</button>
+                <button class="btn-action btn-solution" onclick="closePreview()" style="flex:1; background:var(--danger);"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر المساهمة المطور -->
     <button class="fab" id="fab-btn" onclick="openUploadModal()">
         <i class="fa-solid fa-hand-holding-heart"></i> ساهم بموضوع
     </button>
 
-    <!-- Modal طلب الإضافة -->
+    <!-- Modal المساهمة المتكامل (يختار السنة، الشعبة، المادة، الفصل، النوع) -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
             <h3><i class="fa-solid fa-file-arrow-up" style="color:var(--telegram)"></i> إرسال موضوع للمنصة</h3>
-            <p class="hint">ساهم معنا في إثراء الموقع! سيتم إرسال الملفات للإدارة لمراجعتها وإضافتها لاحقاً لكي يستفيد منها جميع الطلاب والأساتذة.</p>
+            <p class="hint">ساهم معنا بإثراء المنصة! يرجى اختيار البيانات بدقة ليتم تصنيف الموضوع في مكانه الصحيح.</p>
             
             <div class="form-group">
-                <input type="text" id="field-sender" placeholder="اسمك الكريم">
+                <input type="text" id="field-sender" placeholder="اسمك الكريم (اختياري)">
             </div>
-            <div style="display: flex; gap: 15px;">
+            <div class="form-group">
+                <label>السنة الدراسية</label>
+                <select id="modal-year" onchange="updateModalBranches()">
+                    <option value="الأولى ثانوي">الأولى ثانوي</option>
+                    <option value="الثانية ثانوي">الثانية ثانوي</option>
+                    <option value="الثالثة ثانوي">الثالثة ثانوي</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>الشعبة</label>
+                <select id="modal-branch" onchange="updateModalSubjects()"></select>
+            </div>
+            <div class="form-group">
+                <label>المادة</label>
+                <select id="modal-subject"></select>
+            </div>
+            <div style="display: flex; gap: 10px;">
                 <div class="form-group" style="flex: 1;">
+                    <label>الفصل</label>
                     <select id="field-term">
                         <option value="الفصل الأول">الفصل الأول</option>
                         <option value="الفصل الثاني">الفصل الثاني</option>
@@ -226,28 +350,29 @@
                     </select>
                 </div>
                 <div class="form-group" style="flex: 1;">
+                    <label>النوع</label>
                     <select id="field-type">
                         <option value="فرض">فرض</option>
                         <option value="اختبار">اختبار</option>
                         <option value="سلسلة تمارين">سلسلة تمارين</option>
-                        <option value="ملخص">ملخص شامل</option>
+                        <option value="ملخص">ملخص</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: اختبار الفصل الأول في الرياضيات - نموذج 1)">
+                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: فرض المحروس رقم 1)">
             </div>
             <div class="form-group">
-                <label>إرفاق الموضوع (صورة، PDF، Word) <span style="color:var(--danger)">*</span></label>
+                <label>ملف الموضوع <span style="color:var(--danger)">*</span></label>
                 <input type="file" id="field-file-subj" accept="image/*,.pdf,.doc,.docx">
             </div>
             <div class="form-group">
-                <label>إرفاق الحل (إن وجد - اختياري)</label>
+                <label>ملف الحل (اختياري)</label>
                 <input type="file" id="field-file-sol" accept="image/*,.pdf,.doc,.docx">
             </div>
 
             <div class="modal-buttons">
-                <button class="btn-submit" onclick="submitRequestToAdmin()"><i class="fa-brands fa-telegram"></i> إرسال الطلب للإدارة</button>
+                <button class="btn-submit" onclick="submitRequestToAdmin()"><i class="fa-brands fa-telegram"></i> إرسال للإدارة</button>
                 <button class="btn-cancel" onclick="closeUploadModal()">إلغاء</button>
             </div>
             <div id="upload-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري إرسال الملفات ... يرجى الانتظار</div>
@@ -255,7 +380,7 @@
     </div>
 
     <footer>
-        <p>تم التطوير بكل ❤️ من أجل طلاب ثانوية غوبريني مصطفى | أكاديمية التفوق &copy; 2026</p>
+        <p>أكاديمية التفوق &copy; 2026</p>
     </footer>
 
     <script type="module">
@@ -276,101 +401,182 @@
         const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
         const TELEGRAM_CHANNEL_ID = "7737717483"; 
 
-        let navState = { year: '', branch: '', subject: '', termFilter: 'الكل' };
+        let navState = { year: '', branch: '', subject: '', term: '', category: '' };
         let currentExamsList = [];
 
-        // المنهاج الجزائري الشامل
-        const commonSubjects = [
-            { name: 'الرياضيات', icon: 'fa-square-root-variable' },
-            { name: 'العلوم الفيزيائية', icon: 'fa-atom' },
-            { name: 'اللغة العربية وآدابها', icon: 'fa-book-open' },
-            { name: 'اللغة الفرنسية', icon: 'fa-language' },
-            { name: 'اللغة الإنجليزية', icon: 'fa-spell-check' },
-            { name: 'التاريخ والجغرافيا', icon: 'fa-earth-africa' },
-            { name: 'العلوم الإسلامية', icon: 'fa-mosque' },
-            { name: 'اللغة الأمازيغية', icon: 'fa-font' }
-        ];
-
-        const schoolCurriculum = {
-            'الأولى ثانوي': { 
-                'جذع مشترك علوم وتكنولوجيا': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'التكنولوجيا', icon: 'fa-microchip' }, { name: 'الإعلام الآلي', icon: 'fa-computer' }], 
-                'جذع مشترك آداب': [...commonSubjects, { name: 'الإعلام الآلي', icon: 'fa-computer' }] 
-            },
-            'الثانية ثانوي': { 
-                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }], 
-                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية', icon: 'fa-building' }, { name: 'الهندسة الميكانيكية', icon: 'fa-gears' }, { name: 'الهندسة الكهربائية', icon: 'fa-plug' }, { name: 'هندسة الطرائق', icon: 'fa-flask' }], 
-                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }],
-                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }],
-                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }, { name: 'اللغة الإسبانية', icon: 'fa-language' }, { name: 'اللغة الألمانية', icon: 'fa-language' }],
-                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي', icon: 'fa-calculator' }, { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' }, { name: 'القانون', icon: 'fa-scale-balanced' }]
-            },
-            'الثالثة ثانوي': { 
-                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'الفلسفة', icon: 'fa-brain' }], 
-                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية', icon: 'fa-building' }, { name: 'الهندسة الميكانيكية', icon: 'fa-gears' }, { name: 'الهندسة الكهربائية', icon: 'fa-plug' }, { name: 'هندسة الطرائق', icon: 'fa-flask' }, { name: 'الفلسفة', icon: 'fa-brain' }], 
-                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة', icon: 'fa-dna' }, { name: 'الفلسفة', icon: 'fa-brain' }],
-                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }],
-                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة', icon: 'fa-brain' }, { name: 'اللغة الإسبانية', icon: 'fa-language' }, { name: 'اللغة الألمانية', icon: 'fa-language' }],
-                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي', icon: 'fa-calculator' }, { name: 'الاقتصاد والمناجمنت', icon: 'fa-chart-line' }, { name: 'القانون', icon: 'fa-scale-balanced' }, { name: 'الفلسفة', icon: 'fa-brain' }]
+        window.toggleTheme = function() {
+            const root = document.documentElement;
+            const btnIcon = document.querySelector('#theme-toggle i');
+            root.classList.toggle('light-mode');
+            if (root.classList.contains('light-mode')) {
+                btnIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                btnIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
             }
         };
 
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light-mode');
+            document.querySelector('#theme-toggle i').classList.replace('fa-sun', 'fa-moon');
+        }
+
+        // المواد الأساسية (بدون أمازيغية وبدون طرائق)
+        const commonSubjects = [
+            { name: 'الرياضيات' },
+            { name: 'العلوم الفيزيائية' },
+            { name: 'اللغة العربية وآدابها' },
+            { name: 'اللغة الفرنسية' },
+            { name: 'اللغة الإنجليزية' },
+            { name: 'التاريخ والجغرافيا' },
+            { name: 'العلوم الإسلامية' }
+        ];
+
+        // المناهج المحدثة (تكنولوجيا الأولى ثانوي بـ 3 خيارات، دمج برامج الشعب المتشابهة كالرياضيات والعلوم)
+        const schoolCurriculum = {
+            'الأولى ثانوي': { 
+                'جذع مشترك علوم وتكنولوجيا': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }, { name: 'التكنولوجيا (هندسة كهربائية)' }, { name: 'التكنولوجيا (هندسة مدنية)' }, { name: 'التكنولوجيا (هندسة ميكانيكية)' }, { name: 'الإعلام الآلي' }], 
+                'جذع مشترك آداب': [...commonSubjects, { name: 'الإعلام الآلي' }] 
+            },
+            'الثانية ثانوي': { 
+                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }], 
+                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية' }, { name: 'الهندسة الميكانيكية' }, { name: 'الهندسة الكهربائية' }], 
+                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }],
+                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة' }],
+                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة' }, { name: 'اللغة الإسبانية' }, { name: 'اللغة الألمانية' }],
+                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي' }, { name: 'الاقتصاد والمناجمنت' }, { name: 'القانون' }]
+            },
+            'الثالثة ثانوي': { 
+                'علوم تجريبية': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }, { name: 'الفلسفة' }], 
+                'تقني رياضي': [...commonSubjects, { name: 'الهندسة المدنية' }, { name: 'الهندسة الميكانيكية' }, { name: 'الهندسة الكهربائية' }, { name: 'الفلسفة' }], 
+                'رياضيات': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }, { name: 'الفلسفة' }],
+                'آداب وفلسفة': [...commonSubjects, { name: 'الفلسفة' }],
+                'لغات أجنبية': [...commonSubjects, { name: 'الفلسفة' }, { name: 'اللغة الإسبانية' }, { name: 'اللغة الألمانية' }],
+                'تسيير واقتصاد': [...commonSubjects, { name: 'التسيير المحاسبي والمالي' }, { name: 'الاقتصاد والمناجمنت' }, { name: 'القانون' }, { name: 'الفلسفة' }]
+            }
+        };
+
+        // دالة ربط الشعب المتشابهة (مثل الرياضيات لعلوم تجريبية وتقني رياضي ورياضيات)
+        function getCompatibleBranches(year, branch, subject) {
+            let compatible = [branch];
+            if (subject === 'الرياضيات' || subject === 'العلوم الفيزيائية' || subject === 'اللغة العربية وآدابها' || subject === 'اللغة الفرنسية' || subject === 'اللغة الإنجليزية' || subject === 'التاريخ والجغرافيا' || subject === 'العلوم الإسلامية') {
+                if (year === 'الثانية ثانوي' || year === 'الثالثة ثانوي') {
+                    if (['علوم تجريبية', 'تقني رياضي', 'رياضيات'].includes(branch)) {
+                        compatible = ['علوم تجريبية', 'تقني رياضي', 'رياضيات'];
+                    }
+                }
+            }
+            return compatible;
+        }
+
+        // تحديث قوائم الـ Modal الخاص بالمساهمة
+        window.updateModalBranches = function() {
+            const year = document.getElementById('modal-year').value;
+            const branchSelect = document.getElementById('modal-branch');
+            branchSelect.innerHTML = '';
+            Object.keys(schoolCurriculum[year]).forEach(b => {
+                branchSelect.innerHTML += `<option value="${b}">${b}</option>`;
+            });
+            updateModalSubjects();
+        };
+
+        window.updateModalSubjects = function() {
+            const year = document.getElementById('modal-year').value;
+            const branch = document.getElementById('modal-branch').value;
+            const subjectSelect = document.getElementById('modal-subject');
+            subjectSelect.innerHTML = '';
+            if (schoolCurriculum[year][branch]) {
+                schoolCurriculum[year][branch].forEach(s => {
+                    subjectSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+                });
+            }
+        };
+
+        // History API للتنقل الذكي
+        history.replaceState({ view: 'year' }, '');
+
+        window.addEventListener('popstate', (e) => {
+            if (!e.state) return;
+            if (e.state.view === 'year') resetToYearView();
+            else if (e.state.view === 'branch') executeSelectYear(e.state.year);
+            else if (e.state.view === 'subject') executeSelectBranch(e.state.branch);
+            else if (e.state.view === 'term') executeSelectSubject(e.state.subject);
+            else if (e.state.view === 'category') executeSelectTerm(e.state.term);
+        });
+
+        function resetToYearView() {
+            switchView('view-year'); 
+            document.getElementById('btn-back').style.display = 'none'; 
+            document.getElementById('hero-section').style.display = 'block';
+            navState = { year: '', branch: '', subject: '', term: '', category: '' }; 
+            updateBreadcrumb();
+        }
+
         window.selectYear = function(year) { 
-            navState.year = year; 
-            updateBreadcrumb(); 
-            const hero = document.getElementById('hero-section');
-            hero.style.height = hero.offsetHeight + 'px';
-            setTimeout(() => { hero.style.height = '0'; hero.style.padding = '0'; hero.style.marginBottom = '0'; hero.style.opacity = '0'; }, 10);
-            
-            const box = document.getElementById('branches-box'); 
-            box.innerHTML = ''; 
+            history.pushState({ view: 'branch', year: year }, '');
+            executeSelectYear(year);
+        };
+
+        function executeSelectYear(year) {
+            navState.year = year; updateBreadcrumb(); 
+            document.getElementById('hero-section').style.display = 'none';
+            const box = document.getElementById('branches-box'); box.innerHTML = ''; 
             (Object.keys(schoolCurriculum[year]) || []).forEach(branch => { 
                 box.innerHTML += `<div class="grid-item-card" onclick="selectBranch('${branch}')"><i class="fa-solid fa-users-viewfinder"></i><h3>${branch}</h3></div>`; 
             }); 
             switchView('view-branch'); 
             document.getElementById('btn-back').style.display = 'block'; 
-        };
+        }
         
         window.selectBranch = function(branch) { 
-            navState.branch = branch; 
-            updateBreadcrumb(); 
-            const box = document.getElementById('subjects-box'); 
-            box.innerHTML = ''; 
-            (schoolCurriculum[navState.year][branch] || []).forEach(sub => { 
-                box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${sub.icon}"></i><h3>${sub.name}</h3></div>`; 
-            }); 
-            switchView('view-subject'); 
-        };
-        
-        window.selectSubject = function(subject) { 
-            navState.subject = subject; 
-            updateBreadcrumb(); 
-            switchView('view-exams'); 
-            fetchExamsFromDB(); 
+            history.pushState({ view: 'subject', branch: branch, year: navState.year }, '');
+            executeSelectBranch(branch);
         };
 
-        window.navigateBack = function() {
-            if (document.getElementById('view-exams').classList.contains('active')) { switchView('view-subject'); }
-            else if (document.getElementById('view-subject').classList.contains('active')) { switchView('view-branch'); }
-            else if (document.getElementById('view-branch').classList.contains('active')) { 
-                switchView('view-year'); 
-                document.getElementById('btn-back').style.display = 'none'; 
-                
-                const hero = document.getElementById('hero-section');
-                hero.style.height = 'auto';
-                
-                if (window.innerWidth <= 768) {
-                    hero.style.padding = '3rem 1rem 4rem 1rem';
-                } else {
-                    hero.style.padding = '4rem 1.5rem 5rem 1.5rem';
-                }
-                
-                hero.style.marginBottom = '2.5rem';
-                hero.style.opacity = '1';
-                
-                navState = { year: '', branch: '', subject: '', termFilter: 'الكل' }; 
-            }
-            updateBreadcrumb();
+        function executeSelectBranch(branch) {
+            navState.branch = branch; updateBreadcrumb(); 
+            const box = document.getElementById('subjects-box'); box.innerHTML = ''; 
+            // أيقونات المواد الافتراضية
+            const defaultIcons = { 'الرياضيات': 'fa-square-root-variable', 'العلوم الفيزيائية': 'fa-atom', 'اللغة العربية وآدابها': 'fa-book-open', 'اللغة الفرنسية': 'fa-language', 'اللغة الإنجليزية': 'fa-spell-check', 'التاريخ والجغرافيا': 'fa-earth-africa', 'العلوم الإسلامية': 'fa-mosque', 'علوم الطبيعة والحياة': 'fa-dna', 'الفلسفة': 'fa-brain', 'الإعلام الآلي': 'fa-computer' };
+            
+            (schoolCurriculum[navState.year][branch] || []).forEach(sub => {
+                let icon = defaultIcons[sub.name] || 'fa-book';
+                box.innerHTML += `<div class="grid-item-card" onclick="selectSubject('${sub.name}')"><i class="fa-solid ${icon}"></i><h3>${sub.name}</h3></div>`; 
+            }); 
+            switchView('view-subject'); 
+        }
+        
+        window.selectSubject = function(subject) { 
+            history.pushState({ view: 'term', subject: subject, branch: navState.branch, year: navState.year }, '');
+            executeSelectSubject(subject);
         };
+
+        function executeSelectSubject(subject) {
+            navState.subject = subject; updateBreadcrumb(); 
+            switchView('view-term');
+        }
+
+        window.selectTerm = function(term) {
+            history.pushState({ view: 'category', term: term, subject: navState.subject, branch: navState.branch, year: navState.year }, '');
+            executeSelectTerm(term);
+        };
+
+        function executeSelectTerm(term) {
+            navState.term = term; updateBreadcrumb();
+            switchView('view-category');
+        }
+
+        window.selectCategory = function(category) {
+            history.pushState({ view: 'exams', category: category, term: navState.term, subject: navState.subject, branch: navState.branch, year: navState.year }, '');
+            navState.category = category; updateBreadcrumb();
+            switchView('view-exams');
+            document.getElementById('search-input').value = ''; 
+            document.getElementById('search-bear').classList.add('sleeping');
+            fetchExamsFromDB();
+        };
+
+        window.navigateBack = function() { history.back(); };
 
         function switchView(viewId) { 
             document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active')); 
@@ -378,22 +584,25 @@
         }
         
         function updateBreadcrumb() { 
-            document.getElementById('breadcrumb').innerHTML = `<i class="fa-solid fa-house"></i> الرئيسية ${navState.year ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.year}` : ''} ${navState.branch ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.branch}` : ''} ${navState.subject ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.subject}` : ''}`; 
+            let catName = navState.category;
+            if(catName === 'فرض') catName = 'الفروض';
+            else if(catName === 'اختبار') catName = 'الاختبارات';
+            else if(catName === 'سلسلة تمارين') catName = 'سلسلة تمارين';
+            else if(catName === 'ملخص') catName = 'ملخصات شاملة';
+
+            document.getElementById('breadcrumb').innerHTML = `<i class="fa-solid fa-house"></i> الرئيسية ${navState.year ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.year}` : ''} ${navState.branch ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.branch}` : ''} ${navState.subject ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.subject}` : ''} ${navState.term ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${navState.term}` : ''} ${navState.category ? `<span><i class="fa-solid fa-chevron-left"></i></span> ${catName}` : ''}`; 
         }
 
-        window.openUploadModal = () => {
-            const modal = document.getElementById('upload-modal');
-            modal.classList.add('show');
+        window.openUploadModal = () => { 
+            updateModalBranches();
+            document.getElementById('upload-modal').classList.add('show'); 
         };
         
-        window.closeUploadModal = () => {
-            const modal = document.getElementById('upload-modal');
-            modal.classList.remove('show');
+        window.closeUploadModal = () => { 
+            document.getElementById('upload-modal').classList.remove('show');
             setTimeout(() => {
-                document.getElementById('field-sender').value = '';
-                document.getElementById('field-desc').value = '';
-                document.getElementById('field-file-subj').value = '';
-                document.getElementById('field-file-sol').value = '';
+                document.getElementById('field-sender').value = ''; document.getElementById('field-desc').value = '';
+                document.getElementById('field-file-subj').value = ''; document.getElementById('field-file-sol').value = '';
             }, 300);
         };
 
@@ -409,138 +618,193 @@
         }
 
         window.submitRequestToAdmin = async function() {
-            if(!navState.subject) {
-                alert("يرجى تصفح الموقع واختيار السنة، الشعبة، والمادة أولاً قبل محاولة إرسال موضوع، لنعرف أين نصنفه.");
-                closeUploadModal();
-                return;
-            }
-
             const senderName = document.getElementById('field-sender').value || 'فاعل خير (مجهول)';
-            const term = document.getElementById('field-term').value;
+            const mYear = document.getElementById('modal-year').value;
+            const mBranch = document.getElementById('modal-branch').value;
+            const mSubject = document.getElementById('modal-subject').value;
+            const term = document.getElementById('field-term').value; 
             const type = document.getElementById('field-type').value;
             const desc = document.getElementById('field-desc').value;
-            const fileSubj = document.getElementById('field-file-subj').files[0];
+            const fileSubj = document.getElementById('field-file-subj').files[0]; 
             const fileSol = document.getElementById('field-file-sol').files[0];
 
-            if (!desc || !fileSubj) {
-                return alert("الرجاء إدخال عنوان الموضوع وإرفاق ملف الموضوع كحد أدنى.");
-            }
+            if (!desc || !fileSubj) return alert("الرجاء إدخال عنوان الموضوع وإرفاق ملف الموضوع.");
 
-            document.getElementById('upload-loader').style.display = 'block';
-            document.querySelector('.modal-buttons').style.display = 'none';
+            document.getElementById('upload-loader').style.display = 'block'; document.querySelector('.modal-buttons').style.display = 'none';
 
             try {
-                const requestCaption = `🔔 طلب إضافة موضوع جديد 🔔\n\n👤 المرسل: ${senderName}\n📚 المادة: ${navState.subject}\n🎓 المستوى: ${navState.year} - ${navState.branch}\n📌 النوع: ${type} - ${term}\n📝 الوصف: ${desc}\n\n⚠️ يرجى الرفع في لوحة التحكم (Admin).`;
+                const requestCaption = `🔔 مساهمة جديدة للمنصة 🔔\n\n👤 المرسل: ${senderName}\n🎓 المستوى: ${mYear} - ${mBranch}\n📚 المادة: ${mSubject}\n📌 التصنيف: ${type} - ${term}\n📝 الوصف: ${desc}`;
+                await uploadFileToTelegram(fileSubj, requestCaption + "\n\n(الموضوع)");
+                if (fileSol) await uploadFileToTelegram(fileSol, `(الحل التابع للموضوع: ${desc})\nالمرسل: ${senderName}`);
                 
-                await uploadFileToTelegram(fileSubj, requestCaption + "\n\n(المرفق: الموضوع)");
-                if (fileSol) await uploadFileToTelegram(fileSol, `(المرفق: الحل التابع للطلب: ${desc})\nالمرسل: ${senderName}`);
-                
-                alert("✅ تم إرسال طلبك بنجاح! الإدارة ستراجعه وتضيفه في أقرب وقت. شكراً لك."); 
-                closeUploadModal();
-            } catch (err) { 
-                alert("❌ فشل الإرسال، تحقق من اتصالك بالإنترنت. " + err.message); 
-            } finally { 
-                document.getElementById('upload-loader').style.display = 'none'; 
-                document.querySelector('.modal-buttons').style.display = 'flex';
-            }
+                alert("✅ تم إرسال مساهمتك بنجاح للإدارة! شكراً لك."); closeUploadModal();
+            } catch (err) { alert("❌ فشل الإرسال. " + err.message); } 
+            finally { document.getElementById('upload-loader').style.display = 'none'; document.querySelector('.modal-buttons').style.display = 'flex'; }
         };
 
+        // جلب البيانات مع دعم الشعب المشتركة
         async function fetchExamsFromDB() {
             const container = document.getElementById('exams-container'); 
-            container.innerHTML = '<div style="text-align:center; padding:5rem 1rem;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i><h3 style="color:var(--primary-dark);">جاري البحث في قاعدة البيانات...</h3></div>';
+            container.innerHTML = `
+                <div class="book-loader-container">
+                    <div class="book-loader"></div>
+                    <h3 style="color:var(--primary);">جاري البحث في رفوف المكتبة...</h3>
+                </div>`;
             try {
-                const q = query(collection(db, "exams_repository"), where("year", "==", navState.year), where("branch", "==", navState.branch), where("subject", "==", navState.subject));
+                let validBranches = getCompatibleBranches(navState.year, navState.branch, navState.subject);
+                
+                const q = query(
+                    collection(db, "exams_repository"), 
+                    where("year", "==", navState.year), 
+                    where("branch", "in", validBranches), 
+                    where("subject", "==", navState.subject), 
+                    where("term", "==", navState.term), 
+                    where("type", "==", navState.category)
+                );
+                
                 const snapshot = await getDocs(q);
                 currentExamsList = []; 
                 snapshot.forEach(docSnap => currentExamsList.push({ id: docSnap.id, ...docSnap.data() }));
                 currentExamsList.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                 renderExams();
             } catch (err) { 
-                container.innerHTML = '<div style="text-align:center; padding:3rem; background:#fee2e2; border-radius:15px; color:var(--danger);"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; margin-bottom:10px;"></i><h4>تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً.</h4></div>'; 
+                container.innerHTML = '<div style="text-align:center; padding:2rem; background:rgba(239, 68, 68, 0.1); border-radius:10px; color:var(--danger);"><h4>تعذر الاتصال بالخادم.</h4></div>'; 
             }
         }
 
-        // --- الدالة السحرية الجديدة لجلب الملف الخام مباشرة من سيرفرات تليجرام ---
+        window.getTelegramDirectUrl = async function(fileId) {
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+            const data = await res.json();
+            if (!data.ok) throw new Error("تعذر الوصول للملف");
+            return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${data.result.file_path}`;
+        };
+
         window.openTelegramFile = async function(fileId, buttonElement) {
             const originalContent = buttonElement.innerHTML;
-            buttonElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري جلب الملف...';
+            buttonElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري...';
+            buttonElement.style.pointerEvents = 'none';
+            try {
+                const directUrl = await getTelegramDirectUrl(fileId);
+                window.open(directUrl, '_blank');
+            } catch (error) { alert("حدث خطأ: " + error.message); } 
+            finally { buttonElement.innerHTML = originalContent; buttonElement.style.pointerEvents = 'auto'; }
+        };
+
+        // نافذة المعاينة مع أنيميشن الكتاب أثناء جلب الملف
+        window.previewTelegramFile = async function(fileId, titleText, buttonElement) {
+            const originalContent = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> فتح...';
             buttonElement.style.pointerEvents = 'none';
 
+            // إظهار نافذة المعاينة مسبقاً ومعها أنيميشن الكتاب ريثما يتم جلب الرابط
+            document.getElementById('preview-title').innerText = "معاينة: " + titleText;
+            const bodyContainer = document.getElementById('preview-body');
+            bodyContainer.innerHTML = `
+                <div class="book-loader-container">
+                    <div class="book-loader"></div>
+                    <h3 style="color:var(--primary);">جاري تحميل المعاينة...</h3>
+                </div>`;
+            document.getElementById('preview-modal').classList.add('show');
+
             try {
-                // نطلب مسار الملف عبر Telegram API باستخدام الـ File ID
-                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
-                const data = await res.json();
+                const directUrl = await getTelegramDirectUrl(fileId);
+                let viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(directUrl)}&embedded=true`;
                 
-                if (!data.ok) throw new Error("تعذر الوصول للملف في تليجرام");
+                if(directUrl.match(/\.(jpeg|jpg|gif|png)$/i)) {
+                    bodyContainer.innerHTML = `<img src="${directUrl}" alt="Preview">`;
+                } else {
+                    bodyContainer.innerHTML = `<iframe src="${viewerUrl}"></iframe>`;
+                }
 
-                // استخراج الرابط وتكوين الرابط المباشر
-                const filePath = data.result.file_path;
-                const directUrl = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${filePath}`;
-
-                // فتح الملف كملف خام في المتصفح مباشرة
-                window.open(directUrl, '_blank');
+                document.getElementById('preview-download-btn').onclick = function() {
+                    window.open(directUrl, '_blank');
+                };
             } catch (error) {
-                alert("حدث خطأ أثناء فتح الملف: " + error.message);
+                bodyContainer.innerHTML = `<h4 style="color:var(--danger); text-align:center;">تعذر تحميل المعاينة: ${error.message}</h4>`;
             } finally {
-                // إرجاع الزر لشكله الطبيعي
                 buttonElement.innerHTML = originalContent;
                 buttonElement.style.pointerEvents = 'auto';
             }
         };
 
+        window.closePreview = function() {
+            document.getElementById('preview-modal').classList.remove('show');
+            document.getElementById('preview-body').innerHTML = ''; 
+        };
+
+        const searchInput = document.getElementById('search-input');
+        const searchBear = document.getElementById('search-bear');
+        const searchEyes = [document.getElementById('search-eye-left'), document.getElementById('search-eye-right')];
+
+        searchInput.addEventListener('focus', () => searchBear.classList.remove('sleeping'));
+        searchInput.addEventListener('blur', () => { 
+            if(searchInput.value === '') searchBear.classList.add('sleeping'); 
+            searchEyes.forEach(eye => eye.style.transform = 'translateX(0)');
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            let ratio = Math.min(e.target.value.length / 20, 1); 
+            let moveX = 6 - (ratio * 12); 
+            searchEyes.forEach(eye => eye.style.transform = `translateX(${moveX}px)`);
+            renderExams(); 
+        });
+
         function renderExams() {
             const container = document.getElementById('exams-container');
-            let filtered = navState.termFilter !== 'الكل' ? currentExamsList.filter(e => e.term === navState.termFilter) : currentExamsList;
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            let filtered = currentExamsList.filter(e => {
+                return e.title.toLowerCase().includes(searchTerm) || e.type.toLowerCase().includes(searchTerm);
+            });
+
+            if(searchTerm !== '') {
+                if(filtered.length === 0) searchBear.classList.add('sad');
+                else searchBear.classList.remove('sad');
+            } else {
+                searchBear.classList.remove('sad');
+            }
+
             if (filtered.length === 0) {
-                return container.innerHTML = `<div style="text-align:center; padding:5rem 1rem; border:2px dashed var(--border); border-radius:20px; background:var(--surface);">
-                    <i class="fa-regular fa-folder-open" style="font-size:4rem; color:var(--border); margin-bottom:20px;"></i>
-                    <h2 style="color:var(--text-muted); margin-bottom:10px;">لم يتم نشر مواضيع في هذا القسم بعد</h2>
-                    <p style="color:#94a3b8; font-size:1.1rem; max-width:400px; margin:0 auto;">كن أول من يساهم في إثراء هذا القسم عبر إرسال موضوع باستخدام الزر العائم أدناه.</p>
+                return container.innerHTML = `<div style="text-align:center; padding:3rem 1rem; border:2px dashed var(--border); border-radius:15px; background:var(--surface);">
+                    <i class="fa-regular fa-folder-open" style="font-size:3rem; color:var(--border); margin-bottom:15px;"></i>
+                    <h3 style="color:var(--text-muted); margin-bottom:5px;">${searchTerm ? 'لا توجد نتائج مطابقة' : 'لا توجد مواضيع منشورة في هذا القسم بعد'}</h3>
                 </div>`;
             }
             
             container.innerHTML = '';
             filtered.forEach(item => {
-                // التحديث الجديد: يدعم النظامين معاً (القديم بالروابط، والجديد بالـ File ID)
-                let subjectButton = '';
+                let subjectButtons = '';
                 if (item.subjectFileId) {
-                    subjectButton = `<button class="btn-action btn-subject" onclick="openTelegramFile('${item.subjectFileId}', this)"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>`;
+                    subjectButtons += `<button class="btn-action btn-preview" onclick="previewTelegramFile('${item.subjectFileId}', '${item.title} (الموضوع)', this)"><i class="fa-solid fa-eye"></i> معاينة</button>`;
+                    subjectButtons += `<button class="btn-action btn-subject" onclick="openTelegramFile('${item.subjectFileId}', this)"><i class="fa-solid fa-download"></i> تحميل</button>`;
                 } else if (item.subjectImg) {
-                    subjectButton = `<button class="btn-action btn-subject" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-solid fa-file-pdf"></i> تحميل الموضوع</button>`;
+                    subjectButtons += `<button class="btn-action btn-subject" onclick="window.open('${item.subjectImg}', '_blank')"><i class="fa-solid fa-download"></i> تحميل</button>`;
                 }
 
-                let solutionButton = '';
+                let solutionButtons = '';
                 if (item.solutionFileId) {
-                    solutionButton = `<button class="btn-action btn-solution" onclick="openTelegramFile('${item.solutionFileId}', this)"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>`;
+                    solutionButtons += `<button class="btn-action btn-preview" onclick="previewTelegramFile('${item.solutionFileId}', '${item.title} (التصحيح)', this)"><i class="fa-solid fa-eye"></i> معاينة الحل</button>`;
+                    solutionButtons += `<button class="btn-action btn-solution" onclick="openTelegramFile('${item.solutionFileId}', this)"><i class="fa-solid fa-check-to-slot"></i> الحل</button>`;
                 } else if (item.solutionImg) {
-                    solutionButton = `<button class="btn-action btn-solution" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-solid fa-check-to-slot"></i> عرض الحل</button>`;
+                    solutionButtons += `<button class="btn-action btn-solution" onclick="window.open('${item.solutionImg}', '_blank')"><i class="fa-solid fa-check-to-slot"></i> الحل</button>`;
                 }
 
                 container.innerHTML += `
                     <div class="exam-item">
                         <div class="exam-info">
                             <h4>${item.title}</h4>
-                            <div style="display:flex; gap:10px; margin-top:10px;">
-                                <span class="badge badge-term"><i class="fa-regular fa-calendar-check"></i> ${item.term}</span>
-                                <span class="badge badge-type"><i class="fa-solid fa-tags"></i> ${item.type}</span>
+                            <div style="display:flex; gap:8px; margin-top:6px;">
+                                <span class="badge badge-term">${item.term}</span>
+                                <span class="badge badge-type">${item.type}</span>
                             </div>
                         </div>
                         <div class="exam-actions">
-                            ${subjectButton}
-                            ${solutionButton}
+                            ${subjectButtons}
+                            ${solutionButtons}
                         </div>
                     </div>`;
             });
         }
-
-        window.filterTerm = function(term) { 
-            navState.termFilter = term; 
-            document.querySelectorAll('.tab-btn').forEach(btn => { 
-                const isActive = btn.innerText.includes(term) || (term === 'الكل' && btn.innerText.includes('جميع'));
-                btn.classList.toggle('active', isActive); 
-            }); 
-            renderExams(); 
-        };
     </script>
 </body>
 </html>
