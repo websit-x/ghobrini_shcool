@@ -1,26 +1,36 @@
+نعم، هذا ممكن جداً وبطريقة احترافية للغاية!
+بدلاً من أن يضطر الأدمن (أنت) لاستقبال المساهمات يدوياً عبر تليجرام وإعادة رفعها، سنقوم بتعديل النظام ليصبح كالتالي:
+ * قسم جديد في لوحة الإدارة (طلبات المساهمات): عندما يضغط أي طالب أو أستاذ على زر "ساهم بموضوع" من الموقع الرئيسي، لن تذهب الملفات مباشرة إلى الموقع، بل سيتم حفظها في جدول منفصل في قاعدة البيانات باسم contributions_requests (طلبات المساهمة) مع حالة "قيد الانتظار".
+ * القبول أو الرفض بنجاح بنقرة زر: في لوحة الأدمين الخاصة بك، سيظهر لك قسم جديد يسمى "طلبات المساهمات الواردة" تعرض اسم المرسل، عنوان الموضوع، والمستوى، ومعها زرين: [✔️ قبول ونشر] و [❌ رفض].
+   * عند الضغط على [✔️ قبول ونشر]، سيقوم النظام تلقائياً بنقل الملف ونشره في الموقع العام للطلاب فوراً دون أي تعب!
+   * عند الضغط على [❌ رفض]، سيتم حذف الطلب نهائياً.
+الكود المحدث والكامل للوحة الإدارة (Admin Panel):
+انسخ هذا الكود بالكامل واستبدله في ملف لوحة التحكم الخاص بك:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - الرفع المتعدد</title>
+    <title>لوحة الإدارة - إدارة المواضيع والمساهمات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --admin-dark: #111827; --admin-panel: #1f2937; --admin-primary: #3b82f6; --admin-accent: #10b981; --admin-danger: #ef4444; --text-light: #f3f4f6; --text-muted: #9ca3af; --border-color: #374151; }
+        :root { --admin-dark: #111827; --admin-panel: #1f2937; --admin-primary: #3b82f6; --admin-accent: #10b981; --admin-danger: #ef4444; --admin-warning: #f59e0b; --text-light: #f3f4f6; --text-muted: #9ca3af; --border-color: #374151; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background-color: var(--admin-dark); color: var(--text-light); line-height: 1.6; padding-bottom: 50px; }
         header { background: var(--admin-panel); padding: 1.2rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .brand { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; } .brand i { color: var(--admin-primary); }
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
         @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
-        .panel-card { background: var(--admin-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+        .panel-card { background: var(--admin-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
         .panel-header { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; } .panel-header i { color: var(--admin-accent); }
         .form-group { margin-bottom: 1rem; } .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 0.95rem; }
         .form-row { display: flex; gap: 10px; } .form-row .form-group { flex: 1; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; margin-top: 1rem; }
-        .btn-submit { background: var(--admin-primary); } .btn-delete { background: var(--admin-danger); padding: 6px 12px; font-size: 0.85rem; margin-top: 0; width: auto;}
+        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: white; }
+        .btn-submit { background: var(--admin-primary); width: 100%; margin-top: 1rem; padding: 12px; } 
+        .btn-delete { background: var(--admin-danger); } 
+        .btn-approve { background: var(--admin-accent); }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; } th, td { text-align: right; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; } th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
         .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
         #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -34,50 +44,64 @@
     </header>
 
     <div class="container">
-        <div class="panel-card">
-            <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
-            
-            <div class="hint-box">
-                <i class="fa-solid fa-lightbulb"></i> <b>ميزة التسمية التلقائية:</b> حدد العديد من الملفات دفعة واحدة، وسيقوم النظام بتسميتها تلقائياً بناءً على النوع (مثلاً: فرض رقم 1، فرض رقم 2...).
-            </div>
+        <!-- قسم الرفع المباشر للأدمن -->
+        <div>
+            <div class="panel-card">
+                <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
+                <div class="hint-box"><i class="fa-solid fa-lightbulb"></i> حدد عدة ملفات لتسميتها ونشرها تلقائياً.</div>
 
-            <div class="form-group"><label>السنة الدراسية</label><select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select></div>
-            <div class="form-group"><label>الشعبة</label><select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select></div>
-            <div class="form-group"><label>المادة</label><select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select></div>
-            <div class="form-row">
-                <div class="form-group"><label>الفصل</label><select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select></div>
-                <div class="form-group"><label>النوع (سيكون اسم الموضوع)</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
-            </div>
-            
-            <!-- تم إضافة خاصية multiple للسماح بتحديد أكثر من ملف -->
-            <div class="form-group">
-                <label>تحديد المواضيع (يمكنك تحديد عدة صور أو ملفات معاً) <span style="color:var(--admin-danger)">*</span></label>
-                <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx" multiple onchange="checkFilesCount()">
-            </div>
-            
-            <div class="form-group" id="sol-group">
-                <label>ملف الحل (متاح فقط عند رفع موضوع واحد)</label>
-                <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
-            </div>
+                <div class="form-group"><label>السنة الدراسية</label><select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select></div>
+                <div class="form-group"><label>الشعبة</label><select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select></div>
+                <div class="form-group"><label>المادة</label><select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select></div>
+                <div class="form-row">
+                    <div class="form-group"><label>الفصل</label><select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select></div>
+                    <div class="form-group"><label>النوع</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>تحديد المواضيع (ملفات متعددة)</label>
+                    <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx" multiple onchange="checkFilesCount()">
+                </div>
+                
+                <div class="form-group" id="sol-group">
+                    <label>ملف الحل (لموضوع واحد فقط)</label>
+                    <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
+                </div>
 
-            <button class="btn btn-submit" id="btn-publish" onclick="publishExamsBulk()"><i class="fa-solid fa-cloud-arrow-up"></i> رفع المواضيع المحددة الآن</button>
-            <div id="upload-loader"></div>
+                <button class="btn btn-submit" id="btn-publish" onclick="publishExamsBulk()"><i class="fa-solid fa-cloud-arrow-up"></i> نشر المواضيع الآن</button>
+                <div id="upload-loader"></div>
+            </div>
         </div>
 
-        <div class="panel-card">
-            <div class="panel-header"><i class="fa-solid fa-database"></i> إدارة المواضيع</div>
-            <div style="overflow-x: auto;">
-                <table id="exams-table">
-                    <thead><tr><th>العنوان التلقائي</th><th>المستوى والمادة</th><th>حالة الملف</th><th>إجراءات</th></tr></thead>
-                    <tbody id="table-body"><tr><td colspan="4" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
-                </table>
+        <!-- قسم إدارة طلبات المساهمات وقسم المواضيع المنشورة -->
+        <div>
+            <!-- طلبات المساهمات الواردة من الطلاب -->
+            <div class="panel-card" style="border-color: var(--admin-warning);">
+                <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات الواردة للقبول</div>
+                <div style="overflow-x: auto;">
+                    <table id="requests-table">
+                        <thead><tr><th>المرسل والعنوان</th><th>التصنيف والمستوى</th><th>إجراءات القبول</th></tr></thead>
+                        <tbody id="requests-table-body"><tr><td colspan="3" class="empty-state">جاري التحقق من الطلبات...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- المواضيع المنشورة حالياً -->
+            <div class="panel-card">
+                <div class="panel-header"><i class="fa-solid fa-database"></i> المواضيع المنشورة في الموقع</div>
+                <div style="overflow-x: auto;">
+                    <table id="exams-table">
+                        <thead><tr><th>العنوان</th><th>المستوى والمادة</th><th>حذف</th></tr></thead>
+                        <tbody id="table-body"><tr><td colspan="3" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0", authDomain: "shop-clothes-224a3.firebaseapp.com", projectId: "shop-clothes-224a3", storageBucket: "shop-clothes-224a3.appspot.com", messagingSenderId: "348817058494", appId: "1:348817058494:web:830980b3dae15984350cef" };
         const app = initializeApp(firebaseConfig);
@@ -87,26 +111,18 @@
         const TELEGRAM_CHANNEL_ID = "7737717483"; 
 
         const curriculum = {
-            'الأولى ثانوي': { 'جذع مشترك علوم وتكنولوجيا': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التكنولوجيا', 'الإعلام الآلي'], 'جذع مشترك آداب': ['الرياضيات', 'العلوم الفيزيائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الإعلام الآلي'] },
-            'الثانية ثانوي': { 'علوم تجريبية': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 'تقني رياضي': ['الرياضيات', 'العلوم الفيزيائية', 'الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية', 'هندسة الطرائق', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'] },
+            'الأولى ثانوي': { 'جذع مشترك علوم وتكنولوجيا': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التكنولوجيا (هندسة كهربائية)', 'التكنولوجيا (هندسة مدنية)', 'التكنولوجيا (هندسة ميكانيكية)', 'الإعلام الآلي'], 'جذع مشترك آداب': ['الرياضيات', 'العلوم الفيزيائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الإعلام الآلي'] },
+            'الثانية ثانوي': { 'علوم تجريبية': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 'تقني رياضي': ['الرياضيات', 'العلوم الفيزيائية', 'الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 'رياضيات': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 'آداب وفلسفة': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الفلسفة'], 'لغات أجنبية': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'اللغة الإسبانية', 'اللغة الألمانية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الفلسفة'], 'تسيير واقتصاد': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التسيير المحاسبي والمالي', 'الاقتصاد والمناجمنت', 'القانون'] },
             'الثالثة ثانوي': { 'علوم تجريبية': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'الفلسفة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'] }
         };
 
         window.updateBranches = function() { const year = document.getElementById('sel-year').value; const branchSel = document.getElementById('sel-branch'); const subjectSel = document.getElementById('sel-subject'); branchSel.innerHTML = '<option value="">-- اختر الشعبة --</option>'; subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>'; subjectSel.disabled = true; if (year && curriculum[year]) { Object.keys(curriculum[year]).forEach(branch => { branchSel.innerHTML += `<option value="${branch}">${branch}</option>`; }); branchSel.disabled = false; } else { branchSel.disabled = true; } };
         window.updateSubjects = function() { const year = document.getElementById('sel-year').value; const branch = document.getElementById('sel-branch').value; const subjectSel = document.getElementById('sel-subject'); subjectSel.innerHTML = '<option value="">-- اختر المادة --</option>'; if (year && branch && curriculum[year][branch]) { curriculum[year][branch].forEach(subject => { subjectSel.innerHTML += `<option value="${subject}">${subject}</option>`; }); subjectSel.disabled = false; } else { subjectSel.disabled = true; } };
 
-        // إخفاء حقل الحل إذا تم تحديد أكثر من ملف (لأن الحلول تُرفع فردياً)
         window.checkFilesCount = function() {
             const files = document.getElementById('file-subj').files;
             const solGroup = document.getElementById('sol-group');
-            const btn = document.getElementById('btn-publish');
-            if(files.length > 1) {
-                solGroup.style.display = 'none';
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع ${files.length} مواضيع الآن`;
-            } else {
-                solGroup.style.display = 'block';
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع لتليجرام ونشر الموضوع`;
-            }
+            if(files.length > 1) { solGroup.style.display = 'none'; } else { solGroup.style.display = 'block'; }
         };
 
         async function uploadAndGetFileId(file, caption) {
@@ -114,7 +130,6 @@
             formData.append('chat_id', TELEGRAM_CHANNEL_ID);
             formData.append('document', file);
             formData.append('caption', caption);
-
             const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, { method: 'POST', body: formData });
             const data = await res.json();
             if (!data.ok) throw new Error(data.description);
@@ -127,75 +142,105 @@
             const subject = document.getElementById('sel-subject').value; 
             const term = document.getElementById('sel-term').value; 
             const type = document.getElementById('sel-type').value; 
-            
             const filesSubj = document.getElementById('file-subj').files; 
             const fileSol = document.getElementById('file-sol').files[0];
 
-            if (!year || !branch || !subject || filesSubj.length === 0) {
-                return alert("الرجاء اختيار السنة، الشعبة، المادة، وتحديد ملف واحد على الأقل!");
-            }
+            if (!year || !branch || !subject || filesSubj.length === 0) return alert("الرجاء اختيار كافة الحقول وتحديد ملف واحد على الأقل!");
 
             const loader = document.getElementById('upload-loader');
             loader.style.display = 'block';
             document.getElementById('btn-publish').disabled = true;
 
             try {
-                // 1. حساب عدد المواضيع الموجودة مسبقاً في هذا القسم بالذات للترقيم الصحيح
-                const q = query(collection(db, "exams_repository"), 
-                    where("year", "==", year), 
-                    where("branch", "==", branch), 
-                    where("subject", "==", subject), 
-                    where("term", "==", term), 
-                    where("type", "==", type)
-                );
+                const q = query(collection(db, "exams_repository"), where("year", "==", year), where("branch", "==", branch), where("subject", "==", subject), where("term", "==", term), where("type", "==", type));
                 const snapshot = await getDocs(q);
-                let currentCount = snapshot.size; // مثلاً إذا وجد 2، سيبدأ الترقيم الجديد من 3
+                let currentCount = snapshot.size;
 
-                // 2. حلقة التكرار للرفع المتعدد
                 for (let i = 0; i < filesSubj.length; i++) {
                     const currentFile = filesSubj[i];
-                    currentCount++; // زيادة العداد
-                    
-                    // توليد العنوان التلقائي (مثال: فرض رقم 1)
+                    currentCount++;
                     const autoTitle = `${type} رقم ${currentCount}`;
-                    
-                    // تحديث واجهة المستخدم ليعرف الأستاذ أي ملف يُرفع الآن
-                    loader.innerHTML = `<i class="fa-solid fa-gear fa-spin"></i> جاري رفع الملف ${i + 1} من ${filesSubj.length} (${autoTitle})...`;
+                    loader.innerHTML = `<i class="fa-solid fa-gear fa-spin"></i> جاري رفع الملف ${i + 1} من ${filesSubj.length}...`;
 
-                    const metaText = `📁 رفع: ${autoTitle}\nالمادة: ${subject} (${year} - ${branch})\n${type} - ${term}`;
-                    
-                    // رفع الملف لتليجرام
-                    const subjFileId = await uploadAndGetFileId(currentFile, metaText + "\n(الموضوع)");
-                    
-                    // التعامل مع ملف الحل (فقط إذا تم رفع موضوع واحد، في الرفع المتعدد يتم تجاهل الحل)
+                    const subjFileId = await uploadAndGetFileId(currentFile, autoTitle);
                     let solFileId = "";
                     if (filesSubj.length === 1 && fileSol) {
-                        solFileId = await uploadAndGetFileId(fileSol, metaText + "\n(الحل)");
+                        solFileId = await uploadAndGetFileId(fileSol, autoTitle + " (الحل)");
                     }
 
-                    // حفظ في Firebase
                     await addDoc(collection(db, "exams_repository"), { 
-                        year: year, branch: branch, subject: subject, term: term, type: type, 
-                        title: autoTitle, // وضع العنوان التلقائي
-                        subjectFileId: subjFileId, 
-                        solutionFileId: solFileId, 
-                        timestamp: serverTimestamp() 
+                        year, branch, subject, term, type, title: autoTitle, subjectFileId: subjFileId, solutionFileId: solFileId, timestamp: serverTimestamp() 
                     });
                 }
-                
-                alert(`✅ تم رفع ${filesSubj.length} ملفات بنجاح وتسميتها تلقائياً!`);
-                
-                // تفريغ الحقول وإعادة التعيين
-                document.getElementById('file-subj').value = ''; 
-                document.getElementById('file-sol').value = '';
-                checkFilesCount(); // إعادة الزر لحالته
+                alert(`✅ تم النشر بنجاح!`);
+                document.getElementById('file-subj').value = ''; document.getElementById('file-sol').value = '';
                 loadAllExams();
+            } catch (err) { alert("❌ خطأ: " + err.message); } 
+            finally { loader.style.display = 'none'; document.getElementById('btn-publish').disabled = false; }
+        };
+
+        // --- إدارة طلبات المساهمات الواردة من الطلاب ---
+        async function loadContributionsRequests() {
+            const tbody = document.getElementById('requests-table-body');
+            try {
+                const querySnapshot = await getDocs(collection(db, "contributions_requests"));
+                if (querySnapshot.empty) return tbody.innerHTML = '<tr><td colspan="3" class="empty-state">لا توجد طلبات مساهمة معلقة</td></tr>';
+                tbody.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong style="color:white;">${data.title}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">المرسل: ${data.sender}</span></td>
+                            <td><span style="font-size:0.8rem; color:var(--admin-warning); display:block;">${data.year} - ${data.branch}</span>${data.subject} (${data.type} - ${data.term})</td>
+                            <td>
+                                <button class="btn btn-approve" onclick="approveRequest('${docSnap.id}')"><i class="fa-solid fa-check"></i> قبول ونشر</button>
+                                <button class="btn btn-delete" onclick="deleteRequest('${docSnap.id}')"><i class="fa-solid fa-xmark"></i> رفض</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) { tbody.innerHTML = '<tr><td colspan="3" class="empty-state" style="color:var(--admin-danger);">حدث خطأ في جلب الطلبات</td></tr>'; }
+        }
+
+        window.approveRequest = async function(requestId) {
+            if(!confirm("هل أنت متأكد من قبول ونشر هذا الموضوع في الموقع؟")) return;
+            try {
+                const reqDocRef = doc(db, "contributions_requests", requestId);
+                const reqSnap = await getDoc(reqDocRef);
+                if (!reqSnap.exists()) return alert("الطلب غير موجود!");
                 
-            } catch (err) { 
-                alert("❌ خطأ أثناء الرفع: " + err.message); 
-            } finally { 
-                loader.style.display = 'none'; 
-                document.getElementById('btn-publish').disabled = false;
+                const data = reqSnap.data();
+
+                // 1. إضافته فوراً لقاعدة بيانات الفروض والاختبارات الرئيسية بالموقع
+                await addDoc(collection(db, "exams_repository"), {
+                    year: data.year,
+                    branch: data.branch,
+                    subject: data.subject,
+                    term: data.term,
+                    type: data.type,
+                    title: data.title,
+                    subjectFileId: data.subjectFileId,
+                    solutionFileId: data.solutionFileId || "",
+                    timestamp: serverTimestamp()
+                });
+
+                // 2. حذف الطلب من قائمة الطلبات المعلقة
+                await deleteDoc(reqDocRef);
+
+                alert("✅ تم قبول ونشر الموضوع بنجاح ليظهر للطلاب في الموقع!");
+                loadContributionsRequests();
+                loadAllExams();
+            } catch (err) {
+                alert("❌ خطأ أثناء القبول: " + err.message);
+            }
+        };
+
+        window.deleteRequest = async function(requestId) {
+            if(confirm("هل تريد رفض وحذف هذا الطلب نهائياً؟")) {
+                try {
+                    await deleteDoc(doc(db, "contributions_requests", requestId));
+                    loadContributionsRequests();
+                } catch(e) { alert("خطأ: " + e.message); }
             }
         };
 
@@ -203,7 +248,7 @@
             const tbody = document.getElementById('table-body');
             try {
                 const querySnapshot = await getDocs(collection(db, "exams_repository"));
-                if (querySnapshot.empty) return tbody.innerHTML = '<tr><td colspan="4" class="empty-state">لا توجد مواضيع</td></tr>';
+                if (querySnapshot.empty) return tbody.innerHTML = '<tr><td colspan="3" class="empty-state">لا توجد مواضيع منشورة</td></tr>';
                 tbody.innerHTML = '';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
@@ -211,16 +256,85 @@
                         <tr>
                             <td style="font-weight:bold; color:white;">${data.title}</td>
                             <td><span style="font-size:0.8rem; display:block; color:var(--admin-primary);">${data.year} - ${data.branch}</span>${data.subject}</td>
-                            <td><span style="color:var(--admin-accent); font-size:0.8rem;">مربوط بـ Telegram API</span></td>
                             <td><button class="btn btn-delete" onclick="deleteExam('${docSnap.id}')"><i class="fa-solid fa-trash"></i> حذف</button></td>
                         </tr>
                     `;
                 });
-            } catch (error) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--admin-danger);">حدث خطأ</td></tr>'; }
+            } catch (error) { tbody.innerHTML = '<tr><td colspan="3" class="empty-state" style="color:var(--admin-danger);">حدث خطأ</td></tr>'; }
         }
 
-        window.deleteExam = async function(id) { if (confirm("هل أنت متأكد من الحذف؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); loadAllExams(); } catch (error) { alert("خطأ: " + error.message); } } };
-        window.onload = loadAllExams;
+        window.deleteExam = async function(id) { if (confirm("هل أنت متأكد من الحذف النهائي؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); loadAllExams(); } catch (error) { alert("خطأ: " + error.message); } } };
+        
+        window.onload = function() {
+            loadAllExams();
+            loadContributionsRequests();
+        };
     </script>
 </body>
 </html>
+
+ما الذي يجب تعديله في "الموقع الرئيسي" (كود الطلاب) لكي يرسل الطلب للوحة الأدمين بدلاً من تليغرام؟
+في كود الموقع الرئيسي الخاص بالطلاب، استبدل دالة submitRequestToAdmin بالدالة التالية لكي تقوم بحفظ المساهمة في مجموعة contributions_requests بداخل فايربيس بدلاً من إرسالها لتليغرام مباشرة:
+        import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        window.submitRequestToAdmin = async function() {
+            const senderName = document.getElementById('field-sender').value.trim() || 'فاعل خير (مجهول)';
+            const mYear = document.getElementById('modal-year').value;
+            const mBranch = document.getElementById('modal-branch').value;
+            const mSubject = document.getElementById('modal-subject').value;
+            const term = document.getElementById('field-term').value; 
+            const type = document.getElementById('field-type').value;
+            const desc = document.getElementById('field-desc').value.trim();
+            const fileSubj = document.getElementById('field-file-subj').files[0]; 
+            const fileSol = document.getElementById('field-file-sol').files[0];
+
+            if (!desc || !fileSubj) return alert("الرجاء إدخال عنوان الموضوع وإرفاق ملف الموضوع.");
+
+            document.getElementById('upload-loader').style.display = 'block'; 
+            document.querySelector('.modal-buttons').style.display = 'none';
+
+            try {
+                // رفع ملف الموضوع أولاً لتليجرام والحصول على الـ file_id
+                const subjFileId = await uploadFileToTelegramGetId(fileSubj);
+                
+                let solFileId = "";
+                if (fileSol) {
+                    solFileId = await uploadFileToTelegramGetId(fileSol);
+                }
+
+                // حفظ الطلب في جدول (contributions_requests) لكي يظهر للأدمن في لوحة التحكم
+                await addDoc(collection(db, "contributions_requests"), {
+                    sender: senderName,
+                    year: mYear,
+                    branch: mBranch,
+                    subject: mSubject,
+                    term: term,
+                    type: type,
+                    title: desc,
+                    subjectFileId: subjFileId,
+                    solutionFileId: solFileId,
+                    timestamp: serverTimestamp()
+                });
+                
+                alert("✅ تم إرسال مساهمتك بنجاح إلى الإدارة للمراجعة والنشر! شكراً لك."); 
+                closeUploadModal();
+            } catch (err) { 
+                alert("❌ فشل الإرسال، تحقق من اتصالك. " + err.message); 
+            } finally { 
+                document.getElementById('upload-loader').style.display = 'none'; 
+                document.querySelector('.modal-buttons').style.display = 'flex'; 
+            }
+        };
+
+        // دالة مساعدة لرفع الملف لتليجرام وإرجاع الـ file_id فقط
+        async function uploadFileToTelegramGetId(file) {
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_CHANNEL_ID);
+            formData.append('document', file);
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, { method: 'POST', body: formData });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.description);
+            return data.result.document.file_id;
+        }
+
+بهذه الطريقة، لن تحتاج أبداً لتحميل الملفات من تليجرام وإعادة رفعها؛ كل ما عليك فعله هو فتح لوحة التحكم، الضغط على [قبول ونشر]، وسيتم إضافتها للموقع فوراً!
