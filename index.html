@@ -206,12 +206,13 @@
         <div class="header-content">
             <div class="brand"><i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني</div>
             <div class="nav-controls" style="position: relative;">
-                <!-- زر الإعدادات -->
+                <!-- زر الإعدادات المحدث -->
                 <button class="control-btn" onclick="toggleSettingsMenu()"><i class="fa-solid fa-gear"></i></button>
                 <!-- قائمة الإعدادات المنسدلة -->
                 <div class="settings-dropdown" id="settings-menu">
                     <div class="settings-item" onclick="openHowToUse()"><i class="fa-solid fa-circle-question"></i> كيفية الاستعمال</div>
                     <div class="settings-item" onclick="openContactModal()"><i class="fa-solid fa-paper-plane"></i> مراسلة المطور</div>
+                    <div class="settings-item" onclick="openLanguageModal()"><i class="fa-solid fa-language"></i> اللغة (Language)</div>
                 </div>
 
                 <button id="theme-toggle" class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-sun"></i></button>
@@ -221,8 +222,8 @@
     </header>
 
     <div class="hero" id="hero-section">
-        <h1>بنك الفروض والاختبارات</h1>
-        <p>المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.</p>
+        <h1 data-i18n="hero_title">بنك الفروض والاختبارات</h1>
+        <p data-i18n="hero_desc">المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.</p>
     </div>
 
     <div class="main-container">
@@ -331,7 +332,7 @@
     <!-- نافذة كيفية الاستعمال -->
     <div id="howto-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3><i class="fa-solid fa-circle-question" style="color:var(--primary)"></i> كيفية استعمال المنصة</h3>
+            <h3><i class="fa-solid fa-circle-question" style="color:var(--primary)"></i> كيفية الاستعمال</h3>
             <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem;">
                 <p>1️⃣ <b>اختر مستواك الدراسي:</b> (الأولى، الثانية، أو الثالثة ثانوي).</p>
                 <p>2️⃣ <b>حدد شعبتك الدراسية:</b> لتظهر لك المواد المقررة خصيصاً لك.</p>
@@ -363,6 +364,20 @@
                 <button class="btn-cancel" onclick="closeContactModal()">إلغاء</button>
             </div>
             <div id="contact-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري إرسال الرسالة لتليجرام...</div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار اللغة (تم تجهيزها لاستقبال الترجمات) -->
+    <div id="language-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i class="fa-solid fa-language" style="color:var(--primary)"></i> اختر لغة العرض</h3>
+            <p class="hint">اختر لغة التطبيق المفضلة لديك:</p>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
+                <button class="btn-action btn-subject" onclick="changeLanguage('ar')" style="justify-content: flex-start; padding: 12px;"><i class="fa-solid fa-check"></i> العربية (Arabic)</button>
+                <button class="btn-action btn-subject" onclick="changeLanguage('fr')" style="justify-content: flex-start; padding: 12px; background:#475569;"><i class="fa-solid fa-globe"></i> الفرنسية (Français)</button>
+                <button class="btn-action btn-subject" onclick="changeLanguage('en')" style="justify-content: flex-start; padding: 12px; background:#475569;"><i class="fa-solid fa-globe"></i> الإنجليزية (English)</button>
+            </div>
+            <button class="btn-cancel" onclick="closeLanguageModal()" style="width:100%;">إغلاق</button>
         </div>
     </div>
 
@@ -460,13 +475,11 @@
         let navState = { year: '', branch: '', subject: '', term: '', category: '' };
         let currentExamsList = [];
 
-        // إظهار وإخفاء قائمة الإعدادات المنسدلة
+        // إدارة إعدادات القائمة المنسدلة
         window.toggleSettingsMenu = function() {
-            const menu = document.getElementById('settings-menu');
-            menu.classList.toggle('show');
+            document.getElementById('settings-menu').classList.toggle('show');
         };
 
-        // إغلاق القائمة عند النقر خارجها
         window.addEventListener('click', function(e) {
             if (!e.target.closest('.nav-controls')) {
                 document.getElementById('settings-menu').classList.remove('show');
@@ -491,19 +504,33 @@
             document.getElementById('contact-msg').value = '';
         };
 
-        // إرسال رسالة مراسلة المطور مباشرة لتليجرام
+        // نوافذ واختيار اللغة
+        window.openLanguageModal = function() {
+            document.getElementById('settings-menu').classList.remove('show');
+            document.getElementById('language-modal').classList.add('show');
+        };
+        window.closeLanguageModal = function() {
+            document.getElementById('language-modal').classList.remove('show');
+        };
+
+        window.changeLanguage = function(lang) {
+            localStorage.setItem('site_lang', lang);
+            closeLanguageModal();
+            if(lang === 'ar') {
+                alert("تم التبديل إلى اللغة العربية.");
+                location.reload();
+            } else {
+                alert("سيتم تطبيق الترجمة فور إضافتك لملفات الترجمة.");
+            }
+        };
+
         window.sendContactMessage = async function() {
             let name = document.getElementById('contact-name').value.trim();
             let msg = document.getElementById('contact-msg').value.trim();
-
-            if (!name || !msg) {
-                alert("يرجى كتابة الاسم والرسالة أولاً!");
-                return;
-            }
+            if (!name || !msg) { alert("يرجى كتابة الاسم والرسالة أولاً!"); return; }
 
             const loader = document.getElementById('contact-loader');
             loader.style.display = 'block';
-
             let text = `📬 رسالة جديدة من زائر للموقع:\n\n👤 الاسم: ${name}\n💬 الرسالة:\n${msg}`;
 
             try {
@@ -512,18 +539,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: TELEGRAM_CHANNEL_ID, text: text })
                 });
-
-                if (res.ok) {
-                    alert("✅ تم إرسال رسالتك للمطور بنجاح!");
-                    closeContactModal();
-                } else {
-                    alert("❌ فشل الإرسال، تحقق من الإنترنت.");
-                }
-            } catch (err) {
-                alert("❌ حدث خطأ في الاتصال.");
-            } finally {
-                loader.style.display = 'none';
-            }
+                if (res.ok) { alert("✅ تم إرسال رسالتك للمطور بنجاح!"); closeContactModal(); }
+                else { alert("❌ فشل الإرسال."); }
+            } catch (err) { alert("❌ حدث خطأ في الاتصال."); }
+            finally { loader.style.display = 'none'; }
         };
 
         window.toggleTheme = function() {
@@ -545,13 +564,8 @@
         }
 
         const commonSubjects = [
-            { name: 'الرياضيات' },
-            { name: 'العلوم الفيزيائية' },
-            { name: 'اللغة العربية وآدابها' },
-            { name: 'اللغة الفرنسية' },
-            { name: 'اللغة الإنجليزية' },
-            { name: 'التاريخ والجغرافيا' },
-            { name: 'العلوم الإسلامية' }
+            { name: 'الرياضيات' }, { name: 'العلوم الفيزيائية' }, { name: 'اللغة العربية وآدابها' },
+            { name: 'اللغة الفرنسية' }, { name: 'اللغة الإنجليزية' }, { name: 'التاريخ والجغرافيا' }, { name: 'العلوم الإسلامية' }
         ];
 
         const schoolCurriculum = {
