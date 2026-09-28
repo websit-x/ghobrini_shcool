@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - إدارة المواضيع والمساهمات</title>
+    <title>لوحة الإدارة الذكية - ثانوية غوبريني مصطفى</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,14 +19,25 @@
         .form-group { margin-bottom: 1rem; } .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
         .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 0.95rem; }
         .form-row { display: flex; gap: 10px; } .form-row .form-group { flex: 1; }
-        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: white; }
-        .btn-submit { background: var(--admin-primary); width: 100%; margin-top: 1rem; padding: 12px; } 
+        .btn { padding: 8px 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: white; transition: 0.2s; }
+        .btn-submit { background: var(--admin-primary); width: 100%; margin-top: 1rem; padding: 12px; font-size: 1rem; } 
         .btn-delete { background: var(--admin-danger); } 
         .btn-approve { background: var(--admin-accent); }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; } th, td { text-align: right; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; } th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
+        .btn-view { background: var(--admin-primary); }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; } th, td { text-align: right; padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; } th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
         .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
         #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
         .hint-box { background: rgba(59, 130, 246, 0.1); border-right: 4px solid var(--admin-primary); padding: 10px; font-size: 0.85rem; border-radius: 6px; margin-bottom: 15px; color: #bfdbfe; }
+
+        /* نافذة تفاصيل الطلب والمعاينة للأدمن */
+        .admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 1rem; }
+        .admin-modal.show { display: flex; }
+        .admin-modal-card { background: var(--admin-panel); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
+        .admin-modal-header { padding: 1rem; background: #111827; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .admin-modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
+        .admin-modal-footer { padding: 1rem; background: #111827; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); }
+        .detail-row { margin-bottom: 10px; font-size: 0.95rem; }
+        .detail-row span { color: var(--text-muted); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -36,6 +47,7 @@
     </header>
 
     <div class="container">
+        <!-- قسم الرفع المباشر للأدمن -->
         <div>
             <div class="panel-card">
                 <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
@@ -64,17 +76,20 @@
             </div>
         </div>
 
+        <!-- قسم إدارة طلبات المساهمات والمواضيع المنشورة -->
         <div>
+            <!-- طلبات المساهمات الواردة (بشكل أزرار صغيرة وأنيقة) -->
             <div class="panel-card" style="border-color: var(--admin-warning);">
-                <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات الواردة للقبول</div>
+                <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات المعلقة</div>
                 <div style="overflow-x: auto;">
                     <table id="requests-table">
-                        <thead><tr><th>المرسل والعنوان</th><th>التصنيف والمستوى</th><th>إجراءات القبول</th></tr></thead>
+                        <thead><tr><th>عنوان الموضوع</th><th>المرسل</th><th>إجراء</th></tr></thead>
                         <tbody id="requests-table-body"><tr><td colspan="3" class="empty-state">جاري التحقق من الطلبات...</td></tr></tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- المواضيع المنشورة حالياً -->
             <div class="panel-card">
                 <div class="panel-header"><i class="fa-solid fa-database"></i> المواضيع المنشورة في الموقع</div>
                 <div style="overflow-x: auto;">
@@ -83,6 +98,24 @@
                         <tbody id="table-body"><tr><td colspan="3" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تفاصيل ومعاينة الطلب للأدمن -->
+    <div id="admin-request-modal" class="admin-modal">
+        <div class="admin-modal-card">
+            <div class="admin-modal-header">
+                <h3 style="color: var(--admin-warning); font-size: 1.1rem;"><i class="fa-solid fa-file-lines"></i> تفاصيل طلب المساهمة</h3>
+                <button onclick="closeAdminModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="admin-modal-body" id="admin-modal-content">
+                <!-- يتم حقن التفاصيل هنا -->
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-approve" id="modal-approve-btn"><i class="fa-solid fa-check"></i> قبول ونشر</button>
+                <button class="btn btn-delete" id="modal-reject-btn"><i class="fa-solid fa-xmark"></i> رفض وحذف</button>
+                <button class="btn" style="background:#4b5563;" onclick="closeAdminModal()">إغلاق</button>
             </div>
         </div>
     </div>
@@ -179,7 +212,7 @@
             finally { loader.style.display = 'none'; document.getElementById('btn-publish').disabled = false; }
         };
 
-        // --- إدارة طلبات المساهمات الواردة من الطلاب ---
+        // --- جلب وعرض طلبات المساهمات كأزرار صغيرة ---
         async function loadContributionsRequests() {
             const tbody = document.getElementById('requests-table-body');
             try {
@@ -190,11 +223,10 @@
                     const data = docSnap.data();
                     tbody.innerHTML += `
                         <tr>
-                            <td><strong style="color:white;">${data.title}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">المرسل: ${data.sender}</span></td>
-                            <td><span style="font-size:0.8rem; color:var(--admin-warning); display:block;">${data.year} - ${data.branch}</span>${data.subject} (${data.type} - ${data.term})</td>
+                            <td><strong style="color:white; font-size:0.9rem;">${data.title}</strong></td>
+                            <td style="color:var(--text-muted);">${data.sender}</td>
                             <td>
-                                <button class="btn btn-approve" onclick="approveRequest('${docSnap.id}')"><i class="fa-solid fa-check"></i> قبول ونشر</button>
-                                <button class="btn btn-delete" onclick="deleteRequest('${docSnap.id}')"><i class="fa-solid fa-xmark"></i> رفض</button>
+                                <button class="btn btn-view" onclick="openRequestDetails('${docSnap.id}')"><i class="fa-solid fa-eye"></i> معاينة الطلب</button>
                             </td>
                         </tr>
                     `;
@@ -202,16 +234,56 @@
             } catch (error) { tbody.innerHTML = '<tr><td colspan="3" class="empty-state" style="color:var(--admin-danger);">حدث خطأ في جلب الطلبات</td></tr>'; }
         }
 
+        // فتح نافذة تفاصيل الطلب للأدمن
+        window.openRequestDetails = async function(requestId) {
+            const modal = document.getElementById('admin-request-modal');
+            const content = document.getElementById('admin-modal-content');
+            content.innerHTML = '<div style="text-align:center; padding:2rem;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem; color:var(--admin-primary);"></i></div>';
+            modal.classList.add('show');
+
+            try {
+                const reqDoc = await getDoc(doc(db, "contributions_requests", requestId));
+                if(!reqDoc.exists()) return content.innerHTML = '<p>الطلب غير موجود</p>';
+                const data = reqDoc.data();
+
+                let subUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${data.subjectFileId}`;
+                let res = await fetch(subUrl);
+                let resData = await res.json();
+                let directSubUrl = resData.ok ? `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${resData.result.file_path}` : '#';
+
+                content.innerHTML = `
+                    <div class="detail-row"><span>المرسل:</span> ${data.sender}</div>
+                    <div class="detail-row"><span>عنوان الموضوع:</span> <strong style="color:white;">${data.title}</strong></div>
+                    <div class="detail-row"><span>المستوى الدراسي:</span> ${data.year} - ${data.branch}</div>
+                    <div class="detail-row"><span>المادة:</span> ${data.subject}</div>
+                    <div class="detail-row"><span>التصنيف والفصل:</span> ${data.type} (${data.term})</div>
+                    <div style="margin-top: 1.5rem; display:flex; gap:10px; flex-wrap:wrap;">
+                        <a href="${directUrl}" target="_blank" class="btn btn-submit" style="margin:0; text-decoration:none;"><i class="fa-solid fa-file-pdf"></i> معاينة ملف الموضوع (PDF / صورة)</a>
+                    </div>
+                `;
+
+                // ربط أزرار القبول والرفض داخل النافذة
+                document.getElementById('modal-approve-btn').onclick = () => approveRequest(requestId);
+                document.getElementById('modal-reject-btn').onclick = () => deleteRequest(requestId);
+
+            } catch(e) {
+                content.innerHTML = `<p style="color:var(--admin-danger);">تعذر جلب تفاصيل الملف: ${e.message}</p>`;
+            }
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-request-modal').classList.remove('show');
+        };
+
         window.approveRequest = async function(requestId) {
             if(!confirm("هل أنت متأكد من قبول ونشر هذا الموضوع في الموقع العام؟")) return;
             try {
                 const reqDocRef = doc(db, "contributions_requests", requestId);
                 const reqSnap = await getDoc(reqDocRef);
-                if (!reqSnap.exists()) return alert("الطلب غير موجود!");
+                if (!reqSnap.exists()) return;
                 
                 const data = reqSnap.data();
 
-                // نشر الـ file_id الموجود أساساً في تيليجرام إلى جدول الموقع العام مباشرة بدون إعادة رفع
                 await addDoc(collection(db, "exams_repository"), {
                     year: data.year,
                     branch: data.branch,
@@ -224,10 +296,9 @@
                     timestamp: serverTimestamp()
                 });
 
-                // حذف الطلب من قائمة الطلبات المعلقة بعد الموافقة عليه
                 await deleteDoc(reqDocRef);
-
-                alert("✅ تم قبول ونشر الموضوع بنجاح ليعرض للطلاب فوراً دون أي استهلاك لمساحة قاعدة البيانات!");
+                closeAdminModal();
+                alert("✅ تم قبول ونشر الموضوع بنجاح ليعرض للطلاب فوراً!");
                 loadContributionsRequests();
                 loadAllExams();
             } catch (err) {
@@ -239,6 +310,7 @@
             if(confirm("هل تريد رفض وحذف هذا الطلب نهائياً؟")) {
                 try {
                     await deleteDoc(doc(db, "contributions_requests", requestId));
+                    closeAdminModal();
                     loadContributionsRequests();
                 } catch(e) { alert("خطأ: " + e.message); }
             }
