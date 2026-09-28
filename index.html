@@ -59,9 +59,20 @@
         .brand i { color: var(--primary); font-size: 1.5rem; }
         
         .nav-controls { display: flex; align-items: center; gap: 10px; }
-        .theme-toggle-btn { background: var(--surface); border: 1px solid var(--border); color: var(--accent); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .control-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-main); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .control-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
         .back-nav-btn { display: none; background: var(--surface); border: 1px solid var(--border); color: var(--text-main); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
         .back-nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* قائمة الإعدادات المنسدلة */
+        .settings-dropdown { position: absolute; top: 60px; left: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lg); width: 220px; display: none; flex-direction: column; z-index: 2000; overflow: hidden; }
+        .settings-dropdown.show { display: flex; animation: fadeIn 0.2s ease; }
+        .settings-item { padding: 12px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .settings-item:last-child { border-bottom: none; }
+        .settings-item:hover { background: rgba(56, 189, 248, 0.1); color: var(--primary); }
+        .settings-item i { color: var(--primary); font-size: 1rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Hero Section */
         .hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary) 100%); color: white; text-align: center; padding: 2.5rem 1rem 3rem 1rem; position: relative; overflow: hidden; border-radius: 0 0 30px 30px; margin-bottom: 1.5rem; box-shadow: var(--shadow-lg); transition: all 0.4s ease; }
@@ -178,13 +189,13 @@
         
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-main); }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: var(--bg); color: var(--text-main); outline: none; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: var(--bg); color: var(--text-main); outline: none; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
         
         .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; }
         .btn-submit { flex: 2; padding: 10px; background: var(--telegram); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; }
         .btn-cancel { flex: 1; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; color: var(--text-main); }
-        #upload-loader { display: none; text-align: center; color: var(--telegram); font-weight: 800; margin-top: 15px; font-size: 0.95rem; padding: 10px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; }
+        #upload-loader, #contact-loader { display: none; text-align: center; color: var(--telegram); font-weight: 800; margin-top: 15px; font-size: 0.95rem; padding: 10px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; }
 
         footer { text-align: center; padding: 2rem 1rem; margin-top: 3rem; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem; background: var(--surface); }
     </style>
@@ -194,8 +205,16 @@
     <header>
         <div class="header-content">
             <div class="brand"><i class="fa-solid fa-graduation-cap"></i> ثانوية غوبريني</div>
-            <div class="nav-controls">
-                <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()"><i class="fa-solid fa-sun"></i></button>
+            <div class="nav-controls" style="position: relative;">
+                <!-- زر الإعدادات -->
+                <button class="control-btn" onclick="toggleSettingsMenu()"><i class="fa-solid fa-gear"></i></button>
+                <!-- قائمة الإعدادات المنسدلة -->
+                <div class="settings-dropdown" id="settings-menu">
+                    <div class="settings-item" onclick="openHowToUse()"><i class="fa-solid fa-circle-question"></i> كيفية الاستعمال</div>
+                    <div class="settings-item" onclick="openContactModal()"><i class="fa-solid fa-paper-plane"></i> مراسلة المطور</div>
+                </div>
+
+                <button id="theme-toggle" class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-sun"></i></button>
                 <button class="back-nav-btn" id="btn-back" onclick="navigateBack()"><i class="fa-solid fa-arrow-right-long"></i> رجوع</button>
             </div>
         </div>
@@ -209,6 +228,7 @@
     <div class="main-container">
         <div class="breadcrumb" id="breadcrumb"><i class="fa-solid fa-house"></i> الرئيسية</div>
 
+        <!-- 1. اختيار السنة -->
         <div id="view-year" class="page-view active">
             <div class="grid-layout">
                 <div class="grid-item-card" onclick="selectYear('الأولى ثانوي')"><i class="fa-solid fa-1"></i><h3>الأولى ثانوي</h3></div>
@@ -217,10 +237,13 @@
             </div>
         </div>
 
+        <!-- 2. اختيار الشعبة -->
         <div id="view-branch" class="page-view"><div class="grid-layout" id="branches-box"></div></div>
         
+        <!-- 3. اختيار المادة -->
         <div id="view-subject" class="page-view"><div class="grid-layout" id="subjects-box"></div></div>
         
+        <!-- 4. اختيار الفصل -->
         <div id="view-term" class="page-view">
             <div class="trimester-grid">
                 <div class="trimester-card" onclick="selectTerm('الفصل الأول')"><i class="fa-solid fa-calendar-days"></i><h3>الفصل الأول</h3></div>
@@ -229,6 +252,7 @@
             </div>
         </div>
 
+        <!-- 5. اختيار نوع الموضوع -->
         <div id="view-category" class="page-view">
             <div class="category-grid">
                 <div class="category-card" onclick="selectCategory('فرض')">
@@ -254,6 +278,7 @@
             </div>
         </div>
         
+        <!-- 6. عرض المواضيع النهائية -->
         <div id="view-exams" class="page-view">
             <div class="search-container">
                 <div class="bear-search-mascot sleeping" id="search-bear">
@@ -283,6 +308,7 @@
         </div>
     </div>
 
+    <!-- نافذة المعاينة مع أنيميشن الكتاب -->
     <div id="preview-modal" class="preview-overlay">
         <div class="preview-card">
             <div class="preview-header">
@@ -302,10 +328,50 @@
         </div>
     </div>
 
+    <!-- نافذة كيفية الاستعمال -->
+    <div id="howto-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i class="fa-solid fa-circle-question" style="color:var(--primary)"></i> كيفية استعمال المنصة</h3>
+            <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem;">
+                <p>1️⃣ <b>اختر مستواك الدراسي:</b> (الأولى، الثانية، أو الثالثة ثانوي).</p>
+                <p>2️⃣ <b>حدد شعبتك الدراسية:</b> لتظهر لك المواد المقررة خصيصاً لك.</p>
+                <p>3️⃣ <b>اختر المادة والفصل الدراسي:</b> (الأول، الثاني، أو الثالث).</p>
+                <p>4️⃣ <b>تصفح المحتوى:</b> اختر بين (فروض، اختبارات، تمارين، أو ملخصات).</p>
+                <p>5️⃣ <b>المعاينة أو التحميل:</b> يمكنك الضغط على "معاينة" لتصفح الملف مباشرة، أو "تحميل" لحفظه في هاتفك.</p>
+            </div>
+            <button class="btn-submit" onclick="closeHowToUse()" style="width:100%;">فهمت، شكراً!</button>
+        </div>
+    </div>
+
+    <!-- نافذة مراسلة المطور -->
+    <div id="contact-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i class="fa-solid fa-paper-plane" style="color:var(--telegram)"></i> مراسلة المطور</h3>
+            <p class="hint">هل تواجه مشكلة تقنية، أو لديك اقتراح لتحسين المنصة؟ راسلنا وسنرد عليك قريباً.</p>
+            
+            <div class="form-group">
+                <label>اسمك الكريم (إجباري)</label>
+                <input type="text" id="contact-name" placeholder="أدخل اسمك الكامل هنا..." required>
+            </div>
+            <div class="form-group">
+                <label>رسالتك أو طلبك (إجباري)</label>
+                <textarea id="contact-msg" rows="4" placeholder="اكتب ما تبحث عنه أو المشكلة التي تواجهك..." required></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-submit" onclick="sendContactMessage()"><i class="fa-brands fa-telegram"></i> إرسال للمطور</button>
+                <button class="btn-cancel" onclick="closeContactModal()">إلغاء</button>
+            </div>
+            <div id="contact-loader"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري إرسال الرسالة لتليجرام...</div>
+        </div>
+    </div>
+
+    <!-- زر المساهمة المطور -->
     <button class="fab" id="fab-btn" onclick="openUploadModal()">
         <i class="fa-solid fa-hand-holding-heart"></i> ساهم بموضوع
     </button>
 
+    <!-- Modal المساهمة المتكامل -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-card">
             <h3><i class="fa-solid fa-file-arrow-up" style="color:var(--telegram)"></i> إرسال موضوع للمنصة</h3>
@@ -350,7 +416,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: فرض محروس رقم 1)">
+                <input type="text" id="field-desc" placeholder="عنوان الموضوع (مثال: فرض المحروس رقم 1)">
             </div>
             <div class="form-group">
                 <label>ملف الموضوع <span style="color:var(--danger)">*</span></label>
@@ -394,6 +460,72 @@
         let navState = { year: '', branch: '', subject: '', term: '', category: '' };
         let currentExamsList = [];
 
+        // إظهار وإخفاء قائمة الإعدادات المنسدلة
+        window.toggleSettingsMenu = function() {
+            const menu = document.getElementById('settings-menu');
+            menu.classList.toggle('show');
+        };
+
+        // إغلاق القائمة عند النقر خارجها
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.nav-controls')) {
+                document.getElementById('settings-menu').classList.remove('show');
+            }
+        });
+
+        window.openHowToUse = function() {
+            document.getElementById('settings-menu').classList.remove('show');
+            document.getElementById('howto-modal').classList.add('show');
+        };
+        window.closeHowToUse = function() {
+            document.getElementById('howto-modal').classList.remove('show');
+        };
+
+        window.openContactModal = function() {
+            document.getElementById('settings-menu').classList.remove('show');
+            document.getElementById('contact-modal').classList.add('show');
+        };
+        window.closeContactModal = function() {
+            document.getElementById('contact-modal').classList.remove('show');
+            document.getElementById('contact-name').value = '';
+            document.getElementById('contact-msg').value = '';
+        };
+
+        // إرسال رسالة مراسلة المطور مباشرة لتليجرام
+        window.sendContactMessage = async function() {
+            let name = document.getElementById('contact-name').value.trim();
+            let msg = document.getElementById('contact-msg').value.trim();
+
+            if (!name || !msg) {
+                alert("يرجى كتابة الاسم والرسالة أولاً!");
+                return;
+            }
+
+            const loader = document.getElementById('contact-loader');
+            loader.style.display = 'block';
+
+            let text = `📬 رسالة جديدة من زائر للموقع:\n\n👤 الاسم: ${name}\n💬 الرسالة:\n${msg}`;
+
+            try {
+                let res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: TELEGRAM_CHANNEL_ID, text: text })
+                });
+
+                if (res.ok) {
+                    alert("✅ تم إرسال رسالتك للمطور بنجاح!");
+                    closeContactModal();
+                } else {
+                    alert("❌ فشل الإرسال، تحقق من الإنترنت.");
+                }
+            } catch (err) {
+                alert("❌ حدث خطأ في الاتصال.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        };
+
         window.toggleTheme = function() {
             const root = document.documentElement;
             const btnIcon = document.querySelector('#theme-toggle i');
@@ -422,7 +554,6 @@
             { name: 'العلوم الإسلامية' }
         ];
 
-        // المناهج المحدثة (إضافة الفلسفة لعلوم تجريبية ثانية وثالثة ثانوي، وحذف الأمازيغية والطرائق)
         const schoolCurriculum = {
             'الأولى ثانوي': { 
                 'جذع مشترك علوم وتكنولوجيا': [...commonSubjects, { name: 'علوم الطبيعة والحياة' }, { name: 'التكنولوجيا (هندسة كهربائية)' }, { name: 'التكنولوجيا (هندسة مدنية)' }, { name: 'التكنولوجيا (هندسة ميكانيكية)' }, { name: 'الإعلام الآلي' }], 
@@ -601,15 +732,14 @@
             return data.result.document.file_id;
         }
 
-        // إرسال المساهمة مباشرة لجدول (contributions_requests) في فايربيس (تخزين نصي فقط بدون صور ثقيلة)
         window.submitRequestToAdmin = async function() {
-            const senderName = document.getElementById('field-sender').value.trim() || 'فاعل خير (مجهول)';
+            const senderName = document.getElementById('field-sender').value || 'فاعل خير (مجهول)';
             const mYear = document.getElementById('modal-year').value;
             const mBranch = document.getElementById('modal-branch').value;
             const mSubject = document.getElementById('modal-subject').value;
             const term = document.getElementById('field-term').value; 
             const type = document.getElementById('field-type').value;
-            const desc = document.getElementById('field-desc').value.trim();
+            const desc = document.getElementById('field-desc').value;
             const fileSubj = document.getElementById('field-file-subj').files[0]; 
             const fileSol = document.getElementById('field-file-sol').files[0];
 
