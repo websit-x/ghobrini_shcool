@@ -32,7 +32,7 @@
         .admin-view.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ستايلات إدارة المواضيع (كودك الأصلي) */
+        /* ستايلات إدارة المواضيع */
         .exams-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
         @media (max-width: 900px) { .exams-grid { grid-template-columns: 1fr; } }
         .panel-card { background: var(--admin-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
@@ -51,7 +51,7 @@
         #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
         .hint-box { background: rgba(59, 130, 246, 0.1); border-right: 4px solid var(--admin-primary); padding: 10px; font-size: 0.85rem; border-radius: 6px; margin-bottom: 15px; color: #bfdbfe; }
 
-        /* نافذة تفاصيل الطلب والمعاينة للأدمن (كودك الأصلي) */
+        /* نافذة تفاصيل الطلب والمعاينة للأدمن */
         .admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 1rem; }
         .admin-modal.show { display: flex; }
         .admin-modal-card { background: var(--admin-panel); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
@@ -61,7 +61,7 @@
         .detail-row { margin-bottom: 10px; font-size: 0.95rem; }
         .detail-row span { color: var(--text-muted); font-weight: 600; }
 
-        /* ================= ستايلات المحرر المرئي ================= */
+        /* ستايلات المحرر المرئي */
         .visual-sandbox { background: var(--stu-bg); border: 2px solid var(--admin-primary); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; }
         .sandbox-header { background: rgba(30, 41, 59, 0.95); padding: 15px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; }
         .sandbox-hero { background: linear-gradient(135deg, var(--stu-primary-dark) 0%, var(--stu-secondary) 100%); text-align: center; padding: 3rem 1rem; border-radius: 0 0 30px 30px; }
@@ -93,22 +93,17 @@
     </header>
 
     <div class="container">
-        
-        <!-- ============================================== -->
         <!-- التبويب الأول: المحرر المرئي المباشر -->
-        <!-- ============================================== -->
         <div id="visual-editor-view" class="admin-view active">
             <div class="visual-sandbox">
                 <div class="sandbox-toolbar"><i class="fa-solid fa-hand-pointer"></i> اضغط على أي نص في الأسفل لتعديله باللغات الثلاث ليتم تحديثه في موقع الطلاب فوراً</div>
                 
-                <!-- رأس الموقع الوهمي -->
                 <div class="sandbox-header">
                     <div class="editable" style="font-size:1.3rem; font-weight:800; color:var(--stu-primary-dark);" onclick="openEditModal('brand')">
                         <i class="fa-solid fa-graduation-cap"></i> <span id="text_brand">جاري التحميل...</span>
                     </div>
                 </div>
 
-                <!-- الهيرو الوهمي -->
                 <div class="sandbox-hero">
                     <h1 class="editable" style="font-size:2.5rem; font-weight:900; margin-bottom:10px;" onclick="openEditModal('hero_title')">
                         <span id="text_hero_title">جاري التحميل...</span>
@@ -118,7 +113,6 @@
                     </p>
                 </div>
 
-                <!-- الأقسام الوهمية -->
                 <div class="sandbox-body">
                     <div style="background:var(--stu-surface); padding:12px; border-radius:12px; margin-bottom:1.5rem; display:inline-block;">
                         <span class="editable" onclick="openEditModal('breadcrumb_home')"><i class="fa-solid fa-house"></i> <span id="text_breadcrumb_home">...</span></span>
@@ -164,12 +158,9 @@
             </div>
         </div>
 
-        <!-- ============================================== -->
-        <!-- التبويب الثاني: إدارة المواضيع والطلبات (كودك الأصلي) -->
-        <!-- ============================================== -->
+        <!-- التبويب الثاني: إدارة المواضيع والطلبات -->
         <div id="exams-view" class="admin-view">
             <div class="exams-grid">
-                <!-- قسم الرفع المباشر للأدمن -->
                 <div>
                     <div class="panel-card">
                         <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
@@ -198,7 +189,6 @@
                     </div>
                 </div>
 
-                <!-- قسم إدارة طلبات المساهمات والمواضيع المنشورة -->
                 <div>
                     <div class="panel-card" style="border-color: var(--admin-warning);">
                         <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات المعلقة</div>
@@ -224,20 +214,14 @@
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- النوافذ المنبثقة (Modals) -->
-    <!-- ============================================== -->
-
-    <!-- نافذة تفاصيل ومعاينة الطلب للأدمن (كودك الأصلي) -->
+    <!-- نافذة تفاصيل ومعاينة الطلب للأدمن -->
     <div id="admin-request-modal" class="admin-modal">
         <div class="admin-modal-card">
             <div class="admin-modal-header">
                 <h3 style="color: var(--admin-warning); font-size: 1.1rem;"><i class="fa-solid fa-file-lines"></i> تفاصيل طلب المساهمة</h3>
                 <button onclick="closeAdminModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="admin-modal-body" id="admin-modal-content">
-                <!-- يتم حقن التفاصيل هنا -->
-            </div>
+            <div class="admin-modal-body" id="admin-modal-content"></div>
             <div class="admin-modal-footer">
                 <button class="btn btn-approve" id="modal-approve-btn"><i class="fa-solid fa-check"></i> قبول ونشر</button>
                 <button class="btn btn-delete" id="modal-reject-btn"><i class="fa-solid fa-xmark"></i> رفض وحذف</button>
@@ -246,7 +230,7 @@
         </div>
     </div>
 
-    <!-- نافذة تعديل النص (للمحرر المرئي) -->
+    <!-- نافذة تعديل النص -->
     <div id="edit-modal" class="admin-modal">
         <div class="admin-modal-card" style="max-width: 500px;">
             <div class="admin-modal-header">
@@ -255,18 +239,9 @@
             </div>
             <div class="admin-modal-body">
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 20px;">الرمز البرمجي: <strong id="editing-key" style="color:var(--admin-warning);"></strong></p>
-                <div class="lang-group">
-                    <label>العربية (AR) 🇩🇿</label>
-                    <input type="text" id="input-ar" dir="rtl">
-                </div>
-                <div class="lang-group">
-                    <label>الفرنسية (FR) 🇫🇷</label>
-                    <input type="text" id="input-fr" dir="ltr">
-                </div>
-                <div class="lang-group">
-                    <label>الإنجليزية (EN) 🇬🇧</label>
-                    <input type="text" id="input-en" dir="ltr">
-                </div>
+                <div class="lang-group"><label>العربية (AR) 🇩🇿</label><input type="text" id="input-ar" dir="rtl"></div>
+                <div class="lang-group"><label>الفرنسية (FR) 🇫🇷</label><input type="text" id="input-fr" dir="ltr"></div>
+                <div class="lang-group"><label>الإنجليزية (EN) 🇬🇧</label><input type="text" id="input-en" dir="ltr"></div>
             </div>
             <div class="admin-modal-footer">
                 <button class="btn btn-approve" style="width:100%; padding:10px; font-size:1rem;" onclick="saveActiveTranslation()"><i class="fa-solid fa-check"></i> حفظ التعديل ونشره</button>
@@ -285,7 +260,6 @@
         const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
         const TELEGRAM_CHANNEL_ID = "7737717483"; 
 
-        // ================== نظام التبويبات (Tabs) ==================
         window.switchTab = function(viewId, btnElement) {
             document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -293,15 +267,12 @@
             btnElement.classList.add('active');
         };
 
-        // ================== الجزء 1: المحرر المرئي ==================
-                let siteTranslations = {
+        // نصوص افتراضية (تم دمجها مع الكود الخاص بك)
+        let siteTranslations = {
             "brand": { ar: "ثانوية غوبريني", fr: "Lycée Ghoubrini", en: "Ghoubrini High" },
             "hero_title": { ar: "بنك الفروض والاختبارات", fr: "Banque des Devoirs", en: "Exams Bank" },
             "hero_desc": { ar: "المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.", fr: "Plateforme complète pour les élèves.", en: "Comprehensive platform for students." },
             "breadcrumb_home": { ar: "الرئيسية", fr: "Accueil", en: "Home" },
-            "year_1": { ar: "الأولى ثانوي", fr: "1ère Année", en: "1st Year" },
-            "year_2": { ar: "الثانية ثانوي", fr: "2ème Année", en: "2nd Year" },
-            "year_3": { ar: "الثالثة ثانوي", fr: "3ème Année", en: "3rd Year" },
             "term_1": { ar: "الفصل الأول", fr: "Trimestre 1", en: "Term 1" },
             "term_2": { ar: "الفصل الثاني", fr: "Trimestre 2", en: "Term 2" },
             "term_3": { ar: "الفصل الثالث", fr: "Trimestre 3", en: "Term 3" },
@@ -312,16 +283,8 @@
             "preview_btn": { ar: "معاينة", fr: "Aperçu", en: "Preview" },
             "download_btn": { ar: "تحميل", fr: "Télécharger", en: "Download" },
             "view_solution": { ar: "الحل", fr: "Solution", en: "Solution" },
-            "preview_title": { ar: "معاينة الموضوع", fr: "Aperçu", en: "Preview" },
-            "search_placeholder": { ar: "ابحث في هذا القسم...", fr: "Rechercher...", en: "Search here..." },
-            "fab_contribute": { ar: "ساهم بموضوع", fr: "Contribuer", en: "Contribute" },
-            "settings_howto": { ar: "كيفية الاستعمال", fr: "Comment utiliser", en: "How to use" },
-            "settings_contact": { ar: "مراسلة المطور", fr: "Contacter le dév", en: "Contact Dev" },
-            "settings_lang": { ar: "اللغة (Language)", fr: "Langue (Language)", en: "Language" },
-            "back_btn": { ar: "رجوع", fr: "Retour", en: "Back" },
             "footer_text": { ar: "أكاديمية التفوق © 2026", fr: "Académie d'Excellence © 2026", en: "Excellence Academy © 2026" }
         };
-
 
         let currentEditingKey = '';
 
@@ -369,22 +332,28 @@
             finally { btn.innerHTML = originalText; btn.disabled = false; }
         };
 
-        // ================== الجزء 2: إدارة المواضيع والطلبات (كودك الأصلي) ==================
+        // تم تحديث المناهج لتتوافق 100% مع صفحة الطلاب الخاصة بك
+        const commonSubjects = ['الرياضيات', 'العلوم الفيزيائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'];
         const curriculum = {
             'الأولى ثانوي': { 
-                'جذع مشترك علوم وتكنولوجيا': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التكنولوجيا (هندسة كهربائية)', 'التكنولوجيا (هندسة مدنية)', 'التكنولوجيا (هندسة ميكانيكية)', 'الإعلام الآلي'], 
-                'جذع مشترك آداب': ['الرياضيات', 'العلوم الفيزيائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الإعلام الآلي'] 
+                'جذع مشترك علوم وتكنولوجيا': [...commonSubjects, 'علوم الطبيعة والحياة', 'التكنولوجيا (هندسة كهربائية)', 'التكنولوجيا (هندسة مدنية)', 'التكنولوجيا (هندسة ميكانيكية)', 'الإعلام الآلي'], 
+                'جذع مشترك آداب': [...commonSubjects, 'الإعلام الآلي'] 
             },
             'الثانية ثانوي': { 
-                'علوم تجريبية': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'الفلسفة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 
-                'تقني رياضي': ['الرياضيات', 'العلوم الفيزيائية', 'الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 
-                'رياضيات': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'], 
-                'آداب وفلسفة': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الفلسفة'], 
-                'لغات أجنبية': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'اللغة الإسبانية', 'اللغة الألمانية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'الفلسفة'], 
-                'تسيير واقتصاد': ['الرياضيات', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التسيير المحاسبي والمالي', 'الاقتصاد والمناجمنت', 'القانون'] 
+                'علوم تجريبية': [...commonSubjects, 'علوم الطبيعة والحياة', 'الفلسفة'], 
+                'تقني رياضي': [...commonSubjects, 'الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية'], 
+                'رياضيات': [...commonSubjects, 'علوم الطبيعة والحياة'],
+                'آداب وفلسفة': [...commonSubjects, 'الفلسفة'],
+                'لغات أجنبية': [...commonSubjects, 'الفلسفة', 'اللغة الإسبانية', 'اللغة الألمانية'],
+                'تسيير واقتصاد': [...commonSubjects, 'التسيير المحاسبي والمالي', 'الاقتصاد والمناجمنت', 'القانون']
             },
             'الثالثة ثانوي': { 
-                'علوم تجريبية': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'الفلسفة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'] 
+                'علوم تجريبية': [...commonSubjects, 'علوم الطبيعة والحياة', 'الفلسفة'], 
+                'تقني رياضي': [...commonSubjects, 'الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية', 'الفلسفة'], 
+                'رياضيات': [...commonSubjects, 'علوم الطبيعة والحياة', 'الفلسفة'],
+                'آداب وفلسفة': [...commonSubjects, 'الفلسفة'],
+                'لغات أجنبية': [...commonSubjects, 'الفلسفة', 'اللغة الإسبانية', 'اللغة الألمانية'],
+                'تسيير واقتصاد': [...commonSubjects, 'التسيير المحاسبي والمالي', 'الاقتصاد والمناجمنت', 'القانون', 'الفلسفة']
             }
         };
 
