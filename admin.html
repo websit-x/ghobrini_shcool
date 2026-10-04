@@ -4,20 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة الذكية - ثانوية غوبريني مصطفى</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --admin-dark: #111827; --admin-panel: #1f2937; --admin-primary: #3b82f6; --admin-accent: #10b981; --admin-danger: #ef4444; --admin-warning: #f59e0b; --text-light: #f3f4f6; --text-muted: #9ca3af; --border-color: #374151; }
+        :root { 
+            /* ألوان الإدارة */
+            --admin-dark: #111827; --admin-panel: #1f2937; --admin-primary: #3b82f6; 
+            --admin-accent: #10b981; --admin-danger: #ef4444; --admin-warning: #f59e0b; 
+            --text-light: #f3f4f6; --text-muted: #9ca3af; --border-color: #374151; 
+            
+            /* ألوان المحرر المرئي (تحاكي موقع الطلاب) */
+            --stu-primary: #38bdf8; --stu-primary-dark: #0284c7; --stu-secondary: #0ea5e9;
+            --stu-bg: #0f172a; --stu-surface: #1e293b; --stu-accent: #f59e0b;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background-color: var(--admin-dark); color: var(--text-light); line-height: 1.6; padding-bottom: 50px; }
-        header { background: var(--admin-panel); padding: 1.2rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        
+        /* شريط التنقل العلوي */
+        header { background: var(--admin-panel); padding: 1.2rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 100;}
         .brand { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; } .brand i { color: var(--admin-primary); }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+        .nav-tabs { display: flex; gap: 10px; }
+        .tab-btn { background: #374151; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .tab-btn.active { background: var(--admin-primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        .admin-view { display: none; }
+        .admin-view.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ستايلات إدارة المواضيع (كودك الأصلي) */
+        .exams-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+        @media (max-width: 900px) { .exams-grid { grid-template-columns: 1fr; } }
         .panel-card { background: var(--admin-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
         .panel-header { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; } .panel-header i { color: var(--admin-accent); }
         .form-group { margin-bottom: 1rem; } .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
-        .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 0.95rem; outline:none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--admin-primary); }
         .form-row { display: flex; gap: 10px; } .form-row .form-group { flex: 1; }
         .btn { padding: 8px 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: white; transition: 0.2s; }
         .btn-submit { background: var(--admin-primary); width: 100%; margin-top: 1rem; padding: 12px; font-size: 1rem; } 
@@ -29,7 +51,7 @@
         #upload-loader { display: none; text-align: center; padding: 1rem; color: var(--admin-accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); }
         .hint-box { background: rgba(59, 130, 246, 0.1); border-right: 4px solid var(--admin-primary); padding: 10px; font-size: 0.85rem; border-radius: 6px; margin-bottom: 15px; color: #bfdbfe; }
 
-        /* نافذة تفاصيل الطلب والمعاينة للأدمن */
+        /* نافذة تفاصيل الطلب والمعاينة للأدمن (كودك الأصلي) */
         .admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 1rem; }
         .admin-modal.show { display: flex; }
         .admin-modal-card { background: var(--admin-panel); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
@@ -38,71 +60,175 @@
         .admin-modal-footer { padding: 1rem; background: #111827; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); }
         .detail-row { margin-bottom: 10px; font-size: 0.95rem; }
         .detail-row span { color: var(--text-muted); font-weight: 600; }
+
+        /* ================= ستايلات المحرر المرئي ================= */
+        .visual-sandbox { background: var(--stu-bg); border: 2px solid var(--admin-primary); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; }
+        .sandbox-header { background: rgba(30, 41, 59, 0.95); padding: 15px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; }
+        .sandbox-hero { background: linear-gradient(135deg, var(--stu-primary-dark) 0%, var(--stu-secondary) 100%); text-align: center; padding: 3rem 1rem; border-radius: 0 0 30px 30px; }
+        .sandbox-body { padding: 2rem; max-width: 1000px; margin: auto; }
+        .sandbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .sandbox-card { background: var(--stu-surface); border: 2px solid #334155; border-radius: 20px; padding: 1.5rem 1rem; text-align: center; }
+        .sandbox-card i { font-size: 2.5rem; color: var(--stu-accent); margin-bottom: 10px; }
+        .sandbox-toolbar { background: var(--admin-primary); color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; border-radius: 20px 20px 0 0; }
+        
+        .editable { position: relative; display: inline-block; cursor: pointer; border: 2px dashed transparent; border-radius: 8px; padding: 5px 10px; transition: all 0.2s ease; }
+        .editable:hover { border-color: var(--admin-accent); background: rgba(16, 185, 129, 0.1); }
+        .editable::after { content: "\f304"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: -10px; right: -10px; background: var(--admin-accent); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; opacity: 0; transform: scale(0.5); transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .editable:hover::after { opacity: 1; transform: scale(1); }
+
+        /* نافذة تعديل النصوص المنبثقة */
+        .lang-group { margin-bottom: 15px; }
+        .lang-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: bold; }
+        .lang-group input { width: 100%; padding: 12px; background: #374151; border: 1px solid #4b5563; color: white; border-radius: 8px; font-size: 1rem; outline: none; }
+        .lang-group input:focus { border-color: var(--admin-primary); }
     </style>
 </head>
 <body>
     <header>
-        <div class="brand"><i class="fa-solid fa-shield-halved"></i> لوحة الإدارة - ثانوية غوبريني مصطفى</div>
-        <div style="font-size: 0.9rem; color: var(--admin-accent); font-weight: 700;">الأدمن: يوسف</div>
+        <div class="brand"><i class="fa-solid fa-shield-halved"></i> الإدارة - ثانوية غوبريني</div>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('visual-editor-view', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> تعديل نصوص الموقع</button>
+            <button class="tab-btn" onclick="switchTab('exams-view', this)"><i class="fa-solid fa-file-pdf"></i> إدارة المواضيع والطلبات</button>
+        </div>
     </header>
 
     <div class="container">
-        <!-- قسم الرفع المباشر للأدمن -->
-        <div>
-            <div class="panel-card">
-                <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
-                <div class="hint-box"><i class="fa-solid fa-lightbulb"></i> حدد عدة ملفات لتسميتها ونشرها تلقائياً.</div>
-
-                <div class="form-group"><label>السنة الدراسية</label><select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select></div>
-                <div class="form-group"><label>الشعبة</label><select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select></div>
-                <div class="form-group"><label>المادة</label><select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select></div>
-                <div class="form-row">
-                    <div class="form-group"><label>الفصل</label><select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select></div>
-                    <div class="form-group"><label>النوع</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
-                </div>
+        
+        <!-- ============================================== -->
+        <!-- التبويب الأول: المحرر المرئي المباشر -->
+        <!-- ============================================== -->
+        <div id="visual-editor-view" class="admin-view active">
+            <div class="visual-sandbox">
+                <div class="sandbox-toolbar"><i class="fa-solid fa-hand-pointer"></i> اضغط على أي نص في الأسفل لتعديله باللغات الثلاث ليتم تحديثه في موقع الطلاب فوراً</div>
                 
-                <div class="form-group">
-                    <label>تحديد المواضيع (ملفات متعددة)</label>
-                    <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx" multiple onchange="checkFilesCount()">
-                </div>
-                
-                <div class="form-group" id="sol-group">
-                    <label>ملف الحل (لموضوع واحد فقط)</label>
-                    <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
+                <!-- رأس الموقع الوهمي -->
+                <div class="sandbox-header">
+                    <div class="editable" style="font-size:1.3rem; font-weight:800; color:var(--stu-primary-dark);" onclick="openEditModal('brand')">
+                        <i class="fa-solid fa-graduation-cap"></i> <span id="text_brand">جاري التحميل...</span>
+                    </div>
                 </div>
 
-                <button class="btn btn-submit" id="btn-publish" onclick="publishExamsBulk()"><i class="fa-solid fa-cloud-arrow-up"></i> نشر المواضيع الآن</button>
-                <div id="upload-loader"></div>
+                <!-- الهيرو الوهمي -->
+                <div class="sandbox-hero">
+                    <h1 class="editable" style="font-size:2.5rem; font-weight:900; margin-bottom:10px;" onclick="openEditModal('hero_title')">
+                        <span id="text_hero_title">جاري التحميل...</span>
+                    </h1><br>
+                    <p class="editable" style="color:#e0f2fe; font-size:1.1rem;" onclick="openEditModal('hero_desc')">
+                        <span id="text_hero_desc">جاري التحميل...</span>
+                    </p>
+                </div>
+
+                <!-- الأقسام الوهمية -->
+                <div class="sandbox-body">
+                    <div style="background:var(--stu-surface); padding:12px; border-radius:12px; margin-bottom:1.5rem; display:inline-block;">
+                        <span class="editable" onclick="openEditModal('breadcrumb_home')"><i class="fa-solid fa-house"></i> <span id="text_breadcrumb_home">...</span></span>
+                    </div>
+
+                    <h3 style="margin-bottom:15px; color:var(--text-muted);">الفصول الدراسية:</h3>
+                    <div style="display:flex; gap:15px; margin-bottom: 2rem;">
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-calendar-days"></i><h3 class="editable" onclick="openEditModal('term_1')" id="text_term_1">...</h3></div>
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-calendar-days"></i><h3 class="editable" onclick="openEditModal('term_2')" id="text_term_2">...</h3></div>
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-calendar-days"></i><h3 class="editable" onclick="openEditModal('term_3')" id="text_term_3">...</h3></div>
+                    </div>
+
+                    <h3 style="margin-bottom:15px; color:var(--text-muted);">الأقسام:</h3>
+                    <div class="sandbox-grid">
+                        <div class="sandbox-card">
+                            <i class="fa-solid fa-file-pen"></i>
+                            <h3 class="editable" onclick="openEditModal('cat_assignments')" id="text_cat_assignments">...</h3>
+                        </div>
+                        <div class="sandbox-card">
+                            <i class="fa-solid fa-file-shield"></i>
+                            <h3 class="editable" onclick="openEditModal('cat_exams')" id="text_cat_exams">...</h3>
+                        </div>
+                        <div class="sandbox-card">
+                            <i class="fa-solid fa-list-check"></i>
+                            <h3 class="editable" onclick="openEditModal('cat_exercises')" id="text_cat_exercises">...</h3>
+                        </div>
+                        <div class="sandbox-card">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                            <h3 class="editable" onclick="openEditModal('cat_summaries')" id="text_cat_summaries">...</h3>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; gap:10px; justify-content: center; flex-wrap:wrap;">
+                        <div class="sandbox-card" style="padding:10px;"><h3 class="editable" onclick="openEditModal('preview_btn')" id="text_preview_btn">...</h3></div>
+                        <div class="sandbox-card" style="padding:10px;"><h3 class="editable" onclick="openEditModal('download_btn')" id="text_download_btn">...</h3></div>
+                        <div class="sandbox-card" style="padding:10px;"><h3 class="editable" onclick="openEditModal('view_solution')" id="text_view_solution">...</h3></div>
+                    </div>
+
+                    <div style="margin-top: 3rem; text-align:center; padding:2rem; border-top:1px solid #334155;">
+                        <p class="editable" onclick="openEditModal('footer_text')" id="text_footer_text">...</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- قسم إدارة طلبات المساهمات والمواضيع المنشورة -->
-        <div>
-            <!-- طلبات المساهمات الواردة (بشكل أزرار صغيرة وأنيقة) -->
-            <div class="panel-card" style="border-color: var(--admin-warning);">
-                <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات المعلقة</div>
-                <div style="overflow-x: auto;">
-                    <table id="requests-table">
-                        <thead><tr><th>عنوان الموضوع</th><th>المرسل</th><th>إجراء</th></tr></thead>
-                        <tbody id="requests-table-body"><tr><td colspan="3" class="empty-state">جاري التحقق من الطلبات...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- ============================================== -->
+        <!-- التبويب الثاني: إدارة المواضيع والطلبات (كودك الأصلي) -->
+        <!-- ============================================== -->
+        <div id="exams-view" class="admin-view">
+            <div class="exams-grid">
+                <!-- قسم الرفع المباشر للأدمن -->
+                <div>
+                    <div class="panel-card">
+                        <div class="panel-header"><i class="fa-solid fa-layer-group"></i> رفع متعدد للمواضيع</div>
+                        <div class="hint-box"><i class="fa-solid fa-lightbulb"></i> حدد عدة ملفات لتسميتها ونشرها تلقائياً.</div>
 
-            <!-- المواضيع المنشورة حالياً -->
-            <div class="panel-card">
-                <div class="panel-header"><i class="fa-solid fa-database"></i> المواضيع المنشورة في الموقع</div>
-                <div style="overflow-x: auto;">
-                    <table id="exams-table">
-                        <thead><tr><th>العنوان</th><th>المستوى والمادة</th><th>حذف</th></tr></thead>
-                        <tbody id="table-body"><tr><td colspan="3" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
-                    </table>
+                        <div class="form-group"><label>السنة الدراسية</label><select id="sel-year" onchange="updateBranches()"><option value="">-- اختر السنة --</option><option value="الأولى ثانوي">الأولى ثانوي</option><option value="الثانية ثانوي">الثانية ثانوي</option><option value="الثالثة ثانوي">الثالثة ثانوي</option></select></div>
+                        <div class="form-group"><label>الشعبة</label><select id="sel-branch" onchange="updateSubjects()" disabled><option value="">-- اختر الشعبة --</option></select></div>
+                        <div class="form-group"><label>المادة</label><select id="sel-subject" disabled><option value="">-- اختر المادة --</option></select></div>
+                        <div class="form-row">
+                            <div class="form-group"><label>الفصل</label><select id="sel-term"><option value="الفصل الأول">الفصل الأول</option><option value="الفصل الثاني">الفصل الثاني</option><option value="الفصل الثالث">الفصل الثالث</option></select></div>
+                            <div class="form-group"><label>النوع</label><select id="sel-type"><option value="فرض">فرض</option><option value="اختبار">اختبار</option><option value="سلسلة تمارين">سلسلة تمارين</option><option value="ملخص">ملخص</option></select></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>تحديد المواضيع (ملفات متعددة)</label>
+                            <input type="file" id="file-subj" accept="image/*,.pdf,.doc,.docx" multiple onchange="checkFilesCount()">
+                        </div>
+                        
+                        <div class="form-group" id="sol-group">
+                            <label>ملف الحل (لموضوع واحد فقط)</label>
+                            <input type="file" id="file-sol" accept="image/*,.pdf,.doc,.docx">
+                        </div>
+
+                        <button class="btn btn-submit" id="btn-publish" onclick="publishExamsBulk()"><i class="fa-solid fa-cloud-arrow-up"></i> نشر المواضيع الآن</button>
+                        <div id="upload-loader"></div>
+                    </div>
+                </div>
+
+                <!-- قسم إدارة طلبات المساهمات والمواضيع المنشورة -->
+                <div>
+                    <div class="panel-card" style="border-color: var(--admin-warning);">
+                        <div class="panel-header" style="color: var(--admin-warning);"><i class="fa-solid fa-inbox"></i> طلبات المساهمات المعلقة</div>
+                        <div style="overflow-x: auto;">
+                            <table id="requests-table">
+                                <thead><tr><th>عنوان الموضوع</th><th>المرسل</th><th>إجراء</th></tr></thead>
+                                <tbody id="requests-table-body"><tr><td colspan="3" class="empty-state">جاري التحقق من الطلبات...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-header"><i class="fa-solid fa-database"></i> المواضيع المنشورة في الموقع</div>
+                        <div style="overflow-x: auto;">
+                            <table id="exams-table">
+                                <thead><tr><th>العنوان</th><th>المستوى والمادة</th><th>حذف</th></tr></thead>
+                                <tbody id="table-body"><tr><td colspan="3" class="empty-state">جاري جلب البيانات...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تفاصيل ومعاينة الطلب للأدمن -->
+    <!-- ============================================== -->
+    <!-- النوافذ المنبثقة (Modals) -->
+    <!-- ============================================== -->
+
+    <!-- نافذة تفاصيل ومعاينة الطلب للأدمن (كودك الأصلي) -->
     <div id="admin-request-modal" class="admin-modal">
         <div class="admin-modal-card">
             <div class="admin-modal-header">
@@ -120,9 +246,37 @@
         </div>
     </div>
 
+    <!-- نافذة تعديل النص (للمحرر المرئي) -->
+    <div id="edit-modal" class="admin-modal">
+        <div class="admin-modal-card" style="max-width: 500px;">
+            <div class="admin-modal-header">
+                <h3 style="color: var(--admin-primary); font-size: 1.1rem;"><i class="fa-solid fa-language"></i> تعديل النص</h3>
+                <button onclick="closeEditModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 20px;">الرمز البرمجي: <strong id="editing-key" style="color:var(--admin-warning);"></strong></p>
+                <div class="lang-group">
+                    <label>العربية (AR) 🇩🇿</label>
+                    <input type="text" id="input-ar" dir="rtl">
+                </div>
+                <div class="lang-group">
+                    <label>الفرنسية (FR) 🇫🇷</label>
+                    <input type="text" id="input-fr" dir="ltr">
+                </div>
+                <div class="lang-group">
+                    <label>الإنجليزية (EN) 🇬🇧</label>
+                    <input type="text" id="input-en" dir="ltr">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-approve" style="width:100%; padding:10px; font-size:1rem;" onclick="saveActiveTranslation()"><i class="fa-solid fa-check"></i> حفظ التعديل ونشره</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, setDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCu-ZLIqFgvZSEm8KSn7Seh1X9lnHhGSh0", authDomain: "shop-clothes-224a3.firebaseapp.com", projectId: "shop-clothes-224a3", storageBucket: "shop-clothes-224a3.appspot.com", messagingSenderId: "348817058494", appId: "1:348817058494:web:830980b3dae15984350cef" };
         const app = initializeApp(firebaseConfig);
@@ -131,6 +285,91 @@
         const TELEGRAM_BOT_TOKEN = "8830778195:AAGqo5LxOHUWwBa4PS6qRM5OS7hSF8aBQVg"; 
         const TELEGRAM_CHANNEL_ID = "7737717483"; 
 
+        // ================== نظام التبويبات (Tabs) ==================
+        window.switchTab = function(viewId, btnElement) {
+            document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        };
+
+        // ================== الجزء 1: المحرر المرئي ==================
+                let siteTranslations = {
+            "brand": { ar: "ثانوية غوبريني", fr: "Lycée Ghoubrini", en: "Ghoubrini High" },
+            "hero_title": { ar: "بنك الفروض والاختبارات", fr: "Banque des Devoirs", en: "Exams Bank" },
+            "hero_desc": { ar: "المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.", fr: "Plateforme complète pour les élèves.", en: "Comprehensive platform for students." },
+            "breadcrumb_home": { ar: "الرئيسية", fr: "Accueil", en: "Home" },
+            "year_1": { ar: "الأولى ثانوي", fr: "1ère Année", en: "1st Year" },
+            "year_2": { ar: "الثانية ثانوي", fr: "2ème Année", en: "2nd Year" },
+            "year_3": { ar: "الثالثة ثانوي", fr: "3ème Année", en: "3rd Year" },
+            "term_1": { ar: "الفصل الأول", fr: "Trimestre 1", en: "Term 1" },
+            "term_2": { ar: "الفصل الثاني", fr: "Trimestre 2", en: "Term 2" },
+            "term_3": { ar: "الفصل الثالث", fr: "Trimestre 3", en: "Term 3" },
+            "cat_assignments": { ar: "الفروض", fr: "Devoirs", en: "Assignments" },
+            "cat_exams": { ar: "الاختبارات", fr: "Examens", en: "Exams" },
+            "cat_exercises": { ar: "سلسلة تمارين", fr: "Séries d'exercices", en: "Exercises" },
+            "cat_summaries": { ar: "ملخصات شاملة", fr: "Résumés", en: "Summaries" },
+            "preview_btn": { ar: "معاينة", fr: "Aperçu", en: "Preview" },
+            "download_btn": { ar: "تحميل", fr: "Télécharger", en: "Download" },
+            "view_solution": { ar: "الحل", fr: "Solution", en: "Solution" },
+            "preview_title": { ar: "معاينة الموضوع", fr: "Aperçu", en: "Preview" },
+            "search_placeholder": { ar: "ابحث في هذا القسم...", fr: "Rechercher...", en: "Search here..." },
+            "fab_contribute": { ar: "ساهم بموضوع", fr: "Contribuer", en: "Contribute" },
+            "settings_howto": { ar: "كيفية الاستعمال", fr: "Comment utiliser", en: "How to use" },
+            "settings_contact": { ar: "مراسلة المطور", fr: "Contacter le dév", en: "Contact Dev" },
+            "settings_lang": { ar: "اللغة (Language)", fr: "Langue (Language)", en: "Language" },
+            "back_btn": { ar: "رجوع", fr: "Retour", en: "Back" },
+            "footer_text": { ar: "أكاديمية التفوق © 2026", fr: "Académie d'Excellence © 2026", en: "Excellence Academy © 2026" }
+        };
+
+
+        let currentEditingKey = '';
+
+        async function loadVisualEditor() {
+            try {
+                const docRef = doc(db, "settings", "site_translations");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) { siteTranslations = { ...siteTranslations, ...docSnap.data() }; }
+                Object.keys(siteTranslations).forEach(key => {
+                    const element = document.getElementById(`text_${key}`);
+                    if (element) { element.innerText = siteTranslations[key].ar || '(فارغ)'; }
+                });
+            } catch (error) { console.error("خطأ في جلب النصوص:", error); }
+        }
+
+        window.openEditModal = function(key) {
+            currentEditingKey = key;
+            document.getElementById('editing-key').innerText = key;
+            document.getElementById('input-ar').value = siteTranslations[key]?.ar || '';
+            document.getElementById('input-fr').value = siteTranslations[key]?.fr || '';
+            document.getElementById('input-en').value = siteTranslations[key]?.en || '';
+            document.getElementById('edit-modal').classList.add('show');
+        };
+
+        window.closeEditModal = function() { document.getElementById('edit-modal').classList.remove('show'); };
+
+        window.saveActiveTranslation = async function() {
+            const btn = event.target; const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...'; btn.disabled = true;
+
+            const arText = document.getElementById('input-ar').value;
+            const frText = document.getElementById('input-fr').value;
+            const enText = document.getElementById('input-en').value;
+
+            if(!siteTranslations[currentEditingKey]) siteTranslations[currentEditingKey] = {};
+            siteTranslations[currentEditingKey].ar = arText;
+            siteTranslations[currentEditingKey].fr = frText;
+            siteTranslations[currentEditingKey].en = enText;
+
+            try {
+                await setDoc(doc(db, "settings", "site_translations"), siteTranslations);
+                document.getElementById(`text_${currentEditingKey}`).innerText = arText || '(فارغ)';
+                closeEditModal();
+            } catch (error) { alert("❌ حدث خطأ في الحفظ: " + error.message); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
+        };
+
+        // ================== الجزء 2: إدارة المواضيع والطلبات (كودك الأصلي) ==================
         const curriculum = {
             'الأولى ثانوي': { 
                 'جذع مشترك علوم وتكنولوجيا': ['الرياضيات', 'العلوم الفيزيائية', 'علوم الطبيعة والحياة', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية', 'التكنولوجيا (هندسة كهربائية)', 'التكنولوجيا (هندسة مدنية)', 'التكنولوجيا (هندسة ميكانيكية)', 'الإعلام الآلي'], 
@@ -212,7 +451,6 @@
             finally { loader.style.display = 'none'; document.getElementById('btn-publish').disabled = false; }
         };
 
-        // --- جلب وعرض طلبات المساهمات كأزرار صغيرة ---
         async function loadContributionsRequests() {
             const tbody = document.getElementById('requests-table-body');
             try {
@@ -234,7 +472,6 @@
             } catch (error) { tbody.innerHTML = '<tr><td colspan="3" class="empty-state" style="color:var(--admin-danger);">حدث خطأ في جلب الطلبات</td></tr>'; }
         }
 
-        // فتح نافذة تفاصيل الطلب للأدمن
         window.openRequestDetails = async function(requestId) {
             const modal = document.getElementById('admin-request-modal');
             const content = document.getElementById('admin-modal-content');
@@ -258,11 +495,10 @@
                     <div class="detail-row"><span>المادة:</span> ${data.subject}</div>
                     <div class="detail-row"><span>التصنيف والفصل:</span> ${data.type} (${data.term})</div>
                     <div style="margin-top: 1.5rem; display:flex; gap:10px; flex-wrap:wrap;">
-                        <a href="${directUrl}" target="_blank" class="btn btn-submit" style="margin:0; text-decoration:none;"><i class="fa-solid fa-file-pdf"></i> معاينة ملف الموضوع (PDF / صورة)</a>
+                        <a href="${directSubUrl}" target="_blank" class="btn btn-submit" style="margin:0; text-decoration:none;"><i class="fa-solid fa-file-pdf"></i> معاينة ملف الموضوع (PDF / صورة)</a>
                     </div>
                 `;
 
-                // ربط أزرار القبول والرفض داخل النافذة
                 document.getElementById('modal-approve-btn').onclick = () => approveRequest(requestId);
                 document.getElementById('modal-reject-btn').onclick = () => deleteRequest(requestId);
 
@@ -338,6 +574,7 @@
         window.deleteExam = async function(id) { if (confirm("هل أنت متأكد من الحذف النهائي؟")) { try { await deleteDoc(doc(db, "exams_repository", id)); loadAllExams(); } catch (error) { alert("خطأ: " + error.message); } } };
         
         window.onload = function() {
+            loadVisualEditor();
             loadAllExams();
             loadContributionsRequests();
         };
