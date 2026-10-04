@@ -118,6 +118,13 @@
                         <span class="editable" onclick="openEditModal('breadcrumb_home')"><i class="fa-solid fa-house"></i> <span id="text_breadcrumb_home">...</span></span>
                     </div>
 
+                    <h3 style="margin-bottom:15px; color:var(--text-muted);">السنوات الدراسية:</h3>
+                    <div style="display:flex; gap:15px; margin-bottom: 2rem;">
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-1"></i><h3 class="editable" onclick="openEditModal('year_1')" id="text_year_1">...</h3></div>
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-2"></i><h3 class="editable" onclick="openEditModal('year_2')" id="text_year_2">...</h3></div>
+                        <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-3"></i><h3 class="editable" onclick="openEditModal('year_3')" id="text_year_3">...</h3></div>
+                    </div>
+
                     <h3 style="margin-bottom:15px; color:var(--text-muted);">الفصول الدراسية:</h3>
                     <div style="display:flex; gap:15px; margin-bottom: 2rem;">
                         <div class="sandbox-card" style="flex:1;"><i class="fa-solid fa-calendar-days"></i><h3 class="editable" onclick="openEditModal('term_1')" id="text_term_1">...</h3></div>
@@ -267,12 +274,15 @@
             btnElement.classList.add('active');
         };
 
-        // نصوص افتراضية (تم دمجها مع الكود الخاص بك)
+        // نصوص افتراضية
         let siteTranslations = {
             "brand": { ar: "ثانوية غوبريني", fr: "Lycée Ghoubrini", en: "Ghoubrini High" },
             "hero_title": { ar: "بنك الفروض والاختبارات", fr: "Banque des Devoirs", en: "Exams Bank" },
             "hero_desc": { ar: "المنصة الشاملة لطلاب ثانوية غوبريني مصطفى للمراجعة والتحضير.", fr: "Plateforme complète pour les élèves.", en: "Comprehensive platform for students." },
             "breadcrumb_home": { ar: "الرئيسية", fr: "Accueil", en: "Home" },
+            "year_1": { ar: "الأولى ثانوي", fr: "1ère Année", en: "1st Year" },
+            "year_2": { ar: "الثانية ثانوي", fr: "2ème Année", en: "2nd Year" },
+            "year_3": { ar: "الثالثة ثانوي", fr: "3ème Année", en: "3rd Year" },
             "term_1": { ar: "الفصل الأول", fr: "Trimestre 1", en: "Term 1" },
             "term_2": { ar: "الفصل الثاني", fr: "Trimestre 2", en: "Term 2" },
             "term_3": { ar: "الفصل الثالث", fr: "Trimestre 3", en: "Term 3" },
@@ -332,7 +342,7 @@
             finally { btn.innerHTML = originalText; btn.disabled = false; }
         };
 
-        // تم تحديث المناهج لتتوافق 100% مع صفحة الطلاب الخاصة بك
+        // تم تحديث المناهج لتتوافق 100% مع صفحة الطلاب
         const commonSubjects = ['الرياضيات', 'العلوم الفيزيائية', 'اللغة العربية وآدابها', 'اللغة الفرنسية', 'اللغة الإنجليزية', 'التاريخ والجغرافيا', 'العلوم الإسلامية'];
         const curriculum = {
             'الأولى ثانوي': { 
@@ -400,7 +410,7 @@
                 for (let i = 0; i < filesSubj.length; i++) {
                     const currentFile = filesSubj[i];
                     currentCount++;
-                    const autoTitle = `${type} رقم ${currentCount}`;
+                    const autoTitle = `${type} - ${subject} (رقم ${currentCount})`;
                     loader.innerHTML = `<i class="fa-solid fa-gear fa-spin"></i> جاري رفع الملف ${i + 1} من ${filesSubj.length}...`;
 
                     const subjFileId = await uploadAndGetFileId(currentFile, autoTitle);
